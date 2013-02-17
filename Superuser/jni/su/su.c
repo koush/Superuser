@@ -214,12 +214,38 @@ void set_identity(unsigned int uid)
     }
 }
 
+static void socket_cleanup(struct su_context *ctx)
+{
+    if (ctx && ctx->sock_path[0]) {
+        if (unlink(ctx->sock_path))
+            PLOGE("unlink (%s)", ctx->sock_path);
+        ctx->sock_path[0] = 0;
+    }
+}
+
 /*
  * For use in signal handlers/atexit-function
  * NOTE: su_ctx points to main's local variable.
  *       It's OK due to the program uses exit(3), not return from main()
  */
 static struct su_context *su_ctx = NULL;
+
+static void cleanup(void)
+{
+    socket_cleanup(su_ctx);
+}
+
+static void cleanup_signal(int sig)
+{
+    socket_cleanup(su_ctx);
+    exit(128 + sig);
+}
+
+void sigchld_handler(int sig)
+{
+    child_cleanup(su_ctx);
+    (void)sig;
+}
 
 static int socket_create_temp(char *path, size_t len)
 {
@@ -237,10 +263,10 @@ static int socket_create_temp(char *path, size_t len)
     }
 
     memset(&sun, 0, sizeof(sun));
-    sun.sun_family = AF_UNIX;
+    sun.sun_family = AF_LOCAL;
     snprintf(path, len, "%s/.socket%d", REQUESTOR_CACHE_PATH, getpid());
     memset(sun.sun_path, 0, sizeof(sun.sun_path));
-    snprintf(sun.sun_path + 1, sizeof(sun.sun_path) - 1, "%s", path);
+    snprintf(sun.sun_path, sizeof(sun.sun_path), "%s", path);
 
     /*
      * Delete the socket to protect from situations when
@@ -492,6 +518,50 @@ int access_disabled(const struct su_initiator *from)
 
 int main(int argc, char *argv[])
 {
+    // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
+    /* The same list than GLibc at this point */
+    static const char* const unsec_vars[] = {
+        "GCONV_PATH",
+        "GETCONF_DIR",
+        "HOSTALIASES",
+        "LD_AUDIT",
+        "LD_DEBUG",
+        "LD_DEBUG_OUTPUT",
+        "LD_DYNAMIC_WEAK",
+        "LD_LIBRARY_PATH",
+        "LD_ORIGIN_PATH",
+        "LD_PRELOAD",
+        "LD_PROFILE",
+        "LD_SHOW_AUXV",
+        "LD_USE_LOAD_BIAS",
+        "LOCALDOMAIN",
+        "LOCPATH",
+        "MALLOC_TRACE",
+        "MALLOC_CHECK_",
+        "NIS_PATH",
+        "NLSPATH",
+        "RESOLV_HOST_CONF",
+        "RES_OPTIONS",
+        "TMPDIR",
+        "TZDIR",
+        "LD_AOUT_LIBRARY_PATH",
+        "LD_AOUT_PRELOAD",
+        // not listed in linker, used due to system() call
+        "IFS",
+    };
+    const char* const* cp   = unsec_vars;
+    const char* const* endp = cp + sizeof(unsec_vars)/sizeof(unsec_vars[0]);
+    while (cp < endp) {
+        unsetenv(*cp);
+        cp++;
+    }
+
+    /*
+     * set LD_LIBRARY_PATH if the linker has wiped out it due to we're suid.
+     * This occurs on Android 4.0+
+     */
+    setenv("LD_LIBRARY_PATH", "/vendor/lib:/system/lib", 0);
+
     LOGD("su invoked.");
 
     struct su_context ctx = {
@@ -608,11 +678,6 @@ int main(int argc, char *argv[])
 
     ctx.umask = umask(027);
 
-    /*
-     * set LD_LIBRARY_PATH if the linker has wiped out it due to we're suid.
-     * This occurs on Android 4.0+
-     */
-    setenv("LD_LIBRARY_PATH", "/vendor/lib:/system/lib", 0);
     if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL)
         allow(&ctx);
 
@@ -661,12 +726,19 @@ int main(int argc, char *argv[])
         deny(&ctx);
     }
 
+    signal(SIGHUP, cleanup_signal);
+    signal(SIGPIPE, cleanup_signal);
+    signal(SIGTERM, cleanup_signal);
+    signal(SIGQUIT, cleanup_signal);
+    signal(SIGINT, cleanup_signal);
+    signal(SIGABRT, cleanup_signal);
+    atexit(cleanup);
+
     if (send_intent(&ctx, INTERACTIVE, ACTION_REQUEST) < 0) {
         deny(&ctx);
     }
 
     fd = socket_accept(socket_serv_fd);
-    LOGE("accepted");
     if (fd < 0) {
         deny(&ctx);
     }
@@ -679,6 +751,7 @@ int main(int argc, char *argv[])
 
     close(fd);
     close(socket_serv_fd);
+    socket_cleanup(&ctx);
 
     result = buf;
 
