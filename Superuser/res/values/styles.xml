@@ -17,6 +17,15 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
+    <style name="AppBaseDarkTheme" parent="android:Theme.Black">
+        
+    </style>
+    
+    <!-- Application theme. -->
+    <style name="AppDarkTheme" parent="AppBaseDarkTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
     <style name="FlatButton">
         
     </style>

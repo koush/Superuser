@@ -8,4 +8,12 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
 
+    <style name="AppBaseDarkTheme" parent="@android:style/Theme.Holo">
+        <!-- API 14 theme customizations can go here. -->
+    </style>
+        
+    <style name="FlatButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    
 </resources>

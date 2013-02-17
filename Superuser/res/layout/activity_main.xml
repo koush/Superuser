@@ -65,11 +65,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:singleLine="true"
                     android:id="@+id/app_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -87,11 +87,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:singleLine="true"
                     android:id="@+id/package_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -109,11 +109,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:singleLine="true"
                     android:id="@+id/uid_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <LinearLayout
@@ -131,12 +131,12 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:singleLine="true"
-                    android:ellipsize="middle"
                     android:id="@+id/command_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2" />
+                    android:layout_weight="2"
+                    android:ellipsize="middle"
+                    android:singleLine="true" />
             </LinearLayout>
 
             <ListView
@@ -158,23 +158,28 @@
                 android:layout_gravity="center"
                 android:gravity="center" />
 
-            <CheckBox
-                android:gravity="center_horizontal"
-                android:id="@+id/always_allow"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="@string/always_allow" />
+                android:layout_gravity="center"
+                android:orientation="vertical" >
 
-            <CheckBox
-                android:gravity="center_horizontal"
-                android:id="@+id/allow_temporarily"
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                android:text="@string/allow_temporarily" />
+                <CheckBox
+                    android:id="@+id/always_allow"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:text="@string/always_allow" />
+
+                <CheckBox
+                    android:id="@+id/allow_temporarily"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:text="@string/allow_temporarily" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -217,12 +222,12 @@
         </LinearLayout>
 
         <Button
-            android:enabled="false"
             android:id="@+id/allow"
             style="@style/FlatButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="@string/allow" />
     </LinearLayout>
 

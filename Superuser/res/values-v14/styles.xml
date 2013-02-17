@@ -9,10 +9,11 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
-    <style name="FlatButton">
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+    <style name="AppBaseDarkTheme" parent="android:Theme.Holo">
+        <!-- API 14 theme customizations can go here. -->
     </style>
     
-    <style name="Dialog" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="FlatButton" parent="@android:style/Theme.Holo">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 </resources>

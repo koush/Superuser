@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.koushikdutta.superuser.MultitaskSuRequestActivity" android:theme="@style/Dialog"  android:label="@string/request" />
+        <activity android:name="com.koushikdutta.superuser.MultitaskSuRequestActivity" android:theme="@style/AppTheme"  android:label="@string/request" />
 
         <receiver
             android:name=".SuReceiver"
