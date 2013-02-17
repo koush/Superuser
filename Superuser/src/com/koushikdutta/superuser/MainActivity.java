@@ -199,11 +199,12 @@ public class MainActivity extends Activity {
         }
      
         if (getClass() == MainActivity.class) {
-            // MainActivity is actually just a passthrough to new task
+            // MainActivity is actually just a passthrough to a new task
             // stack.
-            // if another su request comes in, let's start a new task for the thing.
-            // pretty much every superuser implementation i've seen craps out if there
-            // is more than 1 su request at a time. really annoying.
+            // Pretty much every superuser implementation i've seen craps out if there
+            // is more than 1 su request at a time. Each subsequent su request
+            // will get "lost" because there can only be one instance of the activity
+            // at a time. Really annoying. This fixes that.
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setClass(this, MultitaskSuRequestActivity.class);
             startActivity(intent);
