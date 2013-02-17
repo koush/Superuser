@@ -273,7 +273,7 @@ static int socket_create_temp(char *path, size_t len)
      * something bad occured previously and the kernel reused pid from that process.
      * Small probability, isn't it.
      */
-    // unlink(sun.sun_path);
+    unlink(sun.sun_path);
 
     if (bind(fd, (struct sockaddr*)&sun, sizeof(sun)) < 0) {
         PLOGE("bind");
@@ -732,11 +732,12 @@ int main(int argc, char *argv[])
     signal(SIGQUIT, cleanup_signal);
     signal(SIGINT, cleanup_signal);
     signal(SIGABRT, cleanup_signal);
-    atexit(cleanup);
 
     if (send_intent(&ctx, INTERACTIVE, ACTION_REQUEST) < 0) {
         deny(&ctx);
     }
+
+    atexit(cleanup);
 
     fd = socket_accept(socket_serv_fd);
     if (fd < 0) {

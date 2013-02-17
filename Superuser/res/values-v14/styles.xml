@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme for API 14+. This theme completely replaces
@@ -9,4 +9,10 @@
         <!-- API 14 theme customizations can go here. -->
     </style>
 
+    <style name="FlatButton">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+    
+    <style name="Dialog" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    </style>
 </resources>

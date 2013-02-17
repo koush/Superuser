@@ -46,8 +46,8 @@
 #define REQUESTOR_OPTIONS REQUESTOR_STORED_PATH "/options"
 
 /* intent actions */
-#define ACTION_REQUEST REQUESTOR ".REQUEST"
-#define ACTION_RESULT  REQUESTOR ".RESULT"
+#define ACTION_REQUEST "start -n " REQUESTOR "/.MainActivity"
+#define ACTION_RESULT "broadcast -n " REQUESTOR "/.SuReceiver"
 
 #define DEFAULT_SHELL "/system/bin/sh"
 

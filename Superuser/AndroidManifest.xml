@@ -8,22 +8,35 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="17" />
 
+    <permission
+        android:name="com.koushikdutta.superuser.REQUEST"
+        android:protectionLevel="signatureOrSystem" />
+    <permission
+        android:name="com.koushikdutta.superuser.RESULT"
+        android:protectionLevel="signatureOrSystem" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:launchMode="singleTask"
             android:name="com.koushikdutta.superuser.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:permission="com.koushikdutta.superuser.REQUEST" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <receiver android:name=".SuReceiver">
+
+        <activity android:name="com.koushikdutta.superuser.MultitaskSuRequestActivity" android:theme="@style/Dialog"  android:label="@string/request" />
+
+        <receiver
+            android:name=".SuReceiver"
+            android:permission="com.koushikdutta.superuser.RESULT" >
             <intent-filter>
                 <action android:name="com.koushikdutta.superuser.REQUEST" />
             </intent-filter>

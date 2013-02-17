@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">Superuser</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-
+    <string name="allow">Allow</string>
+    <string name="deny">Deny</string>
+    <string name="status_incoming">Incoming Superuser Request...</string>
+    <string name="unknown_uid">Unknown UID: %s</string>
+    <string name="application_request">%s is requesting Superuser access.</string>
+    <string name="info">Warning: If you did not initiate this action or do not understand this request, you should Deny the request.</string>
+    <string name="request">Superuser Request</string>
+    <string name="allow_temporarily">Temporarily allow future requests</string>
+    <string name="always_allow">Allow all future requests</string>
+    
+    <string name="package_header">Package:</string>
+    <string name="app_header">App:</string>
+    <string name="uid_header">Requested UID:</string>
+    <string name="command_header">Command:</string>
 </resources>

@@ -24,18 +24,42 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f080000;
+        public static final int allow=0x7f07000c;
+        public static final int allow_temporarily=0x7f07000a;
+        public static final int always_allow=0x7f070009;
+        public static final int app_header=0x7f070003;
+        public static final int command_header=0x7f070006;
+        public static final int deny=0x7f07000b;
+        public static final int image=0x7f07000d;
+        public static final int incoming=0x7f070000;
+        public static final int list=0x7f070007;
+        public static final int package_header=0x7f070004;
+        public static final int ready=0x7f070001;
+        public static final int request=0x7f070002;
+        public static final int summary=0x7f07000f;
+        public static final int title=0x7f07000e;
+        public static final int uid_header=0x7f070005;
+        public static final int unknown=0x7f070008;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-    }
-    public static final class menu {
-        public static final int main=0x7f070000;
+        public static final int packageinfo=0x7f030001;
     }
     public static final class string {
-        public static final int action_settings=0x7f050001;
+        public static final int allow=0x7f050001;
+        public static final int allow_temporarily=0x7f050008;
+        public static final int always_allow=0x7f050009;
+        public static final int app_header=0x7f05000b;
         public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
+        public static final int application_request=0x7f050005;
+        public static final int command_header=0x7f05000d;
+        public static final int deny=0x7f050002;
+        public static final int info=0x7f050006;
+        public static final int package_header=0x7f05000a;
+        public static final int request=0x7f050007;
+        public static final int status_incoming=0x7f050003;
+        public static final int uid_header=0x7f05000c;
+        public static final int unknown_uid=0x7f050004;
     }
     public static final class style {
         /** 
@@ -64,5 +88,7 @@ public final class R {
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f060001;
+        public static final int Dialog=0x7f060003;
+        public static final int FlatButton=0x7f060002;
     }
 }
