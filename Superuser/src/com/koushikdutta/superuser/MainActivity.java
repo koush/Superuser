@@ -199,7 +199,7 @@ public class MainActivity extends Activity {
         }
      
         if (getClass() == MainActivity.class) {
-            // MainActivity is actually just a passthrough to pass through to a new task
+            // MainActivity is actually just a passthrough to new task
             // stack.
             // if another su request comes in, let's start a new task for the thing.
             // pretty much every superuser implementation i've seen craps out if there
