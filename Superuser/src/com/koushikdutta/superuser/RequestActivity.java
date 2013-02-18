@@ -1,6 +1,7 @@
 package com.koushikdutta.superuser;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
@@ -149,7 +150,7 @@ public class RequestActivity extends Activity {
                 return convertView;
             }
         };
-        
+
         list.setAdapter(mAdapter);
         if (pkgs != null) {
             for (String pkg: pkgs) {
@@ -183,13 +184,13 @@ public class RequestActivity extends Activity {
         }.run();
     }
 
-    void manageSocket(final String socket) {
+    void manageSocket() {
         new Thread() {
             @Override
             public void run() {
                 try {
                     mSocket = new LocalSocket();
-                    mSocket.connect(new LocalSocketAddress(socket, Namespace.FILESYSTEM));
+                    mSocket.connect(new LocalSocketAddress(mSocketPath, Namespace.FILESYSTEM));
 
                     DataInputStream is = new DataInputStream(mSocket.getInputStream());
 
@@ -269,8 +270,8 @@ public class RequestActivity extends Activity {
             return;
         }
 
-        String socket = intent.getStringExtra("socket");
-        if (socket == null) {
+        mSocketPath = intent.getStringExtra("socket");
+        if (mSocketPath == null) {
             finish();
             return;
         }
@@ -296,7 +297,22 @@ public class RequestActivity extends Activity {
         
         setContentView();
 
-        manageSocket(socket);
+        manageSocket();
+        
+        
+        // watch for the socket disappearing. that means su died.
+        new Runnable() {
+            public void run() {
+                if (isFinishing())
+                    return;
+                if (!new File(mSocketPath).exists()) {
+                    finish();
+                    return;
+                }
+                
+                mHandler.postDelayed(this, 1000);
+            };
+        }.run();
     }
     
     @Override
@@ -312,6 +328,7 @@ public class RequestActivity extends Activity {
             R.string.remember_forever
     };
     
+    String mSocketPath;
     ArrayAdapter<String> mSpinnerAdapter;
     void setContentView() {
         setContentView(R.layout.request);
