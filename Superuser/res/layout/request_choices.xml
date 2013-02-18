@@ -1,0 +1,28 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <RadioGroup
+        android:id="@+id/remember"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/this_time_only"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/this_time_only" />
+
+        <RadioButton
+            android:id="@+id/remember_for"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_for" />
+
+        <RadioButton
+            android:id="@+id/remember_forever"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remember_forever" />
+    </RadioGroup>
+
+</merge>

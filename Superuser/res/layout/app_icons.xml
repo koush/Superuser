@@ -1,0 +1,14 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <ListView
+        android:scrollbars="none"
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:gravity="center"
+        android:listSelector="@android:color/transparent" />
+
+</merge>

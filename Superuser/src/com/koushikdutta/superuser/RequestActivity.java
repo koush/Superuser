@@ -20,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,6 +48,11 @@ public class RequestActivity extends Activity {
     Button mDeny;
 
     boolean mHandled;
+    
+    public int getGracePeriod() {
+        return 10;
+    }
+    
     void handleAction(boolean action) {
         Assert.assertTrue(!mHandled);
         mHandled = true;
@@ -55,7 +62,27 @@ public class RequestActivity extends Activity {
         catch (Exception ex) {
         }
         try {
-            SuDatabaseHelper.setPolicy(this, mCallerUid, mDesiredCmd, action ? SuDatabaseHelper.POLICY_ALLOW : SuDatabaseHelper.POLICY_DENY, 0);
+            int until = -1;
+            if (mSpinner.isShown()) {
+                int pos = mSpinner.getSelectedItemPosition();
+                int id = mSpinnerIds[pos];
+                if (id == R.string.remember_for) {
+                    until = ((int)System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                }
+                else if (id == R.string.remember_forever) {
+                    until = 0;
+                }
+            }
+            else if (mRemember.isShown()) {
+                if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
+                    until = ((int)System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                }
+                else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
+                    until = 0;
+                }
+            }
+            if (until != -1)
+                SuDatabaseHelper.setPolicy(this, mCallerUid, mDesiredCmd, action ? SuDatabaseHelper.POLICY_ALLOW : SuDatabaseHelper.POLICY_DENY, 0);
         }
         catch (Exception ex) {
         }
@@ -78,13 +105,33 @@ public class RequestActivity extends Activity {
         findViewById(R.id.incoming).setVisibility(View.GONE);
         findViewById(R.id.ready).setVisibility(View.VISIBLE);
         
-        ListView list = (ListView)findViewById(R.id.list);
-        list.setEnabled(false);
+        final ListView list = (ListView)findViewById(R.id.list);
         list.setEmptyView(findViewById(R.id.unknown));
         final PackageManager pm = getPackageManager();
         String[] pkgs = pm.getPackagesForUid(mCallerUid);
         TextView unknown = (TextView)findViewById(R.id.unknown);
         unknown.setText(getString(R.string.unknown_uid, mCallerUid));
+
+        final View appInfo = findViewById(R.id.app_info);
+        appInfo.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (list.getVisibility() == View.GONE) {
+                    appInfo.setVisibility(View.GONE);
+                    list.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        
+        list.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                if (appInfo.getVisibility() == View.GONE) {
+                    appInfo.setVisibility(View.VISIBLE);
+                    list.setVisibility(View.GONE);
+                }
+            }
+        });
         
         ((TextView)findViewById(R.id.uid_header)).setText(Integer.toString(mDesiredUid));
         ((TextView)findViewById(R.id.command_header)).setText(mDesiredCmd);
@@ -143,7 +190,6 @@ public class RequestActivity extends Activity {
                 try {
                     mSocket = new LocalSocket();
                     mSocket.connect(new LocalSocketAddress(socket, Namespace.FILESYSTEM));
-                    Log.i(LOGTAG, "connected to socket.");
 
                     DataInputStream is = new DataInputStream(mSocket.getInputStream());
 
@@ -260,6 +306,13 @@ public class RequestActivity extends Activity {
         setContentView();
     }
     
+    final int[] mSpinnerIds = new int[] {
+            R.string.this_time_only,
+            R.string.remember_for,
+            R.string.remember_forever
+    };
+    
+    ArrayAdapter<String> mSpinnerAdapter;
     void setContentView() {
         setContentView(R.layout.request);
         
@@ -268,9 +321,15 @@ public class RequestActivity extends Activity {
         ViewGroup root = (ViewGroup)findViewById(R.id.root);
         darkInflater.inflate(R.layout.request_buttons, root);
 
+        mSpinner = (Spinner)findViewById(R.id.remember_choices);
+        mSpinner.setAdapter(mSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.request_spinner_choice, R.id.request_spinner_choice));
+        for (int id: mSpinnerIds) {
+            mSpinnerAdapter.add(getString(id, getGracePeriod()));
+        }
+        
         mRemember = (RadioGroup)findViewById(R.id.remember);
         RadioButton rememberFor = (RadioButton)findViewById(R.id.remember_for);
-        rememberFor.setText(getString(R.string.remember_for, 10));
+        rememberFor.setText(getString(R.string.remember_for, getGracePeriod()));
 
         mAllow = (Button)findViewById(R.id.allow);
         mDeny = (Button)findViewById(R.id.deny);
