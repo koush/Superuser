@@ -202,6 +202,11 @@ public class MainActivity extends Activity {
         }
      
         if (getClass() == MainActivity.class) {
+            // TODO: is this the right way to do this?
+            // maybe queue requests to maintain the order?
+            // fragile apps may have race conditions that occur
+            // if the su requests are handled LIFO.
+            
             // MainActivity is actually just a passthrough to a new task
             // stack.
             // Pretty much every superuser implementation i've seen craps out if there

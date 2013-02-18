@@ -63,6 +63,7 @@ void exec_loge(const char* fmt, ...) {
   va_end(args);
   exec_log("e", logline);
 }
+
 void exec_logw(const char* fmt, ...) {
   va_list args;
 
@@ -72,6 +73,7 @@ void exec_logw(const char* fmt, ...) {
   va_end(args);
   exec_log("w", logline);
 }
+
 void exec_logd(const char* fmt, ...) {
   va_list args;
 
@@ -82,8 +84,7 @@ void exec_logd(const char* fmt, ...) {
   exec_log("d", logline);
 }
 
-static int from_init(struct su_initiator *from)
-{
+static int from_init(struct su_initiator *from) {
     char path[PATH_MAX], exe[PATH_MAX];
     char args[4096], *argv0, *argv_rest;
     int fd;
@@ -147,37 +148,30 @@ static int from_init(struct su_initiator *from)
     return 0;
 }
 
-static void read_options(struct su_context *ctx)
-{
+static void read_options(struct su_context *ctx) {
     char mode[12];
     FILE *fp;
-    if ((fp = fopen(REQUESTOR_OPTIONS, "r"))) {
+    if ((fp = fopen(REQUESTOR_MULTIUSER_MODE, "r"))) {
         fgets(mode, sizeof(mode), fp);
         if (strcmp(mode, "user\n") == 0) {
-            ctx->user.owner_mode = 0;
+            ctx->user.multiuser_mode = MULTIUSER_MODE_USER;
         } else if (strcmp(mode, "owner\n") == 0) {
-            ctx->user.owner_mode = 1;
+            ctx->user.multiuser_mode = MULTIUSER_MODE_OWNER;
         }
+        fclose(fp);
     }
 }
 
-static void user_init(struct su_context *ctx)
-{
+static void user_init(struct su_context *ctx) {
     if (ctx->from.uid > 99999) {
-        ctx->user.userid = ctx->from.uid / 100000;
-        if (!ctx->user.owner_mode) {
-            snprintf(ctx->user.data_path, PATH_MAX, "/data/user/%d/%s",
-                    ctx->user.userid, REQUESTOR);
-            snprintf(ctx->user.store_path, PATH_MAX, "/data/user/%d/%s/files/stored",
-                    ctx->user.userid, REQUESTOR);
-            snprintf(ctx->user.store_default, PATH_MAX, "/data/user/%d/%s/files/stored/default",
-                    ctx->user.userid, REQUESTOR);
+        ctx->user.android_user_id = ctx->from.uid / 100000;
+        if (ctx->user.multiuser_mode == MULTIUSER_MODE_USER) {
+            snprintf(ctx->user.database_path, PATH_MAX, "%s/%d/%s", REQUESTOR_USER_PATH, ctx->user.android_user_id, REQUESTOR_DATABASE_PATH);
         }
     }
 }
 
-static void populate_environment(const struct su_context *ctx)
-{
+static void populate_environment(const struct su_context *ctx) {
     struct passwd *pw;
 
     if (ctx->to.keepenv)
@@ -194,8 +188,7 @@ static void populate_environment(const struct su_context *ctx)
     }
 }
 
-void set_identity(unsigned int uid)
-{
+void set_identity(unsigned int uid) {
     /*
      * Set effective uid back to root, otherwise setres[ug]id will fail
      * if uid isn't root.
@@ -214,8 +207,7 @@ void set_identity(unsigned int uid)
     }
 }
 
-static void socket_cleanup(struct su_context *ctx)
-{
+static void socket_cleanup(struct su_context *ctx) {
     if (ctx && ctx->sock_path[0]) {
         if (unlink(ctx->sock_path))
             PLOGE("unlink (%s)", ctx->sock_path);
@@ -230,25 +222,21 @@ static void socket_cleanup(struct su_context *ctx)
  */
 static struct su_context *su_ctx = NULL;
 
-static void cleanup(void)
-{
+static void cleanup(void) {
     socket_cleanup(su_ctx);
 }
 
-static void cleanup_signal(int sig)
-{
+static void cleanup_signal(int sig) {
     socket_cleanup(su_ctx);
     exit(128 + sig);
 }
 
-void sigchld_handler(int sig)
-{
+void sigchld_handler(int sig) {
     child_cleanup(su_ctx);
     (void)sig;
 }
 
-static int socket_create_temp(char *path, size_t len)
-{
+static int socket_create_temp(char *path, size_t len) {
     int fd;
     struct sockaddr_un sun;
 
@@ -291,8 +279,7 @@ err:
     return -1;
 }
 
-static int socket_accept(int serv_fd)
-{
+static int socket_accept(int serv_fd) {
     struct timeval tv;
     fd_set fds;
     int fd, rc;
@@ -319,8 +306,7 @@ static int socket_accept(int serv_fd)
     return fd;
 }
 
-static int socket_send_request(int fd, const struct su_context *ctx)
-{
+static int socket_send_request(int fd, const struct su_context *ctx) {
     size_t len;
     size_t bin_size, cmd_size;
     char *cmd;
@@ -359,8 +345,7 @@ do {                            \
     return 0;
 }
 
-static int socket_receive_result(int fd, char *result, ssize_t result_len)
-{
+static int socket_receive_result(int fd, char *result, ssize_t result_len) {
     ssize_t len;
     
     len = read(fd, result, result_len-1);
@@ -373,8 +358,7 @@ static int socket_receive_result(int fd, char *result, ssize_t result_len)
     return 0;
 }
 
-static void usage(int status)
-{
+static void usage(int status) {
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
 
     fprintf(stream,
@@ -392,28 +376,26 @@ static void usage(int status)
     exit(status);
 }
 
-static __attribute__ ((noreturn)) void deny(struct su_context *ctx)
-{
+static __attribute__ ((noreturn)) void deny(struct su_context *ctx) {
     char *cmd = get_command(&ctx->to);
 
     // No send to UI denied requests for shell and root users (they are in the log)
     if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
-        send_intent(ctx, DENY, ACTION_RESULT);
+        send_result(ctx, DENY);
     }
     LOGW("request rejected (%u->%u %s)", ctx->from.uid, ctx->to.uid, cmd);
     fprintf(stderr, "%s\n", strerror(EACCES));
     exit(EXIT_FAILURE);
 }
 
-static __attribute__ ((noreturn)) void allow(struct su_context *ctx)
-{
+static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     char *arg0;
     int argc, err;
 
     umask(ctx->umask);
     // No send to UI accepted requests for shell and root users (they are in the log)
     if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
-        send_intent(ctx, ALLOW, ACTION_RESULT);
+        send_result(ctx, ALLOW);
     }
 
     arg0 = strrchr (ctx->to.shell, '/');
@@ -463,8 +445,7 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx)
  * and can't trust the location of the property workspace.
  * Find the properties ourselves.
  */
-int access_disabled(const struct su_initiator *from)
-{
+int access_disabled(const struct su_initiator *from) {
     char *data;
     char build_type[PROPERTY_VALUE_MAX];
     char debuggable[PROPERTY_VALUE_MAX], enabled[PROPERTY_VALUE_MAX];
@@ -516,8 +497,7 @@ int access_disabled(const struct su_initiator *from)
     return 0;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
     /* The same list than GLibc at this point */
     static const char* const unsec_vars[] = {
@@ -582,11 +562,9 @@ int main(int argc, char *argv[])
             .optind = 0,
         },
         .user = {
-            .userid = 0,
-            .owner_mode = -1,
-            .data_path = REQUESTOR_DATA_PATH,
-            .store_path = REQUESTOR_STORED_PATH,
-            .store_default = REQUESTOR_STORED_DEFAULT,
+            .android_user_id = 0,
+            .multiuser_mode = MULTIUSER_MODE_OWNER_ONLY,
+            .database_path = REQUESTOR_DATA_PATH REQUESTOR_DATABASE_PATH,
         },
     };
     struct stat st;
@@ -670,7 +648,7 @@ int main(int argc, char *argv[])
     read_options(&ctx);
     user_init(&ctx);
     
-    if (ctx.user.owner_mode == -1 && ctx.user.userid != 0)
+    if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0)
         deny(&ctx);
 
     if (access_disabled(&ctx.from))
@@ -681,7 +659,7 @@ int main(int argc, char *argv[])
     if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL)
         allow(&ctx);
 
-    if (stat(ctx.user.data_path, &st) < 0) {
+    if (stat(ctx.user.database_path, &st) < 0) {
         PLOGE("stat");
         deny(&ctx);
     }
@@ -733,7 +711,7 @@ int main(int argc, char *argv[])
     signal(SIGINT, cleanup_signal);
     signal(SIGABRT, cleanup_signal);
 
-    if (send_intent(&ctx, INTERACTIVE, ACTION_REQUEST) < 0) {
+    if (send_request(&ctx) < 0) {
         deny(&ctx);
     }
 
