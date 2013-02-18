@@ -50,7 +50,7 @@
 #define REQUESTOR_MULTIUSER_MODE REQUESTOR_FILES_PATH "/multiuser_mode"
 
 /* intent actions */
-#define ACTION_REQUEST "start -n " REQUESTOR "/.MainActivity"
+#define ACTION_REQUEST "start -n " REQUESTOR "/.RequestActivity"
 #define ACTION_NOTIFY "start -n " REQUESTOR "/.NotifyActivity"
 #define ACTION_RESULT "broadcast -n " REQUESTOR "/.SuReceiver"
 
@@ -114,15 +114,15 @@ typedef enum {
 } multiuser_mode_t;
 
 typedef enum {
-    INTERACTIVE = -1,
-    DENY = 0,
-    ALLOW = 1,
-} allow_t;
+    INTERACTIVE = 0,
+    DENY = 1,
+    ALLOW = 2,
+} policy_t;
 
-extern allow_t database_check(struct su_context *ctx);
+extern policy_t database_check(struct su_context *ctx);
 extern void set_identity(unsigned int uid);
 extern int send_request(struct su_context *ctx);
-extern int send_result(struct su_context *ctx, allow_t allow);
+extern int send_result(struct su_context *ctx, policy_t policy);
 extern void sigchld_handler(int sig);
 
 static inline char *get_command(const struct su_request *to)

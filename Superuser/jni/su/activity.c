@@ -71,13 +71,11 @@ static int silent_run(char* command) {
     return -1;
 }
 
-int send_result(struct su_context *ctx, allow_t allow) {
+int send_result(struct su_context *ctx, policy_t allow) {
     return 0;
 }
 
 int send_request(struct su_context *ctx) {
-    pid_t pid;
-
     // if su is operating in MULTIUSER_MODEL_OWNER,
     // and the user requestor is not the owner,
     // the owner needs to be notified of the request.
@@ -101,37 +99,29 @@ int send_request(struct su_context *ctx) {
         return -1;
     }
 
-    pid = fork();
-    if (!pid) {
-        if (needs_owner_login_prompt) {
-            // in multiuser mode, the owner gets the su prompt
-            pid = fork();
-            if (!pid) {
-                char notify_command[ARG_MAX];
 
-                // start the activity that confirms the request
-                snprintf(notify_command, sizeof(notify_command),
-                    "exec /system/bin/am " ACTION_NOTIFY " --ei caller_uid %d --user %d",
-                    ctx->from.uid, ctx->user.android_user_id);
-
-                return silent_run(notify_command);
-            }
-        }
-        
-        char request_command[ARG_MAX];
+    int ret;
+    if (needs_owner_login_prompt) {
+        // in multiuser mode, the owner gets the su prompt
+        char notify_command[ARG_MAX];
 
         // start the activity that confirms the request
-        snprintf(request_command, sizeof(request_command),
-            "exec /system/bin/am " ACTION_REQUEST " --es socket '%s' %s",
-            ctx->sock_path, user);
+        snprintf(notify_command, sizeof(notify_command),
+            "exec /system/bin/am " ACTION_NOTIFY " --ei caller_uid %d --user %d",
+            ctx->from.uid, ctx->user.android_user_id);
 
-        return silent_run(request_command);
+        int ret = silent_run(notify_command);
+        if (ret) {
+            return ret;
+        }
     }
-    
-    /* Parent */
-    if (pid < 0) {
-        PLOGE("fork");
-        return -1;
-    }
-    return 0;
+
+    char request_command[ARG_MAX];
+
+    // start the activity that confirms the request
+    snprintf(request_command, sizeof(request_command),
+        "exec /system/bin/am " ACTION_REQUEST " --es socket '%s' %s",
+        ctx->sock_path, user);
+
+    return silent_run(request_command);
 }

@@ -49,39 +49,44 @@ int get_shell_uid() {
 void exec_log(char *priority, char* logline) {
   int pid;
   if ((pid = fork()) == 0) {
-    execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline);
-    exit(0);
+      int zero = open("/dev/zero", O_RDONLY | O_CLOEXEC);
+      dup2(zero, 0);
+      int null = open("/dev/null", O_WRONLY | O_CLOEXEC);
+      dup2(null, 1);
+      dup2(null, 2);
+      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline);
+      _exit(0);
   }
 }
 
 void exec_loge(const char* fmt, ...) {
-  va_list args;
+    va_list args;
 
-  char logline[PATH_MAX];
-  va_start(args, fmt);
-  vsnprintf(logline, PATH_MAX, fmt, args);
-  va_end(args);
-  exec_log("e", logline);
+    char logline[PATH_MAX];
+    va_start(args, fmt);
+    vsnprintf(logline, PATH_MAX, fmt, args);
+    va_end(args);
+    exec_log("e", logline);
 }
 
 void exec_logw(const char* fmt, ...) {
-  va_list args;
+    va_list args;
 
-  char logline[PATH_MAX];
-  va_start(args, fmt);
-  vsnprintf(logline, PATH_MAX, fmt, args);
-  va_end(args);
-  exec_log("w", logline);
+    char logline[PATH_MAX];
+    va_start(args, fmt);
+    vsnprintf(logline, PATH_MAX, fmt, args);
+    va_end(args);
+    exec_log("w", logline);
 }
 
 void exec_logd(const char* fmt, ...) {
-  va_list args;
+    va_list args;
 
-  char logline[PATH_MAX];
-  va_start(args, fmt);
-  vsnprintf(logline, PATH_MAX, fmt, args);
-  va_end(args);
-  exec_log("d", logline);
+    char logline[PATH_MAX];
+    va_start(args, fmt);
+    vsnprintf(logline, PATH_MAX, fmt, args);
+    va_end(args);
+    exec_log("d", logline);
 }
 
 static int from_init(struct su_initiator *from) {
@@ -153,6 +158,7 @@ static void read_options(struct su_context *ctx) {
     FILE *fp;
     if ((fp = fopen(REQUESTOR_MULTIUSER_MODE, "r"))) {
         fgets(mode, sizeof(mode), fp);
+        LOGD("multiuser mode: %s", mode);
         if (strcmp(mode, "user\n") == 0) {
             ctx->user.multiuser_mode = MULTIUSER_MODE_USER;
         } else if (strcmp(mode, "owner\n") == 0) {
@@ -289,6 +295,7 @@ static int socket_accept(int serv_fd) {
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(serv_fd, &fds);
+    LOGD("select");
     do {
         rc = select(serv_fd + 1, &fds, NULL, NULL, &tv);
     } while (rc < 0 && errno == EINTR);
@@ -348,6 +355,7 @@ do {                            \
 static int socket_receive_result(int fd, char *result, ssize_t result_len) {
     ssize_t len;
     
+    LOGD("waiting for result");
     len = read(fd, result, result_len-1);
     if (len < 0) {
         PLOGE("read(result)");
@@ -570,7 +578,7 @@ int main(int argc, char *argv[]) {
     struct stat st;
     int c, socket_serv_fd, fd;
     char buf[64], *result;
-    allow_t dballow;
+    policy_t dballow;
     struct option long_opts[] = {
         { "command",            required_argument,    NULL, 'c' },
         { "help",            no_argument,        NULL, 'h' },
@@ -648,11 +656,15 @@ int main(int argc, char *argv[]) {
     read_options(&ctx);
     user_init(&ctx);
     
-    if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0)
+    if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0) {
+        LOGD("multiuser mode: owner only");
         deny(&ctx);
+    }
 
-    if (access_disabled(&ctx.from))
+    if (access_disabled(&ctx.from)) {
+        LOGD("access_disabled");
         deny(&ctx);
+    }
 
     ctx.umask = umask(027);
 
@@ -660,7 +672,7 @@ int main(int argc, char *argv[]) {
         allow(&ctx);
 
     if (stat(ctx.user.database_path, &st) < 0) {
-        PLOGE("stat");
+        PLOGE("stat %s", ctx.user.database_path);
         deny(&ctx);
     }
 
@@ -671,7 +683,8 @@ int main(int argc, char *argv[]) {
         deny(&ctx);
     }
 
-    mkdir(REQUESTOR_CACHE_PATH, 0770);
+    int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);
+    LOGD("mkdir: %d", ret);
     if (chown(REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid)) {
         PLOGE("chown (%s, %ld, %ld)", REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid);
         deny(&ctx);
@@ -692,10 +705,15 @@ int main(int argc, char *argv[]) {
 
     dballow = database_check(&ctx);
     switch (dballow) {
-        case INTERACTIVE: break;
-        case ALLOW: allow(&ctx);    /* never returns */
+        case INTERACTIVE:
+            break;
+        case ALLOW:
+            LOGD("db allowed");
+            allow(&ctx);    /* never returns */
         case DENY:
-        default: deny(&ctx);        /* never returns too */
+        default:
+            LOGD("db denied");
+            deny(&ctx);        /* never returns too */
     }
     
     socket_serv_fd = socket_create_temp(ctx.sock_path, sizeof(ctx.sock_path));

@@ -16,23 +16,32 @@
         android:protectionLevel="signatureOrSystem" />
 
     <application
+        android:name=".SuApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:launchMode="singleTask"
-            android:name="com.koushikdutta.superuser.MainActivity"
-            android:label="@string/app_name"
-            android:permission="com.koushikdutta.superuser.REQUEST" >
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.koushikdutta.superuser.MultitaskSuRequestActivity" android:theme="@style/AppTheme"  android:label="@string/request" />
+        <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:name=".RequestActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:permission="com.koushikdutta.superuser.REQUEST" />
+        <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:name=".MultitaskSuRequestActivity"
+            android:label="@string/request"
+            android:theme="@style/AppTheme" />
 
         <receiver
             android:name=".SuReceiver"
