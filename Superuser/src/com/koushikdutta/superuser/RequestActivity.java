@@ -82,8 +82,12 @@ public class RequestActivity extends Activity {
                     until = 0;
                 }
             }
-            if (until != -1)
+            // got a policy? let's set it.
+            if (until != -1) {
                 SuDatabaseHelper.setPolicy(this, mCallerUid, mDesiredCmd, action ? SuDatabaseHelper.POLICY_ALLOW : SuDatabaseHelper.POLICY_DENY, 0);
+            }
+            // TODO: logging? or should su binary handle that via broadcast?
+            // Probably the latter, so it is consolidated and from the system of record.
         }
         catch (Exception ex) {
         }

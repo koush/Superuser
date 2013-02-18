@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/RequestTheme"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".RequestActivity"
             android:label="@string/app_name"
@@ -41,7 +42,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".MultitaskSuRequestActivity"
             android:label="@string/request"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/RequestTheme" />
 
         <receiver
             android:name=".SuReceiver"

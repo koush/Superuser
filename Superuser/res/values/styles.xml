@@ -26,6 +26,8 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
+    <style name="RequestTheme" parent="AppTheme"></style>
+    
     <style name="FlatButton">
         
     </style>

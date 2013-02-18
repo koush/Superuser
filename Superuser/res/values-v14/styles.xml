@@ -16,4 +16,6 @@
     <style name="FlatButton" parent="@android:style/Theme.Holo">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
+    
+    <style name="RequestTheme" parent="@style/AppTheme"></style>
 </resources>
