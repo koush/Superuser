@@ -315,41 +315,42 @@ static int socket_accept(int serv_fd) {
 }
 
 static int socket_send_request(int fd, const struct su_context *ctx) {
-    size_t len;
-    size_t bin_size, cmd_size;
-    char *cmd;
-
-#define write_token(fd, data)                \
-do {                            \
-    uint32_t __data = htonl(data);            \
-    size_t __count = sizeof(__data);        \
-    size_t __len = write((fd), &__data, __count);    \
-    if (__len != __count) {                \
-        PLOGE("write(" #data ")");        \
-        return -1;                \
-    }                        \
+#define write_data(fd, data, data_len)              \
+do {                                                \
+    LOGD("len: %d", data_len);                      \
+    size_t __len = htonl(data_len);                 \
+    __len = write((fd), &__len, sizeof(__len));     \
+    if (__len != sizeof(__len)) {                   \
+        PLOGE("write(" #data ")");                  \
+        return -1;                                  \
+    }                                               \
+    __len = write((fd), data, data_len);            \
+    if (__len != data_len) {                        \
+        PLOGE("write(" #data ")");                  \
+        return -1;                                  \
+    }                                               \
 } while (0)
 
-    write_token(fd, PROTO_VERSION);
-    write_token(fd, PATH_MAX);
-    write_token(fd, ARG_MAX);
-    write_token(fd, ctx->from.uid);
-    write_token(fd, ctx->to.uid);
-    bin_size = strlen(ctx->from.bin) + 1;
-    write_token(fd, bin_size);
-    len = write(fd, ctx->from.bin, bin_size);
-    if (len != bin_size) {
-        PLOGE("write(bin)");
-        return -1;
-    }
-    cmd = get_command(&ctx->to);
-    cmd_size = strlen(cmd) + 1;
-    write_token(fd, cmd_size);
-    len = write(fd, cmd, cmd_size);
-    if (len != cmd_size) {
-        PLOGE("write(cmd)");
-        return -1;
-    }
+#define write_string(fd, name, data)        \
+do {                                        \
+    write_data(fd, name, strlen(name));     \
+    write_data(fd, data, strlen(data));     \
+} while (0)
+
+// stringify everything.
+#define write_token(fd, name, data)         \
+do {                                        \
+    char buf[16];                           \
+    snprintf(buf, sizeof(buf), "%d", data); \
+    write_string(fd, name, buf);            \
+} while (0)
+
+    write_token(fd, "version", PROTO_VERSION);
+    write_token(fd, "from.uid", ctx->from.uid);
+    write_token(fd, "to.uid", ctx->to.uid);
+    write_string(fd, "from.bin", ctx->from.bin);
+    write_string(fd, "command", get_command(&ctx->to));
+    write_token(fd, "eof", PROTO_VERSION);
     return 0;
 }
 
