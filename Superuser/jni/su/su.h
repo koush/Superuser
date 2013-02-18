@@ -85,13 +85,22 @@ struct su_request {
     char **argv;
     int argc;
     int optind;
-    int appId;
-    int all;
 };
 
 struct su_user_info {
+    // the user in android userspace (multiuser)
+    // that invoked this action.
     unsigned android_user_id;
+    // how su behaves with multiuser. see enum below.
     int multiuser_mode;
+    // path to superuser directory. this is populated according
+    // to the multiuser mode.
+    // this is used to check uid/gid for protecting socket.
+    // this is used instead of database, as it is more likely
+    // to exist. db will not exist if su has never launched.
+    char base_path[PATH_MAX];
+    // path to su database. this is populated according
+    // to the multiuser mode.
     char database_path[PATH_MAX];
 };
 

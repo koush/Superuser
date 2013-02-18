@@ -173,6 +173,7 @@ static void user_init(struct su_context *ctx) {
         ctx->user.android_user_id = ctx->from.uid / 100000;
         if (ctx->user.multiuser_mode == MULTIUSER_MODE_USER) {
             snprintf(ctx->user.database_path, PATH_MAX, "%s/%d/%s", REQUESTOR_USER_PATH, ctx->user.android_user_id, REQUESTOR_DATABASE_PATH);
+            snprintf(ctx->user.base_path, PATH_MAX, "%s/%d/%s", REQUESTOR_USER_PATH, ctx->user.android_user_id, REQUESTOR);
         }
     }
 }
@@ -573,6 +574,7 @@ int main(int argc, char *argv[]) {
             .android_user_id = 0,
             .multiuser_mode = MULTIUSER_MODE_OWNER_ONLY,
             .database_path = REQUESTOR_DATA_PATH REQUESTOR_DATABASE_PATH,
+            .base_path = REQUESTOR_DATA_PATH REQUESTOR
         },
     };
     struct stat st;
@@ -671,13 +673,12 @@ int main(int argc, char *argv[]) {
     if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL)
         allow(&ctx);
 
-    if (stat(ctx.user.database_path, &st) < 0) {
-        PLOGE("stat %s", ctx.user.database_path);
+    if (stat(ctx.user.base_path, &st) < 0) {
+        PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
 
-    if (st.st_gid != st.st_uid)
-    {
+    if (st.st_gid != st.st_uid) {
         LOGE("Bad uid/gid %d/%d for Superuser Requestor application",
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);

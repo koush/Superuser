@@ -86,7 +86,7 @@ policy_t database_check(struct su_context *ctx) {
     if (ret) {
         LOGE("sqlite3 open failure: %d", ret);
         sqlite3_close(db);
-        return DENY;
+        return INTERACTIVE;
     }
     
     int result;
