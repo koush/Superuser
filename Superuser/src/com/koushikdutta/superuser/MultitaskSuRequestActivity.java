@@ -195,7 +195,7 @@ public class MultitaskSuRequestActivity extends Activity {
 
     private final static int SU_PROTOCOL_PARAM_MAX = 20;
     private final static int SU_PROTOCOL_NAME_MAX = 20;
-    private final static int SU_PROTOCOL_VALUE_MAX_DEFAULT = 128;
+    private final static int SU_PROTOCOL_VALUE_MAX_DEFAULT = 256;
     private final static HashMap<String, Integer> SU_PROTOCOL_VALUE_MAX = new HashMap<String, Integer>() {
         {
             put("command", 2048);
@@ -205,7 +205,7 @@ public class MultitaskSuRequestActivity extends Activity {
     private static int getValueMax(String name) {
         Integer max = SU_PROTOCOL_VALUE_MAX.get(name);
         if (max == null)
-            return SU_PROTOCOL_NAME_MAX;
+            return SU_PROTOCOL_VALUE_MAX_DEFAULT;
         return max;
     }
     
@@ -231,7 +231,7 @@ public class MultitaskSuRequestActivity extends Activity {
                         String name = new String(nameBytes);
                         int dataLen = is.readInt();
                         if (dataLen > getValueMax(name))
-                            throw new IllegalArgumentException("data length too long: " + dataLen);
+                            throw new IllegalArgumentException(name + " data length too long: " + dataLen);
                         byte[] dataBytes = new byte[dataLen];
                         is.readFully(dataBytes);
                         String data = new String(dataBytes);
