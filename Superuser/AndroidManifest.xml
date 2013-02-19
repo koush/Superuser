@@ -22,8 +22,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,17 +31,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Only system/su can open this activity -->
+        <!-- This activity will then call the MultitaskSuRequestActivity to create a new task stack -->
         <activity
-            android:theme="@style/RequestTheme"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".RequestActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
-            android:permission="com.koushikdutta.superuser.REQUEST" />
+            android:noHistory="true"
+            android:permission="com.koushikdutta.superuser.REQUEST"
+            android:theme="@style/RequestTheme" />
+        <!-- Multiple instances of this activity can be running for multiple su requests -->
         <activity
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:name=".MultitaskSuRequestActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
             android:label="@string/request"
+            android:noHistory="true"
             android:theme="@style/RequestTheme" />
 
         <receiver
