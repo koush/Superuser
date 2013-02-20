@@ -8,11 +8,13 @@
     <string name="application_request">%s demande les droits Superuser.</string>
     <string name="info">Attention: Si vous n'êtes pas à l'origine de cette action ou ne comprennez pas cette demande, vous devriez la Refuser.</string>
     <string name="request">Demande Superuser</string>
-    <string name="allow_temporarily">Autoriser temporairement les prochaines demandes</string>
-    <string name="always_allow">Autoriser toutes les prochaines demandes</string>
     
     <string name="package_header">Paquet:</string>
     <string name="app_header">Appli:</string>
     <string name="uid_header">UID Demandé:</string>
     <string name="command_header">Commande:</string>
+    
+    <string name="this_time_only">Cette fois seulement</string>
+    <string name="remember_for">Se souvenir de mon choix pendant %s minutes</string>
+    <string name="remember_forever">Toujours se souvenir de mon choix</string>    
 </resources>
