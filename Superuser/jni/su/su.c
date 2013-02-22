@@ -150,6 +150,12 @@ static int from_init(struct su_initiator *from) {
     strncpy(from->bin, argv0, sizeof(from->bin));
     from->bin[sizeof(from->bin)-1] = '\0';
 
+    struct passwd *pw;
+    pw = getpwuid(from->uid);
+    if (pw && pw->pw_name) {
+        strncpy(from->name, pw->pw_name, sizeof(from->name));
+    }
+
     return 0;
 }
 
@@ -317,7 +323,6 @@ static int socket_accept(int serv_fd) {
 static int socket_send_request(int fd, const struct su_context *ctx) {
 #define write_data(fd, data, data_len)              \
 do {                                                \
-    LOGD("len: %d", data_len);                      \
     size_t __len = htonl(data_len);                 \
     __len = write((fd), &__len, sizeof(__len));     \
     if (__len != sizeof(__len)) {                   \
@@ -346,6 +351,8 @@ do {                                        \
 } while (0)
 
     write_token(fd, "version", PROTO_VERSION);
+    write_token(fd, "from.name", ctx->from.name);
+    write_token(fd, "to.name", ctx->to.name);
     write_token(fd, "from.uid", ctx->from.uid);
     write_token(fd, "to.uid", ctx->to.uid);
     write_string(fd, "from.bin", ctx->from.bin);
@@ -357,7 +364,7 @@ do {                                        \
 static int socket_receive_result(int fd, char *result, ssize_t result_len) {
     ssize_t len;
     
-    LOGD("waiting for result");
+    LOGD("waiting for user");
     len = read(fd, result, result_len-1);
     if (len < 0) {
         PLOGE("read(result)");
@@ -390,9 +397,9 @@ static __attribute__ ((noreturn)) void deny(struct su_context *ctx) {
     char *cmd = get_command(&ctx->to);
 
     // No send to UI denied requests for shell and root users (they are in the log)
-    if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
+    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
         send_result(ctx, DENY);
-    }
+    // }
     LOGW("request rejected (%u->%u %s)", ctx->from.uid, ctx->to.uid, cmd);
     fprintf(stderr, "%s\n", strerror(EACCES));
     exit(EXIT_FAILURE);
@@ -404,9 +411,9 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
 
     umask(ctx->umask);
     // No send to UI accepted requests for shell and root users (they are in the log)
-    if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
+    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
         send_result(ctx, ALLOW);
-    }
+    // }
 
     arg0 = strrchr (ctx->to.shell, '/');
     arg0 = (arg0) ? arg0 + 1 : ctx->to.shell;
@@ -560,6 +567,7 @@ int main(int argc, char *argv[]) {
             .uid = 0,
             .bin = "",
             .args = "",
+            .name = "",
         },
         .to = {
             .uid = AID_ROOT,
@@ -570,6 +578,7 @@ int main(int argc, char *argv[]) {
             .argv = argv,
             .argc = argc,
             .optind = 0,
+            .name = "",
         },
         .user = {
             .android_user_id = 0,
@@ -643,6 +652,8 @@ int main(int argc, char *argv[]) {
             }
         } else {
             ctx.to.uid = pw->pw_uid;
+            if (pw->pw_name)
+                strncpy(ctx.to.name, pw->pw_name, sizeof(ctx.to.name));
         }
         optind++;
     }
@@ -671,8 +682,10 @@ int main(int argc, char *argv[]) {
 
     ctx.umask = umask(027);
 
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL)
+    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing root/shell.");
         allow(&ctx);
+    }
 
     if (stat(ctx.user.base_path, &st) < 0) {
         PLOGE("stat %s", ctx.user.base_path);

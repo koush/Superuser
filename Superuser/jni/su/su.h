@@ -72,12 +72,14 @@ struct su_initiator {
     pid_t pid;
     unsigned uid;
     unsigned user;
+    char name[64];
     char bin[PATH_MAX];
     char args[4096];
 };
 
 struct su_request {
     unsigned uid;
+    char name[64];
     int login;
     int keepenv;
     char *shell;

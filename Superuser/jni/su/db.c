@@ -55,6 +55,7 @@ static int database_callback(void *v, int argc, char **argv, char **azColName){
         else if (strcmp(azColName[i], "until") == 0) {
             if (argv[i] != NULL) {
                 until = atoi(argv[i]);
+                LOGD("Until: %d", until);
             }
         }
     }
@@ -62,7 +63,7 @@ static int database_callback(void *v, int argc, char **argv, char **azColName){
     // check for command match
     if (command_match) {
         // also make sure this policy has not expired
-        if (until == 0 || until < time(NULL)) {
+        if (until == 0 || until > time(NULL)) {
             if (policy == DENY) {
                 data->policy = DENY;
                 return -1;

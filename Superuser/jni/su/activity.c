@@ -71,8 +71,40 @@ static int silent_run(char* command) {
     return -1;
 }
 
-int send_result(struct su_context *ctx, policy_t allow) {
-    return 0;
+int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) {
+    int needs_owner_login_prompt = 0;
+    if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY) {
+        snprintf(user, user_len, "");
+    }
+    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER) {
+        if (0 != ctx->user.android_user_id) {
+            needs_owner_login_prompt = 1;
+        }
+        snprintf(user, user_len, "--user 0");
+    }
+    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_USER) {
+        snprintf(user, user_len, "--user %d", ctx->user.android_user_id);
+    }
+    else {
+        // unknown mode?
+        return -1;
+    }
+    
+    return needs_owner_login_prompt;
+}
+
+int send_result(struct su_context *ctx, policy_t policy) {
+    char user[64];
+    int needs_owner_login_prompt = get_owner_login_user_args(ctx, user, sizeof(user));
+    if (needs_owner_login_prompt == -1)
+        return -1;
+
+    char result_command[ARG_MAX];
+    snprintf(result_command, sizeof(result_command), "exec /system/bin/am " ACTION_RESULT " --es from_name '%s' --es desired_name '%s' --ei uid %d --ei desired_uid %d --es command '%s' --es action %s %s",
+        ctx->from.name, ctx->to.name,
+        ctx->from.uid, ctx->to.uid, get_command(&ctx->to), policy == ALLOW ? "allow" : "deny", user);
+    LOGD(result_command);
+    return silent_run(result_command);
 }
 
 int send_request(struct su_context *ctx) {
@@ -80,24 +112,10 @@ int send_request(struct su_context *ctx) {
     // and the user requestor is not the owner,
     // the owner needs to be notified of the request.
     // so there will be two activities shown.
-    int needs_owner_login_prompt = 0;
     char user[64];
-    if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY) {
-        snprintf(user, sizeof(user), "");
-    }
-    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER) {
-        if (0 != ctx->user.android_user_id) {
-            needs_owner_login_prompt = 1;
-        }
-        snprintf(user, sizeof(user), "--user 0");
-    }
-    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_USER) {
-        snprintf(user, sizeof(user), "--user %d", ctx->user.android_user_id);
-    }
-    else {
-        // unknown mode?
+    int needs_owner_login_prompt = get_owner_login_user_args(ctx, user, sizeof(user));
+    if (needs_owner_login_prompt == -1)
         return -1;
-    }
 
 
     int ret;

@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.UidPolicy;
+
 import junit.framework.Assert;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -70,7 +73,7 @@ public class MultitaskSuRequestActivity extends Activity {
                 int pos = mSpinner.getSelectedItemPosition();
                 int id = mSpinnerIds[pos];
                 if (id == R.string.remember_for) {
-                    until = ((int)System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                    until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
                 }
                 else if (id == R.string.remember_forever) {
                     until = 0;
@@ -78,7 +81,7 @@ public class MultitaskSuRequestActivity extends Activity {
             }
             else if (mRemember.isShown()) {
                 if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
-                    until = ((int)System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                    until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
                 }
                 else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
                     until = 0;
@@ -86,7 +89,13 @@ public class MultitaskSuRequestActivity extends Activity {
             }
             // got a policy? let's set it.
             if (until != -1) {
-                SuDatabaseHelper.setPolicy(this, mCallerUid, mDesiredCmd, action ? SuDatabaseHelper.POLICY_ALLOW : SuDatabaseHelper.POLICY_DENY, 0);
+                UidPolicy policy = new UidPolicy();
+                policy.policy = action ? UidPolicy.ALLOW : UidPolicy.DENY;
+                policy.uid = mCallerUid;
+                policy.command = mDesiredCmd;
+                policy.until = until;
+                policy.desiredUid = mDesiredUid;
+                SuDatabaseHelper.setPolicy(this, policy);
             }
             // TODO: logging? or should su binary handle that via broadcast?
             // Probably the latter, so it is consolidated and from the system of record.
