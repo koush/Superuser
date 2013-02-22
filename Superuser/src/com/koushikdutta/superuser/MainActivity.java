@@ -56,7 +56,8 @@ public class MainActivity extends ActivityBase {
         ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
         if (watermark != null)
             watermark.setImageResource(R.drawable.clockwork512);
-        setContent(null, null);
+        if (!getFragment().isPaged())
+            setContent(null, null);
     }
     
     public void onBackPressed() {
