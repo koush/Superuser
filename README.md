@@ -14,6 +14,19 @@ This is because they contain tests, libs, and samples.
 
 In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work (TM).
 
+# Ant
+
+Same old, same old.
+
+* $ mkdir /path/to/src
+* $ cd /path/to/src
+* $ cd Superuser/Superuser
+* $ ant release
+
+# Building with AOSP, CyanogenMod or another source built ROM
+
+TODO!
+
 # Building the su binary
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
