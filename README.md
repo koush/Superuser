@@ -2,6 +2,8 @@
 
 You'll need the "Widgets" dependency.
 
+* $ mkdir /path/to/src
+* $ cd /path/to/src
 * $ git clone git://github.com/koush/Superuser
 * $ git clone git://github.com/koush/Widgets
 
@@ -16,6 +18,7 @@ In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work 
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
+* $ cd /path/to/src/
 * $ cd Superuser/Superuser
 * $ ndk-build
 
