@@ -16,20 +16,20 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="10dp"
-                android:text="@string/app_header"
-                android:textStyle="bold" />
+                android:text="@string/app_header" />
 
             <TextView
                 android:id="@+id/app_header"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:singleLine="true" />
+                android:layout_weight="@dimen/golden_ratio"
+                android:singleLine="true"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -38,20 +38,20 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="10dp"
-                android:text="@string/package_header"
-                android:textStyle="bold" />
+                android:text="@string/package_header" />
 
             <TextView
                 android:id="@+id/package_header"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:singleLine="true" />
+                android:layout_weight="@dimen/golden_ratio"
+                android:singleLine="true"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
@@ -67,20 +67,20 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="10dp"
-                android:text="@string/uid_header"
-                android:textStyle="bold" />
+                android:text="@string/uid_header" />
 
             <TextView
                 android:id="@+id/uid_header"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:singleLine="true" />
+                android:layout_weight="@dimen/golden_ratio"
+                android:singleLine="true"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,21 +89,21 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
+                android:layout_weight="1"
                 android:gravity="right"
                 android:paddingRight="10dp"
-                android:text="@string/command_header"
-                android:textStyle="bold" />
+                android:text="@string/command_header" />
 
             <TextView
                 android:id="@+id/command_header"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="@dimen/golden_ratio"
                 android:ellipsize="middle"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

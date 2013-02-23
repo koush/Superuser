@@ -41,6 +41,7 @@ public final class R {
 		public static final int list_content_left = 0x7f020005;
 	}
 	public static final class dimen {
+		public static final int golden_ratio = 0x7f050002;
 		public static final int activity_vertical_margin = 0x7f050001;
 		public static final int activity_horizontal_margin = 0x7f050000;
 	}

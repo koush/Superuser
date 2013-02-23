@@ -32,6 +32,11 @@ public class MainActivity extends ActivityBase {
         return (ListContentFragment)super.getFragment();
     }
     
+    void showAllLogs() {
+        setContent(null, null);
+        getFragment().getListView().clearChoices();
+    }
+    
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         MenuInflater mi = new MenuInflater(this);
         mi.inflate(R.menu.main, menu);
@@ -39,7 +44,7 @@ public class MainActivity extends ActivityBase {
         log.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                setContent(null, null);
+                showAllLogs();
                 return true;
             }
         });
@@ -51,13 +56,15 @@ public class MainActivity extends ActivityBase {
     public void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
 
+        getFragment().setEmpty(R.string.no_apps);
+        
         load();
 
         ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
         if (watermark != null)
             watermark.setImageResource(R.drawable.clockwork512);
         if (!getFragment().isPaged())
-            setContent(null, null);
+            showAllLogs();
     }
     
     public void onBackPressed() {
@@ -78,7 +85,7 @@ public class MainActivity extends ActivityBase {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         getFragment().removeItem(li);
-                        setContent(null, null);
+                        showAllLogs();
                         if (up != null)
                             SuDatabaseHelper.delete(MainActivity.this, up);
                         else
@@ -130,7 +137,7 @@ public class MainActivity extends ActivityBase {
                     
                     getListView().setSelector(android.R.color.transparent);
 
-                    logs = SuDatabaseHelper.getLogs(MainActivity.this, up.uid, up.desiredUid);
+                    logs = SuDatabaseHelper.getLogs(MainActivity.this, up, -1);
                 }
                 else {
                     view.findViewById(R.id.title_container).setVisibility(View.GONE);
@@ -164,7 +171,9 @@ public class MainActivity extends ActivityBase {
 
     void addPolicy(final UidPolicy up) {
         java.text.DateFormat df = DateFormat.getLongDateFormat(MainActivity.this);
-        String date = df.format(new Date());
+        String date = df.format(up.getLastDate());
+        if (up.last == 0)
+            date = null;
         ListItem li = addItem(up.getPolicyResource(), new ListItem(getFragment(), up.name, date) {
             public void onClick(View view) {
                 super.onClick(view);

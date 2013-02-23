@@ -11,15 +11,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.6180339887498948482"
             android:paddingRight="10dp"
-            android:text="@string/app_header"
-            android:textStyle="bold" />
+            android:text="@string/app_header" />
 
         <TextView
             android:id="@+id/app_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
@@ -38,15 +38,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.6180339887498948482"
             android:paddingRight="10dp"
-            android:text="@string/package_header"
-            android:textStyle="bold" />
+            android:text="@string/package_header" />
 
         <TextView
             android:id="@+id/package_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
@@ -65,15 +65,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.6180339887498948482"
             android:paddingRight="10dp"
-            android:text="@string/uid_header"
-            android:textStyle="bold" />
+            android:text="@string/uid_header" />
 
         <TextView
             android:id="@+id/uid_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View
@@ -92,8 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.6180339887498948482"
             android:paddingRight="10dp"
-            android:text="@string/command_header"
-            android:textStyle="bold" />
+            android:text="@string/command_header" />
 
         <TextView
             android:id="@+id/command_header"
@@ -101,7 +100,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ellipsize="middle"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <View

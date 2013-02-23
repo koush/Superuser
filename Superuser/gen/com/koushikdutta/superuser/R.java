@@ -39,8 +39,9 @@ public final class R {
          */
         public static final int activity_horizontal_margin=0x7f050000;
         public static final int activity_vertical_margin=0x7f050001;
-        public static final int log_item_padding=0x7f050002;
-        public static final int section_padding=0x7f050003;
+        public static final int golden_ratio=0x7f050002;
+        public static final int log_item_padding=0x7f050003;
+        public static final int section_padding=0x7f050004;
     }
     public static final class drawable {
         public static final int clockwork512=0x7f020000;
@@ -128,6 +129,7 @@ public final class R {
         public static final int info=0x7f060006;
         public static final int interactive=0x7f06000f;
         public static final int logs=0x7f060010;
+        public static final int no_apps=0x7f060014;
         public static final int no_logs=0x7f060013;
         public static final int package_header=0x7f060008;
         public static final int remember_for=0x7f06000d;

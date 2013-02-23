@@ -12,8 +12,7 @@ public class LogEntry extends UidCommand {
     public Date getDate() {
         return new Date((long)date * 1000);
     }
-    
-    
+
     public int getActionResource() {
         if (UidPolicy.ALLOW.equals(action))
             return R.string.allow;

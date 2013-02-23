@@ -26,6 +26,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("create table if not exists uid_policy (desired_name text, username text, policy text, until integer, command text, uid integer, desired_uid integer, package_name text, name text, primary key(uid, command, desired_uid))");
             db.execSQL("create table if not exists log (id integer primary key autoincrement, desired_name text, username text, uid integer, desired_uid integer, command text, date integer, action text, package_name text, name text)");
             db.execSQL("create index if not exists log_uid_index on log(uid)");
+            db.execSQL("create index if not exists log_desired_uid_index on log(desired_uid)");
             db.execSQL("create index if not exists log_command_index on log(command)");
             db.execSQL("create index if not exists log_date_index on log(date)");
             oldVersion = 1;
@@ -70,6 +71,10 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
                 u.policy = c.getString(c.getColumnIndex("policy"));
                 u.until = c.getInt(c.getColumnIndex("until"));
                 u.icon = UidHelper.loadPackageIcon(context, u.packageName);
+                
+                ArrayList<LogEntry> logs = getLogs(context, u, 1);
+                if (logs.size() > 0)
+                    u.last = logs.get(0).date;
             }
         }
         catch (Exception ex) {
@@ -81,10 +86,10 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         return ret;
     }
     
-    public static ArrayList<LogEntry> getLogs(Context context, int uid, int desiredUid) {
+    public static ArrayList<LogEntry> getLogs(Context context, UidPolicy policy, int limit) {
         ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
-        Cursor c = db.query("log", null, "uid = ? and desired_uid = ?", new String[] { String.valueOf(uid), String.valueOf(desiredUid) }, null, null, "date DESC");
+        Cursor c = db.query("log", null, "uid = ? and desired_uid = ? and command = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid), policy.command }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
         try {
             while (c.moveToNext()) {
                 LogEntry l = new LogEntry();
