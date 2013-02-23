@@ -1,4 +1,4 @@
-# Checking out the source
+## Checking out the source
 
 You'll need the "Widgets" dependency.
 
@@ -10,11 +10,11 @@ You'll need the "Widgets" dependency.
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
 
-# Eclipse
+## Eclipse
 
 In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work (TM).
 
-# Ant
+## Ant
 
 Same old, same old.
 
@@ -23,11 +23,7 @@ Same old, same old.
 * $ cd Superuser/Superuser
 * $ ant release
 
-# Building with AOSP, CyanogenMod or another source built ROM
-
-TODO!
-
-# Building the su binary
+## Building the su binary
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
@@ -36,3 +32,9 @@ Make sure you have the android-ndk downloaded with the tool "ndk-build" in your 
 * $ ndk-build
 
 The su binary will built into Superuser/Superuser/libs/armeabi/su.
+
+
+
+## Building with AOSP, CyanogenMod, etc
+
+TODO!
