@@ -1,7 +1,6 @@
 package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -27,7 +26,7 @@ public class MainActivity extends ActivityBase {
     public MainActivity() {
         super(ListContentFragment.class);
     }
-    
+
     public ListContentFragment getFragment() {
         return (ListContentFragment)super.getFragment();
     }
