@@ -2,6 +2,7 @@ package com.koushikdutta.superuser;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -64,6 +65,7 @@ public class SettingsFragment extends BetterListFragment {
         }
     };
     
+    ListItem pinItem;
     void confirmPin(final String pin) {
         MyPinFragment p = new MyPinFragment() {
             @Override
@@ -71,6 +73,7 @@ public class SettingsFragment extends BetterListFragment {
                 super.onEnter(password);
                 if (pin.equals(password)) {
                     Settings.setPin(getActivity(), password);
+                    pinItem.setSummary(Settings.isPinProtected(getActivity()) ? R.string.pin_set : R.string.pin_protection_summary);
                     if (password != null && password.length() > 0)
                         Toast.makeText(getActivity(), getString(R.string.pin_set), Toast.LENGTH_SHORT).show();
                     return;
@@ -119,6 +122,71 @@ public class SettingsFragment extends BetterListFragment {
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
         
+        
+        addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary, R.drawable.ic_declare) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                Settings.setRequirePermission(getActivity(), getChecked());
+            }
+        })
+        .setCheckboxVisible(true)
+        .setChecked(Settings.getRequirePermission(getActivity()));
+
+        addItem(R.string.security, new ListItem(this, R.string.automatic_response, 0, R.drawable.ic_alert) {
+            void update() {
+                switch (Settings.getAutomaticResponse(getActivity())) {
+                case Settings.AUTOMATIC_RESPONSE_ALLOW:
+                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.allow)));
+                    break;
+                case Settings.AUTOMATIC_RESPONSE_DENY:
+                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.deny)));
+                    break;
+                case Settings.AUTOMATIC_RESPONSE_PROMPT:
+                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.prompt)));
+                    break;
+                }
+            }
+            
+            {
+                update();
+            }
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.automatic_response);
+                String[] items = new String[] { getString(R.string.prompt), getString(R.string.deny), getString(R.string.allow) };
+                builder.setItems(items, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            Settings.setAutomaticResponse(getActivity(), Settings.AUTOMATIC_RESPONSE_PROMPT);
+                            break;
+                        case 1:
+                            Settings.setAutomaticResponse(getActivity(), Settings.AUTOMATIC_RESPONSE_DENY);
+                            break;
+                        case 2:
+                            Settings.setAutomaticResponse(getActivity(), Settings.AUTOMATIC_RESPONSE_ALLOW);
+                            break;
+                        }
+                        update();
+                    }
+                });
+                builder.create().show();
+            }
+        });
+
+        pinItem = addItem(R.string.security, new ListItem(this, R.string.pin_protection, Settings.isPinProtected(getActivity()) ? R.string.pin_set : R.string.pin_protection_summary, R.drawable.ic_protected) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                checkPin();
+            }            
+        });
+        
         addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary, R.drawable.ic_logging) {
             @Override
             public void onClick(View view) {
@@ -128,16 +196,8 @@ public class SettingsFragment extends BetterListFragment {
         })
         .setCheckboxVisible(true)
         .setChecked(Settings.getLogging(getActivity()));
-        
-        addItem(R.string.settings, new ListItem(this, R.string.pin_protection, R.string.pin_protection_summary, R.drawable.ic_protected) {
-            @Override
-            public void onClick(View view) {
-                super.onClick(view);
-                checkPin();
-            }            
-        });
-        
-        addItem(R.string.settings, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity())), R.drawable.ic_timeout) {
+
+        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity())), R.drawable.ic_timeout) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -159,7 +219,24 @@ public class SettingsFragment extends BetterListFragment {
         });
 
         
-        addItem(R.string.settings, new ListItem(this, R.string.notifications, R.string.notifications_summary, R.drawable.ic_notifications) {
+        addItem(R.string.settings, new ListItem(this, R.string.notifications, 0, R.drawable.ic_notifications) {
+            void update() {
+                switch (Settings.getNotificationType(getActivity())) {
+                case Settings.NOTIFICATION_TYPE_NONE:
+                    setSummary(getString(R.string.no_notification));
+                    break;
+                case Settings.NOTIFICATION_TYPE_NOTIFICATION:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.notification)));
+                    break;
+                case Settings.NOTIFICATION_TYPE_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.toast)));
+                    break;
+                }
+            }
+            
+            {
+                update();
+            }
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -177,10 +254,11 @@ public class SettingsFragment extends BetterListFragment {
                         case 2:
                             Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NOTIFICATION);
                             break;
-                        default:
+                        case 1:
                             Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_TOAST);
                             break;
                         }
+                        update();
                     }
                 });
                 builder.create().show();

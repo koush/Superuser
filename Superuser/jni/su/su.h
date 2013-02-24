@@ -56,17 +56,13 @@
 
 #define DEFAULT_SHELL "/system/bin/sh"
 
-#ifdef SU_LEGACY_BUILD
-#define VERSION_EXTRA	"l"
-#else
-#define VERSION_EXTRA	""
-#endif
+#define xstr(a) str(a)
+#define str(a) #a
 
-#define VERSION "3.3" VERSION_EXTRA
-#define VERSION_CODE 19
+#define VERSION_CODE 1
+#define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
-#define DATABASE_VERSION 6
-#define PROTO_VERSION 0
+#define PROTO_VERSION 1
 
 struct su_initiator {
     pid_t pid;

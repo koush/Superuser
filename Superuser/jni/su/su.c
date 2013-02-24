@@ -351,6 +351,7 @@ do {                                        \
 } while (0)
 
     write_token(fd, "version", PROTO_VERSION);
+    write_token(fd, "pid", ctx->from.pid);
     write_token(fd, "from.name", ctx->from.name);
     write_token(fd, "to.name", ctx->to.name);
     write_token(fd, "from.uid", ctx->from.uid);

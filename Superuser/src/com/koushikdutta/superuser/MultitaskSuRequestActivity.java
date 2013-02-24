@@ -6,10 +6,10 @@ import java.util.HashMap;
 
 import junit.framework.Assert;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
@@ -43,6 +43,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     int mCallerUid;
     int mDesiredUid;
     String mDesiredCmd;
+    int mPid;
     
     Spinner mSpinner;
     ArrayAdapter<PackageInfo> mAdapter;
@@ -60,7 +61,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         return 10;
     }
     
-    void handleAction(boolean action, boolean user) {
+    void handleAction(boolean action, Integer until) {
         Assert.assertTrue(!mHandled);
         mHandled = true;
         try {
@@ -69,8 +70,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         catch (Exception ex) {
         }
         try {
-            int until = -1;
-            if (user) {
+            if (until == null) {
+                until = -1;
                 if (mSpinner.isShown()) {
                     int pos = mSpinner.getSelectedItemPosition();
                     int id = mSpinnerIds[pos];
@@ -112,7 +113,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (!mHandled)
-            handleAction(false, false);
+            handleAction(false, -1);
         try {
             if (mSocket != null)
                 mSocket.close();
@@ -122,6 +123,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         new File(mSocketPath).delete();
     }
 
+    public static final String PERMISSION = "android.permission.ACCESS_SUPERUSER";
+    
     boolean mRequestReady;
     void requestReady() {
         findViewById(R.id.incoming).setVisibility(View.GONE);
@@ -174,6 +177,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
 
         
         boolean superuserDeclared = false;
+        boolean granted = false;
         list.setAdapter(mAdapter);
         if (pkgs != null) {
             for (String pkg: pkgs) {
@@ -186,12 +190,14 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                     
                     if (pi.requestedPermissions != null) {
                         for (String perm: pi.requestedPermissions) {
-                            if ("android.permission.ACCESS_SUPERUSER".equals(perm)) {
+                            if (PERMISSION.equals(perm)) {
                                 superuserDeclared = true;
                                 break;
                             }
                         }
                     }
+                    
+                    granted |= checkPermission(PERMISSION, mPid, mCallerUid) == PackageManager.PERMISSION_GRANTED;
                     
                     // could display them all, but screw it...
                     // maybe a better ux for this later
@@ -204,6 +210,54 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         
         if (!superuserDeclared) {
             findViewById(R.id.developer_warning).setVisibility(View.VISIBLE);
+        }
+        
+        // handle automatic responses
+        // these will be considered permanent user policies
+        // even though they are automatic.
+        // this is so future su requests dont invoke ui
+
+        // handle declared permission
+        if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !superuserDeclared) {
+            Log.i(LOGTAG, "Automatically denying due to missing permission");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mHandled)
+                        handleAction(false, 0);
+                }
+            });
+            return;
+        }
+
+        // automatic response
+        switch (Settings.getAutomaticResponse(MultitaskSuRequestActivity.this)) {
+        case Settings.AUTOMATIC_RESPONSE_ALLOW:
+            // automatic response and pin can not be used together
+            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
+                break;
+            // check if the permission must be granted 
+            if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !granted)
+                break;
+            Log.i(LOGTAG, "Automatically allowing due to user preference");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mHandled)
+                        handleAction(true, 0);
+                }
+            });
+            return;
+        case Settings.AUTOMATIC_RESPONSE_DENY:
+            Log.i(LOGTAG, "Automatically denying due to user preference");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mHandled)
+                        handleAction(false, 0);
+                }
+            });
+            return;
         }
         
         new Runnable() {
@@ -274,6 +328,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                     mDesiredUid = payload.getAsByte("to.uid");
                     mDesiredCmd = payload.getAsString("command");
                     String calledBin = payload.getAsString("from.bin");
+                    mPid = payload.getAsInteger("pid");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -346,7 +401,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 if (isFinishing())
                     return;
                 if (!mHandled)
-                    handleAction(false, false);
+                    handleAction(false, -1);
             }
         }, Settings.getRequestTimeout(this) * 1000);
     }
@@ -367,13 +422,13 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     void approve() {
         mAllow.setEnabled(false);
         mDeny.setEnabled(false);
-        handleAction(true, true);
+        handleAction(true, null);
     }
 
     void deny() {
         mAllow.setEnabled(false);
         mDeny.setEnabled(false);
-        handleAction(false, true);
+        handleAction(false, null);
     }
 
     String mSocketPath;

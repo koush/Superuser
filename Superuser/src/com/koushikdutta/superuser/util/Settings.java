@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Base64;
 
+import com.koushikdutta.superuser.R;
+
 public class Settings {
     SQLiteDatabase mDatabase;
     Context mContext;
@@ -133,9 +135,15 @@ public class Settings {
             return NOTIFICATION_TYPE_NONE;
         case NOTIFICATION_TYPE_NOTIFICATION:
             return NOTIFICATION_TYPE_NOTIFICATION;
-        default:
+        case NOTIFICATION_TYPE_TOAST:
             return NOTIFICATION_TYPE_TOAST;
+        default:
+            return NOTIFICATION_TYPE_DEFAULT;
         }
+    }
+    
+    public static void setNotificationType(Context context, int notification) {
+        getInstance(context).setInt(KEY_NOTIFICATION, notification);
     }
     
     public static final String KEY_PIN = "pin";
@@ -167,8 +175,48 @@ public class Settings {
     public static boolean checkPin(Context context, String pin) {
         return digest(pin).equals(Settings.getInstance(context).getString(KEY_PIN));
     }
+
+    private static final String KEY_REQUIRE_PREMISSION = "require_permission";
+    public static boolean getRequirePermission(Context context) {
+        return getInstance(context).getBoolean(KEY_REQUIRE_PREMISSION, false);
+    }
     
-    public static void setNotificationType(Context context, int notification) {
-        getInstance(context).setInt(KEY_NOTIFICATION, notification);
+    public static void setRequirePermission(Context context, boolean require) {
+        getInstance(context).setBoolean(KEY_REQUIRE_PREMISSION, require);
+    }
+    
+    private static final String KEY_AUTOMATIC_RESPONSE = "automatic_response";
+    public static final int AUTOMATIC_RESPONSE_PROMPT = 0;
+    public static final int AUTOMATIC_RESPONSE_ALLOW = 1;
+    public static final int AUTOMATIC_RESPONSE_DENY = 2;
+    public static final int AUTOMATIC_RESPONSE_DEFAULT = AUTOMATIC_RESPONSE_PROMPT;
+    public static int getAutomaticResponse(Context context) {
+        switch (getInstance(context).getInt(KEY_AUTOMATIC_RESPONSE, AUTOMATIC_RESPONSE_DEFAULT)) {
+        case AUTOMATIC_RESPONSE_ALLOW:
+            return AUTOMATIC_RESPONSE_ALLOW;
+        case AUTOMATIC_RESPONSE_PROMPT:
+            return AUTOMATIC_RESPONSE_PROMPT;
+        case AUTOMATIC_RESPONSE_DENY:
+            return AUTOMATIC_RESPONSE_DENY;
+        default:
+            return AUTOMATIC_RESPONSE_DEFAULT;
+        }
+    }
+
+    public static String getAutomaticResponseName(Context context) {
+        switch (getInstance(context).getInt(KEY_AUTOMATIC_RESPONSE, AUTOMATIC_RESPONSE_DEFAULT)) {
+        case AUTOMATIC_RESPONSE_ALLOW:
+            return context.getString(R.string.allow);
+        case AUTOMATIC_RESPONSE_PROMPT:
+            return context.getString(R.string.prompt);
+        case AUTOMATIC_RESPONSE_DENY:
+            return context.getString(R.string.deny);
+        default:
+            return context.getString(R.string.prompt);
+        }
+    }
+    
+    public static void setAutomaticResponse(Context context, int response) {
+        getInstance(context).setInt(KEY_AUTOMATIC_RESPONSE, response);
     }
 }
