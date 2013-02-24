@@ -25,4 +25,13 @@
     <string name="no_logs">No Logs</string>
     
     <string name="no_apps">There are currently no Superuser app policies.</string>
+    
+    <string name="logging">Logging</string>
+    <string name="logging_summary">Enable or disable all Superuser request logging</string>
+    <string name="pin_and_password">PIN and Password Protection</string>
+    <string name="pin_and_password_summary">Require entry of a PIN or Password to approve Superuser requests</string>
+    <string name="request_timeout">Request Timeout</string>
+    <string name="request_timeout_summary">Superuser requests will time out after %s seconds</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_summary">Customize the notification shown when an app is granted Superuser permissions</string>
 </resources>

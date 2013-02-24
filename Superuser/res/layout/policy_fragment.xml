@@ -53,12 +53,21 @@
         android:layout_weight="1"
         android:orientation="vertical" >
 
-        <TextView
-            style="@android:style/TextAppearance.Medium"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/section_padding"
-            android:text="@string/logs" />
+            android:orientation="horizontal" >
+
+            <TextView
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingBottom="@dimen/section_padding"
+                android:text="@string/logs" />
+
+            <include layout="@layout/log_toggle" />
+        </LinearLayout>
 
         <View
             android:layout_width="fill_parent"

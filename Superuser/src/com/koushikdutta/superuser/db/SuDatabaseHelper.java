@@ -4,11 +4,14 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.koushikdutta.superuser.UidHelper;
+import com.koushikdutta.superuser.util.Settings;
 
 public class SuDatabaseHelper extends SQLiteOpenHelper {
     public SuDatabaseHelper(Context context) {
@@ -23,7 +26,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 0) {
-            db.execSQL("create table if not exists uid_policy (desired_name text, username text, policy text, until integer, command text, uid integer, desired_uid integer, package_name text, name text, primary key(uid, command, desired_uid))");
+            db.execSQL("create table if not exists uid_policy (logging integer, desired_name text, username text, policy text, until integer, command text, uid integer, desired_uid integer, package_name text, name text, primary key(uid, command, desired_uid))");
             db.execSQL("create table if not exists log (id integer primary key autoincrement, desired_name text, username text, uid integer, desired_uid integer, command text, date integer, action text, package_name text, name text)");
             db.execSQL("create index if not exists log_uid_index on log(uid)");
             db.execSQL("create index if not exists log_desired_uid_index on log(desired_uid)");
@@ -33,12 +36,23 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         }
     }
     
+    public static void getPackageInfoForUid(Context context, UidCommand cpi) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = context.getPackageManager().getPackageInfo(pm.getPackagesForUid(cpi.uid)[0], 0);
+            cpi.name = pi.applicationInfo.loadLabel(pm).toString();
+            cpi.packageName = pi.packageName;
+        }
+        catch (Exception ex) {
+        }
+    }
     public static void setPolicy(Context context, UidPolicy policy) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
         
-        UidHelper.getPackageInfoForUid(context, policy, false);
+        getPackageInfoForUid(context, policy);
 
         ContentValues values = new ContentValues();
+        values.put("logging", policy.logging);
         values.put("uid", policy.uid);
         values.put("command", policy.command);
         values.put("policy", policy.policy);
@@ -59,22 +73,28 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         u.desiredUid = c.getInt(c.getColumnIndex("desired_uid"));
     }
     
+    private static UidPolicy getPolicy(Context context, Cursor c) {
+        UidPolicy u = new UidPolicy();
+        getUidCommand(c, u);
+        u.policy = c.getString(c.getColumnIndex("policy"));
+        u.until = c.getInt(c.getColumnIndex("until"));
+        u.icon = UidHelper.loadPackageIcon(context, u.packageName);
+        u.logging = c.getInt(c.getColumnIndex("logging")) != 0;
+        
+        ArrayList<LogEntry> logs = getLogs(context, u, 1);
+        if (logs.size() > 0)
+            u.last = logs.get(0).date;
+        return u;
+    }
+    
     public static ArrayList<UidPolicy> getPolicies(Context context) {
         ArrayList<UidPolicy> ret = new ArrayList<UidPolicy>();
         SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
         Cursor c = db.query("uid_policy", null, null, null, null, null, null);
         try {
             while (c.moveToNext()) {
-                UidPolicy u = new UidPolicy();
+                UidPolicy u = getPolicy(context, c);
                 ret.add(u);
-                getUidCommand(c, u);
-                u.policy = c.getString(c.getColumnIndex("policy"));
-                u.until = c.getInt(c.getColumnIndex("until"));
-                u.icon = UidHelper.loadPackageIcon(context, u.packageName);
-                
-                ArrayList<LogEntry> logs = getLogs(context, u, 1);
-                if (logs.size() > 0)
-                    u.last = logs.get(0).date;
             }
         }
         catch (Exception ex) {
@@ -145,9 +165,24 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     }
     
     public static void addLog(Context context, LogEntry log) {
+        if (!Settings.getLogging(context))
+            return;
+        
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
         
-        UidHelper.getPackageInfoForUid(context, log, false);
+        Cursor c = db.query("uid_policy", null, "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(log.uid), log.command, String.valueOf(log.desiredUid) }, null, null, null, null);
+        try {
+            if (c.moveToNext()) {
+                UidPolicy u = getPolicy(context, c);
+                if (!u.logging)
+                    return;
+            }
+        }
+        finally {
+            c.close();
+        }
+        
+        getPackageInfoForUid(context, log);
         
         ContentValues values = new ContentValues();
         values.put("uid", log.uid);

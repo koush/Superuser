@@ -23,18 +23,4 @@ public class UidHelper {
         }
         return null;
     }
-    
-    public static void getPackageInfoForUid(Context context, UidCommand cpi, boolean loadIcon) {
-        try {
-            PackageManager pm = context.getPackageManager();
-            PackageInfo pi = context.getPackageManager().getPackageInfo(pm.getPackagesForUid(cpi.uid)[0], 0);
-            cpi.name = pi.applicationInfo.loadLabel(pm).toString();
-            cpi.packageName = pi.packageName;
-            if (loadIcon) {
-                cpi.icon = loadPackageIcon(context, cpi.packageName);
-            }
-        }
-        catch (Exception ex) {
-        }
-    }
 }

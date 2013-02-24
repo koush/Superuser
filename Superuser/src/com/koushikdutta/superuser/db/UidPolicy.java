@@ -11,6 +11,7 @@ public class UidPolicy extends UidCommand {
 
     public String policy;
     public int until;
+    public boolean logging = true;
     public Date getUntilDate() {
         return new Date((long)until * 1000);
     }
