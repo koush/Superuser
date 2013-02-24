@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item 
+        android:id="@+id/logs"
+        android:title="@string/logs"
+        android:icon="@drawable/ic_action_logs"
+        android:showAsAction="ifRoom"
+        />
+    
+    <item 
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_action_settings"
+        />
+</menu>

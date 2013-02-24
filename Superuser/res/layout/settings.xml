@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:padding="@dimen/section_padding" >
+    android:padding="@dimen/content_padding" >
 
     <LinearLayout
         android:id="@+id/title_container"
@@ -16,8 +16,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:paddingLeft="@dimen/section_padding"
-        android:paddingRight="@dimen/section_padding" />
+        android:paddingLeft="@dimen/content_padding"
+        android:paddingRight="@dimen/content_padding" />
 
     <TextView
         android:id="@+id/empty"
