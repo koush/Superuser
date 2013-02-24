@@ -330,7 +330,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 if (isFinishing())
                     return;
                 if (!mHandled)
-                    deny();
+                    handleAction(false, false);
             }
         }, Settings.getRequestTimeout(this) * 1000);
     }
