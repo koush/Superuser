@@ -1,13 +1,24 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <include
-        android:visibility="gone"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        layout="@layout/app_info" />
+        layout="@layout/app_info"
+        android:visibility="gone" />
 
     <include
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         layout="@layout/app_icons" />
+
+    <TextView
+        android:paddingBottom="4dp"
+        android:gravity="center"
+        android:id="@+id/developer_warning"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/developer_warning"
+        android:textColor="@color/holo_red_dark"
+        android:visibility="gone" />
+
 </merge>

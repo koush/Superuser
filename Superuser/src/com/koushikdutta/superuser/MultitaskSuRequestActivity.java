@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.content.res.Configuration;
 import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
@@ -171,15 +172,26 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
             }
         };
 
+        
+        boolean superuserDeclared = false;
         list.setAdapter(mAdapter);
         if (pkgs != null) {
             for (String pkg: pkgs) {
                 try {
-                    PackageInfo pi = pm.getPackageInfo(pkg, 0);
+                    PackageInfo pi = pm.getPackageInfo(pkg, PackageManager.GET_PERMISSIONS);
                     ((TextView)findViewById(R.id.request)).setText(getString(R.string.application_request, pi.applicationInfo.loadLabel(pm)));
                     mAdapter.add(pi);
                     ((TextView)findViewById(R.id.app_header)).setText(pi.applicationInfo.loadLabel(pm));
                     ((TextView)findViewById(R.id.package_header)).setText(pi.packageName);
+                    
+                    if (pi.requestedPermissions != null) {
+                        for (String perm: pi.requestedPermissions) {
+                            if ("android.permission.ACCESS_SUPERUSER".equals(perm)) {
+                                superuserDeclared = true;
+                                break;
+                            }
+                        }
+                    }
                     
                     // could display them all, but screw it...
                     // maybe a better ux for this later
@@ -188,6 +200,10 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 catch (Exception ex) {
                 }
             }
+        }
+        
+        if (!superuserDeclared) {
+            findViewById(R.id.developer_warning).setVisibility(View.VISIBLE);
         }
         
         new Runnable() {
