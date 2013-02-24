@@ -2,10 +2,15 @@ package com.koushikdutta.superuser;
 
 import com.koushikdutta.superuser.db.LogEntry;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.UidPolicy;
+import com.koushikdutta.superuser.util.Settings;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 public class SuReceiver extends BroadcastReceiver {
     @Override
@@ -36,5 +41,31 @@ public class SuReceiver extends BroadcastReceiver {
         le.desiredName = desiredName;
         le.username = fromName;
         SuDatabaseHelper.addLog(context, le);
+
+        String toast;
+        if (UidPolicy.ALLOW.equals(action)) {
+            toast = context.getString(R.string.superuser_granted, le.getName());
+        }
+        else {
+            toast = context.getString(R.string.superuser_denied, le.getName());
+        }
+
+        switch (Settings.getNotificationType(context)) {
+        case Settings.NOTIFICATION_TYPE_NOTIFICATION:
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            builder.setTicker(toast)
+            .setContentTitle(toast)
+            .setContentText("")
+            .setSmallIcon(R.drawable.ic_stat_notification);
+            
+            NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.notify(NOTIFICATION_ID, builder.getNotification());
+            break;
+        case Settings.NOTIFICATION_TYPE_TOAST:
+            Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+            break;
+        }
     }
+    
+    private static final int NOTIFICATION_ID = 4545;
 }

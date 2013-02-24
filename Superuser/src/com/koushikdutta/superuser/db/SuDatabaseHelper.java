@@ -78,7 +78,6 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         getUidCommand(c, u);
         u.policy = c.getString(c.getColumnIndex("policy"));
         u.until = c.getInt(c.getColumnIndex("until"));
-        u.icon = UidHelper.loadPackageIcon(context, u.packageName);
         u.logging = c.getInt(c.getColumnIndex("logging")) != 0;
         
         ArrayList<LogEntry> logs = getLogs(context, u, 1);

@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 
-import com.koushikdutta.superuser.db.UidCommand;
 import com.koushikdutta.superuser.util.ImageCache;
 
 public class UidHelper {

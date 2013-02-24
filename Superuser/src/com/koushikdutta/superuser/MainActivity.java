@@ -3,8 +3,10 @@ package com.koushikdutta.superuser;
 import java.util.ArrayList;
 
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -76,7 +78,6 @@ public class MainActivity extends BetterListActivity {
             watermark.setImageResource(R.drawable.clockwork512);
         if (!getFragment().isPaged())
             showAllLogs();
-        
     }
     
     public void onBackPressed() {
@@ -116,10 +117,11 @@ public class MainActivity extends BetterListActivity {
                 setContent(this, up);
             };
         });
-        if (up.icon == null)
+        Drawable icon = UidHelper.loadPackageIcon(this, up.packageName);
+        if (icon == null)
             li.setIcon(R.drawable.ic_launcher);
         else
-            li.setDrawable(up.icon);
+            li.setDrawable(icon);
     }
     
     Handler mHandler = new Handler();

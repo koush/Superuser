@@ -45,6 +45,13 @@
 
             <include layout="@layout/policy_info" />
         </LinearLayout>
+        
+        <View
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/holo_blue_light" />
+        
     </LinearLayout>
 
     <LinearLayout
@@ -63,18 +70,17 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+            android:paddingLeft="@dimen/section_padding"
                 android:paddingBottom="@dimen/section_padding"
                 android:text="@string/logs" />
 
-            <include layout="@layout/log_toggle" />
+            <include layout="@layout/log_toggle"
+                android:layout_weight="@dimen/golden_ratio"
+                 />
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:background="@color/holo_blue_light" />
-
         <ListView
+            android:scrollbars="none"
             android:id="@+id/listview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"

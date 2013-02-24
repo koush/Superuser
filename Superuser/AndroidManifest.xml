@@ -9,22 +9,25 @@
         android:targetSdkVersion="17" />
 
     <permission
-        android:name="com.koushikdutta.superuser.REQUEST"
+        android:name="android.permission.REQUEST_SUPERUSER"
         android:protectionLevel="signatureOrSystem" />
     <permission
-        android:name="com.koushikdutta.superuser.RESULT"
+        android:name="android.permission.REPORT_SUPERUSER"
         android:protectionLevel="signatureOrSystem" />
+    <permission android:name="android.permission.ACCESS_SUPERUSER" />
 
     <application
         android:name=".SuApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:allowClearUserData="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +42,7 @@
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:permission="com.koushikdutta.superuser.REQUEST"
+            android:permission="android.permission.REQUEST_SUPERUSER"
             android:theme="@style/RequestTheme" />
         <!-- Multiple instances of this activity can be running for multiple su requests -->
         <activity
@@ -52,11 +55,15 @@
 
         <receiver
             android:name=".SuReceiver"
-            android:permission="com.koushikdutta.superuser.RESULT" >
-            <intent-filter>
-                <action android:name="com.koushikdutta.superuser.REQUEST" />
-            </intent-filter>
-        </receiver>
+            android:permission="android.permission.REPORT_SUPERUSER" />
+
+        <activity
+            android:name=".PinActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false"
+            android:label="@string/enter_pin"
+            android:noHistory="true"
+            android:theme="@style/RequestTheme" />
     </application>
 
 </manifest>

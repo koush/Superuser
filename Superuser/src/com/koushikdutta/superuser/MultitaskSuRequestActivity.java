@@ -2,14 +2,9 @@ package com.koushikdutta.superuser;
 
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
-import com.koushikdutta.superuser.db.SuDatabaseHelper;
-import com.koushikdutta.superuser.db.UidPolicy;
-
 import junit.framework.Assert;
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -20,9 +15,9 @@ import android.net.LocalSocketAddress;
 import android.net.LocalSocketAddress.Namespace;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -36,8 +31,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MultitaskSuRequestActivity extends Activity {
+import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.UidPolicy;
+import com.koushikdutta.superuser.util.Settings;
+
+public class MultitaskSuRequestActivity extends FragmentActivity {
     private static final String LOGTAG = "Superuser";
     int mCallerUid;
     int mDesiredUid;
@@ -59,7 +59,7 @@ public class MultitaskSuRequestActivity extends Activity {
         return 10;
     }
     
-    void handleAction(boolean action) {
+    void handleAction(boolean action, boolean user) {
         Assert.assertTrue(!mHandled);
         mHandled = true;
         try {
@@ -69,22 +69,24 @@ public class MultitaskSuRequestActivity extends Activity {
         }
         try {
             int until = -1;
-            if (mSpinner.isShown()) {
-                int pos = mSpinner.getSelectedItemPosition();
-                int id = mSpinnerIds[pos];
-                if (id == R.string.remember_for) {
-                    until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+            if (user) {
+                if (mSpinner.isShown()) {
+                    int pos = mSpinner.getSelectedItemPosition();
+                    int id = mSpinnerIds[pos];
+                    if (id == R.string.remember_for) {
+                        until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                    }
+                    else if (id == R.string.remember_forever) {
+                        until = 0;
+                    }
                 }
-                else if (id == R.string.remember_forever) {
-                    until = 0;
-                }
-            }
-            else if (mRemember.isShown()) {
-                if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
-                    until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
-                }
-                else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
-                    until = 0;
+                else if (mRemember.isShown()) {
+                    if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
+                        until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+                    }
+                    else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
+                        until = 0;
+                    }
                 }
             }
             // got a policy? let's set it.
@@ -109,7 +111,7 @@ public class MultitaskSuRequestActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         if (!mHandled)
-            handleAction(false);
+            handleAction(false, false);
         try {
             if (mSocket != null)
                 mSocket.close();
@@ -321,6 +323,16 @@ public class MultitaskSuRequestActivity extends Activity {
                 mHandler.postDelayed(this, 1000);
             };
         }.run();
+        
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing())
+                    return;
+                if (!mHandled)
+                    deny();
+            }
+        }, Settings.getRequestTimeout(this) * 1000);
     }
     
     @Override
@@ -336,15 +348,22 @@ public class MultitaskSuRequestActivity extends Activity {
             R.string.remember_forever
     };
     
+    void approve() {
+        mAllow.setEnabled(false);
+        mDeny.setEnabled(false);
+        handleAction(true, true);
+    }
+
+    void deny() {
+        mAllow.setEnabled(false);
+        mDeny.setEnabled(false);
+        handleAction(false, true);
+    }
+
     String mSocketPath;
     ArrayAdapter<String> mSpinnerAdapter;
     void setContentView() {
         setContentView(R.layout.request);
-        
-        ContextThemeWrapper wrapper =  new ContextThemeWrapper(this, R.style.AppDarkTheme);
-        LayoutInflater darkInflater = (LayoutInflater)wrapper.getSystemService(LAYOUT_INFLATER_SERVICE);
-        ViewGroup root = (ViewGroup)findViewById(R.id.root);
-        darkInflater.inflate(R.layout.request_buttons, root);
 
         mSpinner = (Spinner)findViewById(R.id.remember_choices);
         mSpinner.setAdapter(mSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.request_spinner_choice, R.id.request_spinner_choice));
@@ -362,17 +381,40 @@ public class MultitaskSuRequestActivity extends Activity {
         mAllow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAllow.setEnabled(false);
-                mDeny.setEnabled(false);
-                handleAction(true);
+                if (!Settings.isPinProtected(MultitaskSuRequestActivity.this)) {
+                    approve();
+                    return;
+                }
+                
+                ViewGroup ready = (ViewGroup)findViewById(R.id.root);
+                ready.removeAllViews();
+                getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.root, new PinFragment() {
+                    @Override
+                    public void onEnter(String password) {
+                        super.onEnter(password);
+                        if (Settings.checkPin(getActivity(), password)) {
+                            approve();
+                        }
+                        else {
+                            Toast.makeText(getActivity(), getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancel() {
+                        super.onCancel();
+                        deny();
+                    }
+                })
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
             }
         });
         mDeny.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAllow.setEnabled(false);
-                mDeny.setEnabled(false);
-                handleAction(false);
+                deny();
             }
         });
         

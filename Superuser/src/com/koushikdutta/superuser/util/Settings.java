@@ -1,10 +1,13 @@
 package com.koushikdutta.superuser.util;
 
+import java.security.MessageDigest;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Base64;
 
 public class Settings {
     SQLiteDatabase mDatabase;
@@ -110,8 +113,9 @@ public class Settings {
     }
     
     private static final String KEY_TIMEOUT = "timeout";
+    public static final int REQUEST_TIMEOUT_DEFAULT = 30;
     public static int getRequestTimeout(Context context) {
-        return getInstance(context).getInt(KEY_TIMEOUT, 10);
+        return getInstance(context).getInt(KEY_TIMEOUT, REQUEST_TIMEOUT_DEFAULT);
     }
     
     public static void setTimeout(Context context, int timeout) {
@@ -122,8 +126,9 @@ public class Settings {
     public static final int NOTIFICATION_TYPE_NONE = 0;
     public static final int NOTIFICATION_TYPE_TOAST = 1;
     public static final int NOTIFICATION_TYPE_NOTIFICATION = 2;
+    public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_TOAST;
     public static int getNotificationType(Context context) {
-        switch (getInstance(context).getInt(KEY_NOTIFICATION, NOTIFICATION_TYPE_TOAST)) {
+        switch (getInstance(context).getInt(KEY_NOTIFICATION, NOTIFICATION_TYPE_DEFAULT)) {
         case NOTIFICATION_TYPE_NONE:
             return NOTIFICATION_TYPE_NONE;
         case NOTIFICATION_TYPE_NOTIFICATION:
@@ -131,6 +136,36 @@ public class Settings {
         default:
             return NOTIFICATION_TYPE_TOAST;
         }
+    }
+    
+    public static final String KEY_PIN = "pin";
+    public static final boolean isPinProtected(Context context) {
+        return Settings.getInstance(context).getString(KEY_PIN) != null;
+    }
+    
+    private static String digest(String value) {
+        // ok, there's honestly no point in digesting the pin.
+        // if someone gets a hold of the hash, there's really only like
+        // 10^n possible values to brute force, where N is generally
+        // 4. Ie, 10000. Yay, security theater. This really ought
+        // to be a password.
+        if (value == null || value.length() == 0)
+            return null;
+        try {
+            MessageDigest digester = MessageDigest.getInstance("MD5");
+            return Base64.encodeToString(digester.digest(value.getBytes()), Base64.DEFAULT);
+        }
+        catch (Exception e) {
+            return value;
+        }
+    }
+    
+    public static void setPin(Context context, String pin) {
+        Settings.getInstance(context).setString(KEY_PIN, digest(pin));
+    }
+    
+    public static boolean checkPin(Context context, String pin) {
+        return digest(pin).equals(Settings.getInstance(context).getString(KEY_PIN));
     }
     
     public static void setNotificationType(Context context, int notification) {

@@ -1,0 +1,135 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:padding="@dimen/section_padding"
+        android:maxLines="1"
+        android:hint="@string/enter_pin"
+        android:textColor="@color/holo_blue_dark"
+        android:gravity="center"
+        android:id="@+id/password"
+        style="@android:style/TextAppearance.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:editable="false"
+        android:password="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/p1"
+            style="@style/PinButton"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/p2"
+            style="@style/PinButton"
+            android:text="2" />
+
+        <Button
+            android:id="@+id/p3"
+            style="@style/PinButton"
+            android:text="3" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/p4"
+            style="@style/PinButton"
+            android:text="4" />
+
+        <Button
+            android:id="@+id/p5"
+            style="@style/PinButton"
+            android:text="5" />
+
+        <Button
+            android:id="@+id/p6"
+            style="@style/PinButton"
+            android:text="6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/p7"
+            style="@style/PinButton"
+            android:text="7" />
+
+        <Button
+            android:id="@+id/p8"
+            style="@style/PinButton"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/p9"
+            style="@style/PinButton"
+            android:text="9" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            style="@style/PinButton"
+            android:enabled="false" />
+
+        <Button
+            android:id="@+id/p0"
+            style="@style/PinButton"
+            android:text="0" />
+
+        <ImageButton
+            android:id="@+id/pd"
+            style="@style/PinButton"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:background="@color/background_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/FlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp" >
+
+            <LinearLayout
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/ok"
+            style="@style/FlatButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+    
+</LinearLayout>

@@ -16,22 +16,26 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
-    <style name="AppBaseDarkTheme" parent="android:Theme.Black">
-        
-    </style>
-    
+
+    <style name="AppBaseDarkTheme" parent="android:Theme.Black"></style>
+
     <!-- Application theme. -->
     <style name="AppDarkTheme" parent="AppBaseDarkTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    
+
     <style name="RequestTheme" parent="AppTheme"></style>
-    
-    <style name="FlatButton">
-        
-    </style>
-    
+
+    <style name="FlatButton" parent="@android:style/TextAppearance.Inverse"></style>
+
     <color name="background_dark">#1F1F1F</color>
-    
+
+    <style name="PinButton" parent="@android:style/TextAppearance.Large">
+        <item name="android:background">@drawable/border</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
 </resources>

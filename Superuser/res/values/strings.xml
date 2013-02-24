@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Superuser</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
@@ -8,30 +9,37 @@
     <string name="application_request">%s is requesting Superuser access.</string>
     <string name="info">Warning: If you do not understand this, you should Deny the request.</string>
     <string name="request">Superuser Request</string>
-    
     <string name="package_header">Package:</string>
     <string name="app_header">App:</string>
     <string name="uid_header">Requested UID:</string>
     <string name="command_header">Command:</string>
-
     <string name="this_time_only">This time only</string>
     <string name="remember_for">Remember choice for %s minutes</string>
     <string name="remember_forever">Remember choice forever</string>
-
     <string name="interactive">Interactive</string>
     <string name="logs">Logs</string>
     <string name="settings">Settings</string>
     <string name="delete">Delete</string>
     <string name="no_logs">No Logs</string>
-    
     <string name="no_apps">There are currently no Superuser app policies.</string>
-    
     <string name="logging">Logging</string>
     <string name="logging_summary">Enable or disable all Superuser request logging</string>
-    <string name="pin_and_password">PIN and Password Protection</string>
-    <string name="pin_and_password_summary">Require entry of a PIN or Password to approve Superuser requests</string>
+    <string name="pin_protection">PIN Protection</string>
+    <string name="pin_protection_summary">Require entry of a PIN to approve Superuser requests</string>
     <string name="request_timeout">Request Timeout</string>
-    <string name="request_timeout_summary">Superuser requests will time out after %s seconds</string>
+    <string name="request_timeout_summary">Superuser requests will time out and be denied after %s seconds</string>
     <string name="notifications">Notifications</string>
     <string name="notifications_summary">Customize the notification shown when an app is granted Superuser permissions</string>
+    <string name="enter_pin">Enter PIN</string>
+    <string name="enter_new_pin">Enter New PIN</string>
+    <string name="incorrect_pin">Incorrect PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="pin_mismatch">PIN did not match</string>
+    <string name="pin_set">Superuser PIN protection enabled</string>
+    <string name="number_seconds">%s seconds</string>
+    <string name="superuser_granted">Superuser granted to %s</string>
+    <string name="superuser_denied">Superuser denied to %s</string>
+    <string name="toast">Toast</string>
+    <string name="notification">Notification</string>
+    <string name="none">None</string>
 </resources>

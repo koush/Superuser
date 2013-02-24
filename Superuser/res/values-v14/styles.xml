@@ -12,10 +12,11 @@
     <style name="AppBaseDarkTheme" parent="android:Theme.Holo">
         <!-- API 14 theme customizations can go here. -->
     </style>
-    
-    <style name="FlatButton" parent="@android:style/Theme.Holo">
+
+    <style name="FlatButton" parent="@android:style/TextAppearance.Inverse">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
-    
+
     <style name="RequestTheme" parent="@style/AppTheme"></style>
+
 </resources>
