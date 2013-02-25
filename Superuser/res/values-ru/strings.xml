@@ -46,7 +46,7 @@
     <string name="developer_warning">Предупреждение:\nandroid.permission.ACCESS_SUPERUSER\nне были объявлены в манифесте.</string>
     <string name="superuser_description">полный доступ к функциям телефона и памяти</string>
     <string name="superuser_description_more">Суперпользователь предоставляет полный доступ к функциям и памяти устройства. Это может представлять опасность.</string>
-    <string name="declared_permission">Declared Permission</string>
+    <string name="declared_permission">Описанный запрос</string>
     <string name="declared_permission_summary">Разрешение будет только у приложений с описанным android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Автоматический ответ</string>
     <string name="automatic_response_summary">Суперпользователь будет will %s новые запросы</string>
