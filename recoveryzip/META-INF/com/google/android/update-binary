@@ -17,7 +17,6 @@ then
 else
   PLATFORM=armeabi
 fi
-LIBDIR=$PLATFORM
 
 echo -n -e 'ui_print Installing '$PLATFORM' binaries...\n' > /proc/self/fd/$2
 echo -n -e 'ui_print\n' > /proc/self/fd/$2
@@ -27,7 +26,7 @@ rm -f /system/bin/su
 rm -f /system/xbin/su
 rm -f /system/app/Superuser.apk
 
-cp $LIBDIR/su /system/bin/su
+cp $PLATFORM/su /system/bin/su
 chown 0:0 /system/bin/su
 chmod 6755 /system/bin/su
 ln -sf ../bin/su /system/xbin/su
