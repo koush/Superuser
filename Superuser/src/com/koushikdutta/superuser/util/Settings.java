@@ -16,6 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Base64;
 
 import com.koushikdutta.superuser.Helper;
@@ -184,8 +185,8 @@ public class Settings {
     public static boolean checkPin(Context context, String pin) {
         pin = digest(pin);
         String hashed = Settings.getInstance(context).getString(KEY_PIN);
-        if (pin == null)
-            return hashed == null || hashed.length() == 0;
+        if (TextUtils.isEmpty(pin))
+            return TextUtils.isEmpty(hashed);
         return pin.equals(hashed);
     }
 
