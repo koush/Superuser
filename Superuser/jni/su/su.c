@@ -168,7 +168,7 @@ static int get_multiuser_mode() {
     free(data);
 
     int sdk = atoi(sdk_ver);
-    if (sdk < 16)
+    if (sdk < 17)
         return MULTIUSER_MODE_NONE;
 
     int ret = MULTIUSER_MODE_OWNER_ONLY;
