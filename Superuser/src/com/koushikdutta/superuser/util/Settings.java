@@ -1,11 +1,13 @@
 package com.koushikdutta.superuser.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 
 import android.content.ContentValues;
@@ -237,6 +239,24 @@ public class Settings {
         dout.write(string.getBytes());
         dout.close();
     }
+    
+    public static byte[] readToEndAsArray(InputStream input) throws IOException {
+        DataInputStream dis = new DataInputStream(input);
+        byte[] stuff = new byte[1024];
+        ByteArrayOutputStream buff = new ByteArrayOutputStream();
+        int read = 0;
+        while ((read = dis.read(stuff)) != -1)
+        {
+            buff.write(stuff, 0, read);
+        }
+        input.close();
+        return buff.toByteArray();
+    }
+
+    public static String readToEnd(InputStream input) throws IOException {
+        return new String(readToEndAsArray(input));
+    }
+
     public static final int MULTIUSER_MODE_OWNER_ONLY = 0;
     public static final int MULTIUSER_MODE_OWNER_MANAGED = 1;
     public static final int MULTIUSER_MODE_USER = 2;
@@ -253,9 +273,17 @@ public class Settings {
         if (!Helper.supportsMultipleUsers(context))
             return MULTIUSER_MODE_NONE;
         
-        File file = context.getFileStreamPath("multiuser_mode");
         try {
-            String mode = readFile(file);
+            String mode;
+            if (Helper.isAdminUser(context)) {
+                File file = context.getFileStreamPath("multiuser_mode");
+                mode = readFile(file);
+            }
+            else {
+                Process p = Runtime.getRuntime().exec("su -u");
+                mode = readToEnd(p.getInputStream()).trim();
+            }
+            
             if (MULTIUSER_VALUE_OWNER_MANAGED.equals(mode))
                 return MULTIUSER_MODE_OWNER_MANAGED;
             if (MULTIUSER_VALUE_USER.equals(mode))
@@ -269,6 +297,8 @@ public class Settings {
     }
     
     public static void setMultiuserMode(Context context, int mode) {
+        if (!Helper.isAdminUser(context))
+            return;
         try {
             File file = context.getFileStreamPath("multiuser_mode");
             switch (mode) {
