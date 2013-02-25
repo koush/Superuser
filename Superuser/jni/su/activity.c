@@ -73,10 +73,8 @@ static int silent_run(char* command) {
 
 int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) {
     int needs_owner_login_prompt = 0;
-    if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY) {
-        snprintf(user, user_len, "");
-    }
-    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER) {
+    
+    if (ctx->user.multiuser_mode == MULTIUSER_MODE_OWNER_MANAGED) {
         if (0 != ctx->user.android_user_id) {
             needs_owner_login_prompt = 1;
         }
@@ -85,9 +83,11 @@ int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) 
     else if (ctx->user.multiuser_mode == MULTIUSER_MODE_USER) {
         snprintf(user, user_len, "--user %d", ctx->user.android_user_id);
     }
+    else if (ctx->user.multiuser_mode == MULTIUSER_MODE_NONE) {
+        snprintf(user, user_len, "");
+    }
     else {
-        // unknown mode?
-        return -1;
+        snprintf(user, user_len, "--user 0");
     }
     
     return needs_owner_login_prompt;
@@ -96,14 +96,13 @@ int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) 
 int send_result(struct su_context *ctx, policy_t policy) {
     char user[64];
     int needs_owner_login_prompt = get_owner_login_user_args(ctx, user, sizeof(user));
-    if (needs_owner_login_prompt == -1)
-        return -1;
 
     char result_command[ARG_MAX];
-    snprintf(result_command, sizeof(result_command), "exec /system/bin/am " ACTION_RESULT " --es from_name '%s' --es desired_name '%s' --ei uid %d --ei desired_uid %d --es command '%s' --es action %s %s",
+    snprintf(result_command, sizeof(result_command), "exec /system/bin/am " ACTION_RESULT " --ei binary_version %d --es from_name '%s' --es desired_name '%s' --ei uid %d --ei desired_uid %d --es command '%s' --es action %s %s",
+        VERSION_CODE,
         ctx->from.name, ctx->to.name,
         ctx->from.uid, ctx->to.uid, get_command(&ctx->to), policy == ALLOW ? "allow" : "deny", user);
-    LOGD(result_command);
+    // LOGD(result_command);
     return silent_run(result_command);
 }
 
@@ -114,9 +113,6 @@ int send_request(struct su_context *ctx) {
     // so there will be two activities shown.
     char user[64];
     int needs_owner_login_prompt = get_owner_login_user_args(ctx, user, sizeof(user));
-    if (needs_owner_login_prompt == -1)
-        return -1;
-
 
     int ret;
     if (needs_owner_login_prompt) {

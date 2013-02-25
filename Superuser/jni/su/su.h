@@ -115,10 +115,16 @@ typedef enum {
   // only owner can su
   MULTIUSER_MODE_OWNER_ONLY = 0,
   // owner gets a su prompt
-  MULTIUSER_MODE_OWNER = 1,
+  MULTIUSER_MODE_OWNER_MANAGED = 1,
   // user gets a su prompt
   MULTIUSER_MODE_USER = 2,
+  MULTIUSER_MODE_NONE = 3,
 } multiuser_mode_t;
+
+#define MULTIUSER_VALUE_OWNER_ONLY    "owner"
+#define MULTIUSER_VALUE_OWNER_MANAGED "managed"
+#define MULTIUSER_VALUE_USER          "user"
+#define MULTIUSER_VALUE_NONE          "none"
 
 typedef enum {
     INTERACTIVE = 0,

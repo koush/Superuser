@@ -159,19 +159,42 @@ static int from_init(struct su_initiator *from) {
     return 0;
 }
 
-static void read_options(struct su_context *ctx) {
+static int get_multiuser_mode() {
+    char *data;
+    char sdk_ver[PROPERTY_VALUE_MAX];
+
+    data = read_file("/system/build.prop");
+    get_property(data, sdk_ver, "ro.build.version.sdk", "0");
+    free(data);
+
+    int sdk = atoi(sdk_ver);
+    if (sdk < 16)
+        return MULTIUSER_MODE_NONE;
+
+    int ret = MULTIUSER_MODE_OWNER_ONLY;
     char mode[12];
     FILE *fp;
     if ((fp = fopen(REQUESTOR_MULTIUSER_MODE, "r"))) {
+        int last = strlen(mode) - 1;
+        if (mode[last] == '\n')
+            mode[last] = '\0';
         fgets(mode, sizeof(mode), fp);
         LOGD("multiuser mode: %s", mode);
-        if (strcmp(mode, "user\n") == 0) {
-            ctx->user.multiuser_mode = MULTIUSER_MODE_USER;
-        } else if (strcmp(mode, "owner\n") == 0) {
-            ctx->user.multiuser_mode = MULTIUSER_MODE_OWNER;
+        if (strcmp(mode, MULTIUSER_VALUE_USER) == 0) {
+            ret = MULTIUSER_MODE_USER;
+        } else if (strcmp(mode, MULTIUSER_VALUE_OWNER_MANAGED) == 0) {
+            ret = MULTIUSER_MODE_OWNER_MANAGED;
+        }
+        else {
+            ret = MULTIUSER_MODE_OWNER_ONLY;
         }
         fclose(fp);
     }
+    return ret;
+}
+
+static void read_options(struct su_context *ctx) {
+    ctx->user.multiuser_mode = get_multiuser_mode();
 }
 
 static void user_init(struct su_context *ctx) {
@@ -388,6 +411,7 @@ static void usage(int status) {
     "  -m, -p,\n"
     "  --preserve-environment        do not change environment variables\n"
     "  -s, --shell SHELL             use SHELL instead of the default " DEFAULT_SHELL "\n"
+    "  -u                            display the multiuser mode and exit\n"
     "  -v, --version                 display version number and exit\n"
     "  -V                            display version code and exit,\n"
     "                                this is used almost exclusively by Superuser.apk\n");
@@ -602,7 +626,7 @@ int main(int argc, char *argv[]) {
         { NULL, 0, NULL, 0 },
     };
 
-    while ((c = getopt_long(argc, argv, "+c:hlmps:Vv", long_opts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "+c:hlmps:Vvu", long_opts, NULL)) != -1) {
         switch(c) {
         case 'c':
             ctx.to.command = optarg;
@@ -625,6 +649,22 @@ int main(int argc, char *argv[]) {
             exit(EXIT_SUCCESS);
         case 'v':
             printf("%s\n", VERSION);
+            exit(EXIT_SUCCESS);
+        case 'u':
+            switch (get_multiuser_mode()) {
+            case MULTIUSER_MODE_USER:
+                printf("%s\n", MULTIUSER_VALUE_USER);
+                break;
+            case MULTIUSER_MODE_OWNER_MANAGED:
+                printf("%s\n", MULTIUSER_VALUE_OWNER_MANAGED);
+                break;
+            case MULTIUSER_MODE_OWNER_ONLY:
+                printf("%s\n", MULTIUSER_VALUE_OWNER_ONLY);
+                break;
+            case MULTIUSER_MODE_NONE:
+                printf("%s\n", MULTIUSER_VALUE_NONE);
+                break;
+            }
             exit(EXIT_SUCCESS);
         default:
             /* Bionic getopt_long doesn't terminate its error output by newline */
