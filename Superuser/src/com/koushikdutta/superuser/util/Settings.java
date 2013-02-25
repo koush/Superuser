@@ -182,7 +182,11 @@ public class Settings {
     }
     
     public static boolean checkPin(Context context, String pin) {
-        return digest(pin).equals(Settings.getInstance(context).getString(KEY_PIN));
+        pin = digest(pin);
+        String hashed = Settings.getInstance(context).getString(KEY_PIN);
+        if (pin == null)
+            return hashed == null || hashed.length() == 0;
+        return pin.equals(hashed);
     }
 
     private static final String KEY_REQUIRE_PREMISSION = "require_permission";

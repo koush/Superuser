@@ -79,10 +79,10 @@
             <arg value="clean"/>
         </exec>
         <delete file="bin/update.zip"/>
-        <!-- <delete file="bin/Superuser.apk"/> -->
+        <delete file="bin/Superuser.apk"/>
     </target>
 
-    <target name="post-build">
+    <target name="zip">
         <exec executable="zip" failonerror="true" dir="../recoveryzip">
           <arg value="-ry"/>
           <arg value="../Superuser/bin/update.zip"/>
@@ -94,7 +94,7 @@
           <arg value="armeabi"/>
           <arg value="x86"/>
         </exec>
-        <!-- <copy file="bin/Superuser-release.apk" tofile="bin/Superuser.apk"/> -->
+        <copy file="bin/Superuser-release.apk" tofile="bin/Superuser.apk"/>
         <exec executable="zip" failonerror="true" dir="bin">
           <arg value="update.zip"/>
           <arg value="Superuser.apk"/>
