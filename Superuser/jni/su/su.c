@@ -32,7 +32,6 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <sys/types.h>
-#include <pwd.h>
 
 #include "su.h"
 #include "utils.h"
