@@ -7,7 +7,7 @@
     <string name="status_incoming">Incoming Superuser Request...</string>
     <string name="unknown_uid">Unknown UID: %s</string>
     <string name="application_request">%s is requesting Superuser access.</string>
-    <string name="info">Warning: If you do not understand this, you should Deny the request.</string>
+    <string name="info">Warning: If you do not understand this, you should deny the request.</string>
     <string name="request">Superuser Request</string>
     <string name="package_header">Package:</string>
     <string name="app_header">App:</string>
