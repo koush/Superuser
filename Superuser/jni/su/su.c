@@ -712,7 +712,6 @@ int main(int argc, char *argv[]) {
     user_init(&ctx);
     
     if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0) {
-        LOGD("multiuser mode: owner only");
         deny(&ctx);
     }
 

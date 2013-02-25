@@ -1,14 +1,23 @@
 package com.koushikdutta.superuser.util;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.MessageDigest;
 
+import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.util.Base64;
 
+import com.koushikdutta.superuser.Helper;
 import com.koushikdutta.superuser.R;
 
 public class Settings {
@@ -203,20 +212,83 @@ public class Settings {
         }
     }
 
-    public static String getAutomaticResponseName(Context context) {
-        switch (getInstance(context).getInt(KEY_AUTOMATIC_RESPONSE, AUTOMATIC_RESPONSE_DEFAULT)) {
-        case AUTOMATIC_RESPONSE_ALLOW:
-            return context.getString(R.string.allow);
-        case AUTOMATIC_RESPONSE_PROMPT:
-            return context.getString(R.string.prompt);
-        case AUTOMATIC_RESPONSE_DENY:
-            return context.getString(R.string.deny);
-        default:
-            return context.getString(R.string.prompt);
-        }
-    }
-    
     public static void setAutomaticResponse(Context context, int response) {
         getInstance(context).setInt(KEY_AUTOMATIC_RESPONSE, response);
+    }
+    
+    
+    static public String readFile(String filename) throws IOException {
+        return readFile(new File(filename));
+    }
+    
+    static public String readFile(File file) throws IOException {
+        byte[] buffer = new byte[(int) file.length()];
+        DataInputStream input = new DataInputStream(new FileInputStream(file));
+        input.readFully(buffer);
+        return new String(buffer);
+    }
+    
+    public static void writeFile(File file, String string) throws IOException {
+        writeFile(file.getAbsolutePath(), string);
+    }
+    
+    public static void writeFile(String file, String string) throws IOException {
+        File f = new File(file);
+        f.getParentFile().mkdirs();
+        DataOutputStream dout = new DataOutputStream(new FileOutputStream(f));
+        dout.write(string.getBytes());
+        dout.close();
+    }
+    public static final int MULTIUSER_MODE_OWNER_ONLY = 0;
+    public static final int MULTIUSER_MODE_OWNER_MANAGED = 1;
+    public static final int MULTIUSER_MODE_USER = 2;
+    public static final int MULTIUSER_MODE_NONE = 3;
+    
+    private static final String MULTIUSER_VALUE_OWNER_ONLY  = "owner";
+    private static final String MULTIUSER_VALUE_OWNER_MANAGED = "managed";
+    private static final String MULTIUSER_VALUE_USER = "user";
+
+    public static final int getMultiuserMode(Context context) {
+        if (Build.VERSION.SDK_INT < 16)
+            return MULTIUSER_MODE_NONE;
+
+        if (!Helper.supportsMultipleUsers(context))
+            return MULTIUSER_MODE_NONE;
+        
+        File file = context.getFileStreamPath("multiuser_mode");
+        try {
+            String mode = readFile(file);
+            if (MULTIUSER_VALUE_OWNER_MANAGED.equals(mode))
+                return MULTIUSER_MODE_OWNER_MANAGED;
+            if (MULTIUSER_VALUE_USER.equals(mode))
+                return MULTIUSER_MODE_USER;
+            if (MULTIUSER_VALUE_OWNER_ONLY.equals(mode))
+                return MULTIUSER_MODE_OWNER_ONLY;
+        }
+        catch (Exception e) {
+        }
+        return MULTIUSER_MODE_OWNER_ONLY;
+    }
+    
+    public static void setMultiuserMode(Context context, int mode) {
+        try {
+            File file = context.getFileStreamPath("multiuser_mode");
+            switch (mode) {
+            case MULTIUSER_MODE_OWNER_MANAGED:
+                writeFile(file, MULTIUSER_VALUE_OWNER_MANAGED);
+                break;
+            case MULTIUSER_MODE_USER:
+                writeFile(file, MULTIUSER_VALUE_USER);
+                break;
+            case MULTIUSER_MODE_NONE:
+                file.delete();
+                break;
+            default:
+                writeFile(file, MULTIUSER_VALUE_OWNER_ONLY);
+                break;
+            }
+        }
+        catch (Exception ex) {
+        }
     }
 }

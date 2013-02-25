@@ -95,14 +95,23 @@ int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) 
 
 int send_result(struct su_context *ctx, policy_t policy) {
     char user[64];
-    int needs_owner_login_prompt = get_owner_login_user_args(ctx, user, sizeof(user));
+    get_owner_login_user_args(ctx, user, sizeof(user));
+    
+    if (0 != ctx->user.android_user_id) {
+        char user_result_command[ARG_MAX];
+        snprintf(user_result_command, sizeof(user_result_command), "exec /system/bin/am " ACTION_RESULT " --ei binary_version %d --es from_name '%s' --es desired_name '%s' --ei uid %d --ei desired_uid %d --es command '%s' --es action %s --user %d",
+            VERSION_CODE,
+            ctx->from.name, ctx->to.name,
+            ctx->from.uid, ctx->to.uid, get_command(&ctx->to), policy == ALLOW ? "allow" : "deny", ctx->user.android_user_id);
+        silent_run(user_result_command);
+        LOGD(user_result_command);
+    }
 
     char result_command[ARG_MAX];
     snprintf(result_command, sizeof(result_command), "exec /system/bin/am " ACTION_RESULT " --ei binary_version %d --es from_name '%s' --es desired_name '%s' --ei uid %d --ei desired_uid %d --es command '%s' --es action %s %s",
         VERSION_CODE,
         ctx->from.name, ctx->to.name,
         ctx->from.uid, ctx->to.uid, get_command(&ctx->to), policy == ALLOW ? "allow" : "deny", user);
-    // LOGD(result_command);
     return silent_run(result_command);
 }
 

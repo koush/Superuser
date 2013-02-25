@@ -117,7 +117,7 @@ public class MainActivity extends BetterListActivity {
                 setContent(this, up);
             };
         });
-        Drawable icon = UidHelper.loadPackageIcon(this, up.packageName);
+        Drawable icon = Helper.loadPackageIcon(this, up.packageName);
         if (icon == null)
             li.setIcon(R.drawable.ic_launcher);
         else

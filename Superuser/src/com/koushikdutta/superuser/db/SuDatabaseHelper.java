@@ -70,6 +70,8 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         u.name = c.getString(c.getColumnIndex("name"));
         u.packageName = c.getString(c.getColumnIndex("package_name"));
         u.desiredUid = c.getInt(c.getColumnIndex("desired_uid"));
+        u.desiredName = c.getString(c.getColumnIndex("desired_name"));
+        u.username = c.getString(c.getColumnIndex("username"));
     }
     
     private static UidPolicy getPolicy(Context context, Cursor c) {

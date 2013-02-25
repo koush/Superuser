@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 import junit.framework.Assert;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -22,12 +21,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -46,7 +42,6 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     int mPid;
     
     Spinner mSpinner;
-    ArrayAdapter<PackageInfo> mAdapter;
     
     Handler mHandler = new Handler();
     
@@ -130,8 +125,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         findViewById(R.id.incoming).setVisibility(View.GONE);
         findViewById(R.id.ready).setVisibility(View.VISIBLE);
         
-        final ListView list = (ListView)findViewById(R.id.list);
-        list.setEmptyView(findViewById(R.id.unknown));
+        final View packageInfo = findViewById(R.id.packageinfo);
         final PackageManager pm = getPackageManager();
         String[] pkgs = pm.getPackagesForUid(mCallerUid);
         TextView unknown = (TextView)findViewById(R.id.unknown);
@@ -141,19 +135,19 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         appInfo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (list.getVisibility() == View.GONE) {
+                if (packageInfo.getVisibility() == View.GONE) {
                     appInfo.setVisibility(View.GONE);
-                    list.setVisibility(View.VISIBLE);
+                    packageInfo.setVisibility(View.VISIBLE);
                 }
             }
         });
         
-        list.setOnItemClickListener(new OnItemClickListener() {
+        packageInfo.setOnClickListener(new OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            public void onClick(View v) {
                 if (appInfo.getVisibility() == View.GONE) {
                     appInfo.setVisibility(View.VISIBLE);
-                    list.setVisibility(View.GONE);
+                    packageInfo.setVisibility(View.GONE);
                 }
             }
         });
@@ -161,30 +155,17 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         ((TextView)findViewById(R.id.uid_header)).setText(Integer.toString(mDesiredUid));
         ((TextView)findViewById(R.id.command_header)).setText(mDesiredCmd);
 
-        mAdapter = new ArrayAdapter<PackageInfo>(this, R.layout.packageinfo, R.id.title) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                convertView = super.getView(position, convertView, parent);
-                
-                PackageInfo pi = getItem(position);
-                ImageView icon = (ImageView)convertView.findViewById(R.id.image);
-                icon.setImageDrawable(pi.applicationInfo.loadIcon(pm));
-                ((TextView)convertView.findViewById(R.id.title)).setText(pi.applicationInfo.loadLabel(pm));
-                
-                return convertView;
-            }
-        };
-
-        
         boolean superuserDeclared = false;
         boolean granted = false;
-        list.setAdapter(mAdapter);
-        if (pkgs != null) {
+        if (pkgs != null && pkgs.length > 0) {
             for (String pkg: pkgs) {
                 try {
                     PackageInfo pi = pm.getPackageInfo(pkg, PackageManager.GET_PERMISSIONS);
                     ((TextView)findViewById(R.id.request)).setText(getString(R.string.application_request, pi.applicationInfo.loadLabel(pm)));
-                    mAdapter.add(pi);
+                    ImageView icon = (ImageView)packageInfo.findViewById(R.id.image);
+                    icon.setImageDrawable(pi.applicationInfo.loadIcon(pm));
+                    ((TextView)packageInfo.findViewById(R.id.title)).setText(pi.applicationInfo.loadLabel(pm));
+                    
                     ((TextView)findViewById(R.id.app_header)).setText(pi.applicationInfo.loadLabel(pm));
                     ((TextView)findViewById(R.id.package_header)).setText(pi.packageName);
                     
@@ -206,6 +187,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 catch (Exception ex) {
                 }
             }
+            findViewById(R.id.unknown).setVisibility(View.GONE);
         }
         
         if (!superuserDeclared) {
@@ -317,8 +299,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                         is.readFully(dataBytes);
                         String data = new String(dataBytes);
                         payload.put(name, data);
-                        Log.i(LOGTAG, name);
-                        Log.i(LOGTAG, data);
+//                        Log.i(LOGTAG, name);
+//                        Log.i(LOGTAG, data);
                         if ("eof".equals(name))
                             break;
                     }

@@ -52,4 +52,13 @@
     <string name="automatic_response_summary">Superuser will %s new requests</string>
     <string name="prompt">Prompt</string>
     <string name="security">Security</string>
+    <string name="multiuser_policy">Multiuser Policy</string>
+    <string name="multiuser_owner_only_summary">Only the device owner can request Superuser</string>
+    <string name="multiuser_owner_managed_summary">The device owner will be prompted when another user requests Superuser</string>
+    <string name="multiuser_user_summary">All users can request Superuser</string>
+    <string name="multiuser_owner_only">Owner Only</string>
+    <string name="multiuser_owner_managed">Owner Managed</string>
+    <string name="multiuser_user">All Users</string>
+    <string name="multiuser_require_owner">The Multiuser Policy can only be managed by the device owner.</string>
+    <string name="owner_login_info">Please switch to the owner account to approve or deny this request.</string>
 </resources>

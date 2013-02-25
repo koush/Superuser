@@ -9,7 +9,7 @@
     <include
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        layout="@layout/app_icons" />
+        layout="@layout/packageinfo" />
 
     <TextView
         android:paddingBottom="4dp"

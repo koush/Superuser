@@ -15,6 +15,8 @@ public class UidCommand {
             return name;
         if (packageName != null)
             return packageName;
+        if (username != null && username.length() > 0)
+            return username;
         return String.valueOf(uid);
     }
 }

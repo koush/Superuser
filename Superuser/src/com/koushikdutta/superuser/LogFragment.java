@@ -72,7 +72,7 @@ public class LogFragment extends BetterListFragment {
         java.text.DateFormat time = DateFormat.getTimeFormat(getActivity());
         if (up != null) {
             ImageView icon = (ImageView)view.findViewById(R.id.image);
-            icon.setImageDrawable(UidHelper.loadPackageIcon(getActivity(), up.packageName));
+            icon.setImageDrawable(Helper.loadPackageIcon(getActivity(), up.packageName));
             TextView name = (TextView)view.findViewById(R.id.name);
             name.setText(up.name);
             
@@ -101,7 +101,7 @@ public class LogFragment extends BetterListFragment {
             String title = date;
             String summary = getString(log.getActionResource());
             if (up == null) {
-                title = log.name;
+                title = log.getName();
             }
             addItem(day.format(log.getDate()), new ListItem(this, title, summary, null) {
                 @Override

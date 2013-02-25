@@ -2,7 +2,6 @@ package com.koushikdutta.superuser;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -122,6 +120,67 @@ public class SettingsFragment extends BetterListFragment {
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
         
+        if (Settings.getMultiuserMode(getActivity()) != Settings.MULTIUSER_MODE_NONE) {
+            addItem(R.string.security, new ListItem(this, R.string.multiuser_policy, 0, R.drawable.ic_users) {
+                void update() {
+                    int res = -1;
+                    switch (Settings.getMultiuserMode(getActivity())) {
+                    case Settings.MULTIUSER_MODE_OWNER_MANAGED:
+                        res = R.string.multiuser_owner_managed_summary;
+                        break;
+                    case Settings.MULTIUSER_MODE_OWNER_ONLY:
+                        res = R.string.multiuser_owner_only_summary;
+                        break;
+                    case Settings.MULTIUSER_MODE_USER:
+                        res = R.string.multiuser_user_summary;
+                        break;
+                    }
+                    
+                    if (!Helper.isAdminUser(getActivity())) {
+                        setEnabled(false);
+                        String s = "";
+                        if (res != -1)
+                            s = getString(res) + "\n";
+                        setSummary(s + getString(R.string.multiuser_require_owner));
+                    }
+                    else {
+                        if (res != -1)
+                            setSummary(res);
+                    }
+                }
+                
+                {
+                    update();
+                }
+                
+                @Override
+                public void onClick(View view) {
+                    super.onClick(view);
+                    
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle(R.string.multiuser_policy);
+                    String[] items = new String[] { getString(R.string.multiuser_owner_only), getString(R.string.multiuser_owner_managed), getString(R.string.multiuser_user) };
+                    builder.setItems(items, new OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                            case 0:
+                                Settings.setMultiuserMode(getActivity(), Settings.MULTIUSER_MODE_OWNER_ONLY);
+                                break;
+                            case 1:
+                                Settings.setMultiuserMode(getActivity(), Settings.MULTIUSER_MODE_OWNER_MANAGED);
+                                break;
+                            case 2:
+                                Settings.setMultiuserMode(getActivity(), Settings.MULTIUSER_MODE_USER);
+                                break;
+                            }
+                            update();
+                        }
+                    });
+                    builder.create().show();
+                }
+            });
+        }
         
         addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary, R.drawable.ic_declare) {
             @Override
@@ -186,16 +245,6 @@ public class SettingsFragment extends BetterListFragment {
                 checkPin();
             }            
         });
-        
-        addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary, R.drawable.ic_logging) {
-            @Override
-            public void onClick(View view) {
-                super.onClick(view);
-                Settings.setLogging(getActivity(), getChecked());
-            }
-        })
-        .setCheckboxVisible(true)
-        .setChecked(Settings.getLogging(getActivity()));
 
         addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity())), R.drawable.ic_timeout) {
             @Override
@@ -218,7 +267,16 @@ public class SettingsFragment extends BetterListFragment {
             }
         });
 
-        
+        addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary, R.drawable.ic_logging) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                Settings.setLogging(getActivity(), getChecked());
+            }
+        })
+        .setCheckboxVisible(true)
+        .setChecked(Settings.getLogging(getActivity()));
+
         addItem(R.string.settings, new ListItem(this, R.string.notifications, 0, R.drawable.ic_notifications) {
             void update() {
                 switch (Settings.getNotificationType(getActivity())) {
