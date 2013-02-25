@@ -26,26 +26,6 @@
 
 #include "su.h"
 
-static void kill_child(pid_t pid) {
-    LOGD("killing child %d", pid);
-    if (pid) {
-        sigset_t set, old;
-
-        sigemptyset(&set);
-        sigaddset(&set, SIGCHLD);
-        if (sigprocmask(SIG_BLOCK, &set, &old)) {
-            PLOGE("sigprocmask(SIG_BLOCK)");
-            return;
-        }
-        if (kill(pid, SIGKILL))
-            PLOGE("kill (%d)", pid);
-        else if (sigsuspend(&old) && errno != EINTR)
-            PLOGE("sigsuspend");
-        if (sigprocmask(SIG_SETMASK, &old, NULL))
-            PLOGE("sigprocmask(SIG_BLOCK)");
-    }
-}
-
 // TODO: leverage this with exec_log?
 static int silent_run(char* command) {
     char *args[] = { "sh", "-c", command, NULL, };
@@ -104,7 +84,6 @@ int send_result(struct su_context *ctx, policy_t policy) {
             ctx->from.name, ctx->to.name,
             ctx->from.uid, ctx->to.uid, get_command(&ctx->to), policy == ALLOW ? "allow" : "deny", ctx->user.android_user_id);
         silent_run(user_result_command);
-        LOGD(user_result_command);
     }
 
     char result_command[ARG_MAX];

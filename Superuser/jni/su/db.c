@@ -55,7 +55,6 @@ static int database_callback(void *v, int argc, char **argv, char **azColName){
         else if (strcmp(azColName[i], "until") == 0) {
             if (argv[i] != NULL) {
                 until = atoi(argv[i]);
-                LOGD("Until: %d", until);
             }
         }
     }

@@ -178,7 +178,6 @@ static int get_multiuser_mode() {
         if (mode[last] == '\n')
             mode[last] = '\0';
         fgets(mode, sizeof(mode), fp);
-        LOGD("multiuser mode: %s", mode);
         if (strcmp(mode, MULTIUSER_VALUE_USER) == 0) {
             ret = MULTIUSER_MODE_USER;
         } else if (strcmp(mode, MULTIUSER_VALUE_OWNER_MANAGED) == 0) {
@@ -324,7 +323,6 @@ static int socket_accept(int serv_fd) {
     tv.tv_usec = 0;
     FD_ZERO(&fds);
     FD_SET(serv_fd, &fds);
-    LOGD("select");
     do {
         rc = select(serv_fd + 1, &fds, NULL, NULL, &tv);
     } while (rc < 0 && errno == EINTR);
@@ -738,7 +736,6 @@ int main(int argc, char *argv[]) {
     }
 
     int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);
-    LOGD("mkdir: %d", ret);
     if (chown(REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid)) {
         PLOGE("chown (%s, %ld, %ld)", REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid);
         deny(&ctx);
