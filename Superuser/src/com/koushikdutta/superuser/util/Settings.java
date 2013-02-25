@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 
-import android.app.AlertDialog.Builder;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -18,7 +17,6 @@ import android.os.Build;
 import android.util.Base64;
 
 import com.koushikdutta.superuser.Helper;
-import com.koushikdutta.superuser.R;
 
 public class Settings {
     SQLiteDatabase mDatabase;
@@ -249,7 +247,7 @@ public class Settings {
     private static final String MULTIUSER_VALUE_USER = "user";
 
     public static final int getMultiuserMode(Context context) {
-        if (Build.VERSION.SDK_INT < 16)
+        if (Build.VERSION.SDK_INT < 17)
             return MULTIUSER_MODE_NONE;
 
         if (!Helper.supportsMultipleUsers(context))
