@@ -23,6 +23,12 @@ Same old, same old.
 * $ cd Superuser/Superuser
 * $ ant release
 
+Outputs:
+* bin/update.zip - Recovery installable zip
+* bin/Superuser.apk - Superuser Android app
+* libs/armeabi/su - ARM su binary
+* libs/x86/su - x86 su binary
+
 ## Building the su binary
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
