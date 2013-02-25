@@ -54,8 +54,8 @@ public class SuReceiver extends BroadcastReceiver {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setTicker(toast)
-            .setContentTitle(toast)
-            .setContentText("")
+            .setContentTitle(context.getString(R.string.app_name))
+            .setContentText(toast)
             .setSmallIcon(R.drawable.ic_stat_notification);
             
             NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
