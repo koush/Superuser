@@ -47,7 +47,7 @@
     <string name="superuser_description">volle Berechtigungen auf alle Gerätefunktionen und Speicher</string>
     <string name="superuser_description_more">Superuser gewährt vollen Zugriff auf alle Gerätefunktionen und Speicher, einschließlich der sicheren und sensiblen Hardware-Elemente Ihres Geräts. Diese Erlaubnis ist potenziell gefährlich.</string>
     <string name="declared_permission">Deklarierte Genehmigung</string>
-    <string name="declared_permission_summary">Erlaube nur Anfragen von Anwendungen die android.permission.ACCESS_SUPERUSER verwenden</string>
+    <string name="declared_permission_summary">Erlaube nur Anfragen von Apps die android.permission.ACCESS_SUPERUSER verwenden</string>
     <string name="automatic_response">Automatische Antwort</string>
     <string name="automatic_response_summary">Superuser %s neue Anfragen</string>
     <string name="prompt">Zeigt</string>
