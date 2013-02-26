@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import junit.framework.Assert;
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -34,6 +35,7 @@ import com.koushikdutta.superuser.db.SuDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
 
+@SuppressLint("ValidFragment")
 public class MultitaskSuRequestActivity extends FragmentActivity {
     private static final String LOGTAG = "Superuser";
     int mCallerUid;

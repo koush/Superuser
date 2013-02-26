@@ -84,14 +84,6 @@
         <receiver
             android:name=".SuReceiver"
             android:permission="android.permission.REPORT_SUPERUSER" />
-
-        <activity
-            android:name=".PinActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false"
-            android:label="@string/enter_pin"
-            android:noHistory="true"
-            android:theme="@style/RequestTheme" />
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.koushikdutta.superuser;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,6 +17,7 @@ import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.widgets.BetterListFragment;
 import com.koushikdutta.widgets.ListItem;
 
+@SuppressLint("ValidFragment")
 public class SettingsFragment extends BetterListFragment {
     @Override
     protected int getListFragmentResource() {

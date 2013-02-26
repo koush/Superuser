@@ -27,7 +27,7 @@
     <string name="pin_protection">Использование PIN-кода</string>
     <string name="pin_protection_summary">Запрашивать ввод PIN-кода для запросов Суперпользователя</string>
     <string name="request_timeout">Таймаут доступа</string>
-    <string name="request_timeout_summary">Приложения, которые не запомнены будут иметь доступ на %1$d секунд после запроса</string>
+    <string name="request_timeout_summary">Приложения, которые не запомнены будут иметь доступ на %s секунд после запроса</string>
     <string name="notifications">Оповещения</string>
     <string name="none">Нет</string>
     <string name="notifications_summary">%s будет показано когда приложение получает SU разрешения</string>
