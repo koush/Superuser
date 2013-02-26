@@ -3,5 +3,4 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
 
     <dimen name="log_item_padding">4dp</dimen>
-    <dimen name="section_padding">4dp</dimen>
 </resources>

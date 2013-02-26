@@ -29,7 +29,6 @@ public class LogFragment extends BetterListFragment {
     }
     
     void onDelete() {
-        
     }
     
     @Override
@@ -77,14 +76,13 @@ public class LogFragment extends BetterListFragment {
             name.setText(up.name);
             
             ((TextView)view.findViewById(R.id.uid_header)).setText(Integer.toString(up.desiredUid));
-            ((TextView)view.findViewById(R.id.command_header)).setText(up.command);
+            ((TextView)view.findViewById(R.id.command_header)).setText(up.command == null ? getString(R.string.all_commands) : up.command);
             String app = up.username;
             if (app == null || app.length() == 0)
                 app = String.valueOf(up.uid);
             ((TextView)view.findViewById(R.id.app_header)).setText(app);
             ((TextView)view.findViewById(R.id.package_header)).setText(up.packageName);
 
-            
             getListView().setSelector(android.R.color.transparent);
 
             logs = SuDatabaseHelper.getLogs(getActivity(), up, -1);

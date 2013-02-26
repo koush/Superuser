@@ -45,6 +45,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         catch (Exception ex) {
         }
     }
+
     public static void setPolicy(Context context, UidPolicy policy) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
         
@@ -62,6 +63,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         values.put("desired_name", policy.desiredName);
         values.put("username", policy.username);
         db.replace("uid_policy", null, values);
+        db.close();
     }
     
     private static void getUidCommand(Cursor c, UidCommand u) {
@@ -98,6 +100,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         catch (Exception ex) {
+            ex.printStackTrace();
         }
         finally {
             c.close();
@@ -109,7 +112,11 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<LogEntry> getLogs(Context context, UidPolicy policy, int limit) {
         ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
-        Cursor c = db.query("log", null, "uid = ? and desired_uid = ? and command = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid), policy.command }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
+        Cursor c;
+        if (policy.command != null)
+            c = db.query("log", null, "uid = ? and desired_uid = ? and command = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid), policy.command }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
+        else
+            c = db.query("log", null, "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
         try {
             while (c.moveToNext()) {
                 LogEntry l = new LogEntry();
@@ -154,7 +161,10 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
 
     public static void delete(Context context, UidPolicy policy) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
-        db.delete("uid_policy", "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), policy.command, String.valueOf(policy.desiredUid) });
+        if (policy.command != null)
+            db.delete("uid_policy", "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), policy.command, String.valueOf(policy.desiredUid) });
+        else
+            db.delete("uid_policy", "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) });
         db.close();
     }
 
@@ -165,25 +175,26 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     }
     
     public static void addLog(Context context, LogEntry log) {
+        getPackageInfoForUid(context, log);
+
         if (!Settings.getLogging(context))
             return;
         
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
-        
         Cursor c = db.query("uid_policy", null, "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(log.uid), log.command, String.valueOf(log.desiredUid) }, null, null, null, null);
         try {
             if (c.moveToNext()) {
                 UidPolicy u = getPolicy(context, c);
-                if (!u.logging)
+                if (!u.logging) {
+                    db.close();
                     return;
+                }
             }
         }
         finally {
             c.close();
         }
-        
-        getPackageInfoForUid(context, log);
-        
+
         ContentValues values = new ContentValues();
         values.put("uid", log.uid);
         values.put("command", log.command);

@@ -91,7 +91,9 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 UidPolicy policy = new UidPolicy();
                 policy.policy = action ? UidPolicy.ALLOW : UidPolicy.DENY;
                 policy.uid = mCallerUid;
-                policy.command = mDesiredCmd;
+                // for now just approve all commands, since per command approval is stupid
+//                policy.command = mDesiredCmd;
+                policy.command = null;
                 policy.until = until;
                 policy.desiredUid = mDesiredUid;
                 SuDatabaseHelper.setPolicy(this, policy);
