@@ -217,9 +217,9 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         // automatic response
         switch (Settings.getAutomaticResponse(MultitaskSuRequestActivity.this)) {
         case Settings.AUTOMATIC_RESPONSE_ALLOW:
-            // automatic response and pin can not be used together
-            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
-                break;
+//            // automatic response and pin can not be used together
+//            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
+//                break;
             // check if the permission must be granted 
             if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !granted)
                 break;
