@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Superuser</string>
-    <string name="allow">Erlauben</string>
-    <string name="deny">Verweigern</string>
+    <string name="allow">Gewährt</string>
+    <string name="deny">Verweigert</string>
     <string name="status_incoming">Eingehende Superuser Anfrage...</string>
     <string name="unknown_uid">Unbekannte UID: %s</string>
     <string name="application_request">%s fordert Superuser Zugriff.</string>
@@ -26,8 +26,8 @@
     <string name="logging_summary">Aktivieren oder deaktivieren Sie alle Protokollierung für Superuser Anfragen</string>
     <string name="pin_protection">PIN Schutz</string>
     <string name="pin_protection_summary">Erfordern die Eingabe eines PIN um Superuser Anfragen zu genehmigen</string>
-    <string name="request_timeout">Request Timeout</string>
-    <string name="request_timeout_summary">Superuser requests will time out and be denied after %s seconds</string>
+    <string name="request_timeout">Anfragen Zeitlimit</string>
+    <string name="request_timeout_summary">Superuser Anfragen werden nach %s Sekunden Zeitüberschreitung verweigert</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="none">Keiner</string>
     <string name="notifications_summary">Eine %s wird angezeigt wenn eine App Superuser Anforderung gewährt oder verweigert bekommt</string>
@@ -40,17 +40,17 @@
     <string name="number_seconds">%s Sekunden</string>
     <string name="superuser_granted">Superuser gewährt für %s</string>
     <string name="superuser_denied">Superuser verweigert für %s</string>
-    <string name="toast">Toast</string>
+    <string name="toast">Benachrichtigung</string>
     <string name="notification">Benachrichtigung</string>
     <string name="no_notification">Es werden keine Benachrichtigungen angezeigt</string>
     <string name="developer_warning">Entwickler Warnung:\nandroid.permission.ACCESS_SUPERUSER\nnicht deklariert in manifest.</string>
     <string name="superuser_description">volle Berechtigungen auf alle Gerätefunktionen und Speicher</string>
     <string name="superuser_description_more">Superuser gewährt vollen Zugriff auf alle Gerätefunktionen und Speicher, einschließlich der sicheren und sensiblen Hardware-Elemente Ihres Geräts. Diese Erlaubnis ist potenziell gefährlich.</string>
     <string name="declared_permission">Deklarierte Genehmigung</string>
-    <string name="declared_permission_summary">Erlauben nur Anfragen von Anwendungen die android.permission.ACCESS_SUPERUSER verwenden</string>
+    <string name="declared_permission_summary">Erlaube nur Anfragen von Anwendungen die android.permission.ACCESS_SUPERUSER verwenden</string>
     <string name="automatic_response">Automatische Antwort</string>
-    <string name="automatic_response_summary">Superuser will %s new requests</string>
-    <string name="prompt">Prompt</string>
+    <string name="automatic_response_summary">Superuser %s neue Anfragen</string>
+    <string name="prompt">Zeigt</string>
     <string name="security">Sicherheit</string>
     <string name="multiuser_policy">Mehrbenutzer Regel</string>
     <string name="multiuser_owner_only_summary">Nur der Eigentümer kann Superuser anfordern</string>
@@ -60,6 +60,6 @@
     <string name="multiuser_owner_managed">Verwaltet vom Eigentümer</string>
     <string name="multiuser_user">Alle Benutzer</string>
     <string name="multiuser_require_owner">Die Mehrbenutzer Regeln werden nur vom Eigentümer verwaltet.</string>
-    <string name="owner_login_info">Bitte zum Eigentümer Account wecheln um die Anfrage zu erlauben oder zu verweigern.</string>
+    <string name="owner_login_info">Bitte zum Eigentümer Konto wechseln um die Anfrage zu erlauben oder zu verweigern.</string>
     <string name="all_commands">Alle Befehle</string>
 </resources>
