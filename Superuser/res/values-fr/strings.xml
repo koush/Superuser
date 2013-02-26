@@ -6,7 +6,7 @@
     <string name="status_incoming">Nouvelle demande Superuser...</string>
     <string name="unknown_uid">UID Inconnu: %s</string>
     <string name="application_request">%s demande les droits Superuser.</string>
-    <string name="info">Attention: Si vous n'êtes pas à l'origine de cette action ou ne comprennez pas cette demande, vous devriez la Refuser.</string>
+    <string name="info">Attention: Si vous n\'êtes pas à l\'origine de cette action ou ne comprennez pas cette demande, vous devriez la Refuser.</string>
     <string name="request">Demande Superuser</string>
     
     <string name="package_header">Paquet:</string>
