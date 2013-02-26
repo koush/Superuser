@@ -8,7 +8,7 @@ echo -n -e 'ui_print\n' > /proc/self/fd/$2
 cd /tmp
 mkdir superuser
 cd superuser
-unzip -o $3
+unzip -o "$3"
 
 X86=$(uname -a | grep x86)
 if [ ! -z "$X86" ]
