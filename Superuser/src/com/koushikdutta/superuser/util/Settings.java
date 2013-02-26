@@ -167,7 +167,7 @@ public class Settings {
         // 10^n possible values to brute force, where N is generally
         // 4. Ie, 10000. Yay, security theater. This really ought
         // to be a password.
-        if (value == null || value.length() == 0)
+        if (TextUtils.isEmpty(value))
             return null;
         try {
             MessageDigest digester = MessageDigest.getInstance("MD5");
