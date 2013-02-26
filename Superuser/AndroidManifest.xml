@@ -14,16 +14,25 @@
     <permission
         android:name="android.permission.REPORT_SUPERUSER"
         android:protectionLevel="signatureOrSystem" />
+
+    <permission-group
+        android:name="android.permission-group.SUPERUSER"
+        android:description="@string/superuser_description_more"
+        android:icon="@drawable/ic_action_permission"
+        android:label="@string/app_name"
+        android:priority="0" />
+
     <permission
-        android:protectionLevel="dangerous"
         android:name="android.permission.ACCESS_SUPERUSER"
         android:description="@string/superuser_description_more"
-        android:logo="@drawable/ic_action_permission"
         android:icon="@drawable/ic_action_permission"
-        android:label="@string/superuser_description" />
+        android:label="@string/superuser_description"
+        android:logo="@drawable/ic_action_permission"
+        android:permissionGroup="android.permission-group.SUPERUSER"
+        android:protectionLevel="dangerous" />
 
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
-    
+
     <application
         android:name=".SuApplication"
         android:allowBackup="false"
