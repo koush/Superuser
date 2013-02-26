@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Superuser</string>
+    <string name="allow">Autoriser</string>
+    <string name="deny">Refuser</string>
+    <string name="status_incoming">Nouvelle demande Superuser...</string>
+    <string name="unknown_uid">UID Inconnu: %s</string>
+    <string name="application_request">%s demande les droits Superuser.</string>
+    <string name="info">Attention: Si vous n'êtes pas à l'origine de cette action ou ne comprennez pas cette demande, vous devriez la Refuser.</string>
+    <string name="request">Demande Superuser</string>
+    
+    <string name="package_header">Paquet:</string>
+    <string name="app_header">Appli:</string>
+    <string name="uid_header">UID Demandé:</string>
+    <string name="command_header">Commande:</string>
+    
+    <string name="this_time_only">Cette fois seulement</string>
+    <string name="remember_for">Se souvenir de mon choix pendant %s minutes</string>
+    <string name="remember_forever">Toujours se souvenir de mon choix</string>    
+</resources>
