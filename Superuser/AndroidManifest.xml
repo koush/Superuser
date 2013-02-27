@@ -10,10 +10,10 @@
 
     <permission
         android:name="android.permission.REQUEST_SUPERUSER"
-        android:protectionLevel="signatureOrSystem" />
+        android:protectionLevel="signature" />
     <permission
         android:name="android.permission.REPORT_SUPERUSER"
-        android:protectionLevel="signatureOrSystem" />
+        android:protectionLevel="signature" />
 
     <permission-group
         android:name="android.permission-group.SUPERUSER"
