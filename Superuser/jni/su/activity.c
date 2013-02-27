@@ -64,7 +64,7 @@ int get_owner_login_user_args(struct su_context *ctx, char* user, int user_len) 
         snprintf(user, user_len, "--user %d", ctx->user.android_user_id);
     }
     else if (ctx->user.multiuser_mode == MULTIUSER_MODE_NONE) {
-        snprintf(user, user_len, "");
+        user[0] = '\0';
     }
     else {
         snprintf(user, user_len, "--user 0");

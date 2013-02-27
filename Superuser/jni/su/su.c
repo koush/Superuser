@@ -36,10 +36,10 @@
 #include "su.h"
 #include "utils.h"
 
-int get_shell_uid() {
+unsigned get_shell_uid() {
   struct passwd* ppwd = getpwnam("shell");
   if (NULL == ppwd) {
-    return -1;
+    return 2000;
   }
   
   return ppwd->pw_uid;
@@ -265,11 +265,6 @@ static void cleanup_signal(int sig) {
     exit(128 + sig);
 }
 
-void sigchld_handler(int sig) {
-    child_cleanup(su_ctx);
-    (void)sig;
-}
-
 static int socket_create_temp(char *path, size_t len) {
     int fd;
     struct sockaddr_un sun;
@@ -372,8 +367,8 @@ do {                                        \
 
     write_token(fd, "version", PROTO_VERSION);
     write_token(fd, "pid", ctx->from.pid);
-    write_token(fd, "from.name", ctx->from.name);
-    write_token(fd, "to.name", ctx->to.name);
+    write_string(fd, "from.name", ctx->from.name);
+    write_string(fd, "to.name", ctx->to.name);
     write_token(fd, "from.uid", ctx->from.uid);
     write_token(fd, "to.uid", ctx->to.uid);
     write_string(fd, "from.bin", ctx->from.bin);

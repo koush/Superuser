@@ -37,7 +37,9 @@
 #define CM_ROOT_ACCESS_ADB_ONLY      2
 #define CM_ROOT_ACCESS_APPS_AND_ADB  3
 
+#ifndef REQUESTOR
 #define REQUESTOR "com.koushikdutta.superuser"
+#endif
 #define REQUESTOR_DATA_PATH "/data/data/"
 #define REQUESTOR_FILES_PATH REQUESTOR_DATA_PATH REQUESTOR "/files"
 #define REQUESTOR_USER_PATH "/data/user/"
@@ -136,7 +138,6 @@ extern policy_t database_check(struct su_context *ctx);
 extern void set_identity(unsigned int uid);
 extern int send_request(struct su_context *ctx);
 extern int send_result(struct su_context *ctx, policy_t policy);
-extern void sigchld_handler(int sig);
 
 static inline char *get_command(const struct su_request *to)
 {
