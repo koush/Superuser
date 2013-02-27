@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Суперпользователь</string>
+    <string name="superuser">Суперпользователь</string>
     <string name="allow">Разрешить</string>
     <string name="deny">Отказать</string>
     <string name="status_incoming">Запрос прав Суперпользователя...</string>
