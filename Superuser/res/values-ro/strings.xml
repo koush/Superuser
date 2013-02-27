@@ -49,7 +49,6 @@
     <string name="declared_permission">Permisiune declarată</string>
     <string name="declared_permission_summary">Permiteţi doar cererile de la aplicațiile care declară android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Răspuns automat</string>
-    <string name="automatic_response_summary">Superuser va %s cereri noi</string>
     <string name="prompt">Întreba</string>
     <string name="security">Securitate</string>
     <string name="multiuser_policy">Politică multi-utilizator</string>

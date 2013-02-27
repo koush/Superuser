@@ -49,7 +49,6 @@
     <string name="declared_permission">Описанный запрос</string>
     <string name="declared_permission_summary">Разрешение будет только у приложений с описанным android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Автоматический ответ</string>
-    <string name="automatic_response_summary">Суперпользователь будет will %s новые запросы</string>
     <string name="prompt">Подсказка</string>
     <string name="security">Безопасность</string>
     <string name="multiuser_policy">Многопользовательские настройки</string>
