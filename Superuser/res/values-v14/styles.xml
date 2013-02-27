@@ -5,6 +5,4 @@
         <item name="android:textColor">?attr/bottomButtonBarText</item>
     </style>
 
-    <style name="RequestTheme" parent="Superuser"></style>
-
 </resources>

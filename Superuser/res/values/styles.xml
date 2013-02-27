@@ -1,7 +1,5 @@
 <resources>
 
-    <style name="RequestTheme" parent="Superuser"></style>
-
     <style name="BottomButton">
         <item name="android:textColor">?attr/bottomButtonBarText</item>
     </style>
@@ -48,6 +46,10 @@
     <style name="Superuser.PolicyIcon">
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
-
+    
+    <style name="RequestThemeDark" parent="SuperuserDark" />
+    <style name="RequestThemeLight" parent="SuperuserLight" />
+    
+    <style name="RequestTheme" parent="RequestThemeDark" />
     
 </resources>

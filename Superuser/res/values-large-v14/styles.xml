@@ -10,5 +10,4 @@
         <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
     </style>
 
-    <style name="RequestTheme" parent="RequestThemeDark" />
 </resources>
