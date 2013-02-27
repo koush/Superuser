@@ -167,6 +167,25 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             db.delete("uid_policy", "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) });
         db.close();
     }
+    
+    public static UidPolicy get(Context context, int uid, int desiredUid, String command) {
+        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        Cursor c;
+        if (command != null)
+            c = db.query("uid_policy", null, "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(uid), command, String.valueOf(desiredUid) }, null, null, null);
+        else
+            c = db.query("uid_policy", null, "uid = ? and desired_uid = ?", new String[] { String.valueOf(uid), String.valueOf(desiredUid) }, null, null, null);
+        try {
+            if (c.moveToNext()) {
+                return getPolicy(context, c);
+            }
+        }
+        finally {
+            c.close();
+            db.close();
+        }
+        return null;
+    }
 
     public static void deleteLogs(Context context) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
