@@ -49,8 +49,9 @@
     <string name="declared_permission">Declared Permission</string>
     <string name="declared_permission_summary">Only allow requests from apps that declare android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Automatic Response</string>
+    <string name="prompt">Prompt</string>
     <string name="automatic_response_allow_summary">Automatically allow new requests</string>
-    <string name="automatic_response_deny_summary">Automatically allow new requests</string>
+    <string name="automatic_response_deny_summary">Automatically deny new requests</string>
     <string name="automatic_response_prompt_summary">Show confirmation dialog for new requests</string>
     <string name="security">Security</string>
     <string name="multiuser_policy">Multiuser Policy</string>
