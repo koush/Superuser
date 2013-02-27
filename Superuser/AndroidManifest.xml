@@ -39,7 +39,7 @@
         android:allowClearUserData="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppDarkTheme" >
+        android:theme="@style/Superuser" >
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

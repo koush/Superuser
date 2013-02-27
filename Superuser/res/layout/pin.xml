@@ -90,11 +90,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_dark" >
+        android:background="?attr/bottomButtonBar" >
 
         <Button
             android:id="@+id/cancel"
-            style="@style/FlatButton"
+            style="@style/BottomButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -109,13 +109,13 @@
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" >
+                android:background="?android:attr/listDivider" >
             </LinearLayout>
         </LinearLayout>
 
         <Button
             android:id="@+id/ok"
-            style="@style/FlatButton"
+            style="@style/BottomButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

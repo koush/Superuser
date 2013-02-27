@@ -123,7 +123,7 @@ public class SettingsFragment extends BetterListFragment {
         super.onCreate(savedInstanceState, view);
         
         if (Settings.getMultiuserMode(getActivity()) != Settings.MULTIUSER_MODE_NONE) {
-            addItem(R.string.security, new ListItem(this, R.string.multiuser_policy, 0, R.drawable.ic_users) {
+            addItem(R.string.security, new ListItem(this, R.string.multiuser_policy, 0) {
                 void update() {
                     int res = -1;
                     switch (Settings.getMultiuserMode(getActivity())) {
@@ -181,20 +181,21 @@ public class SettingsFragment extends BetterListFragment {
                     });
                     builder.create().show();
                 }
-            });
+            }).setAttrDrawable(R.attr.multiuserIcon);
         }
         
-        addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary, R.drawable.ic_declare) {
+        addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
                 Settings.setRequirePermission(getActivity(), getChecked());
             }
         })
+        .setAttrDrawable(R.attr.declaredPermissionsIcon)
         .setCheckboxVisible(true)
         .setChecked(Settings.getRequirePermission(getActivity()));
 
-        addItem(R.string.security, new ListItem(this, R.string.automatic_response, 0, R.drawable.ic_alert) {
+        addItem(R.string.security, new ListItem(this, R.string.automatic_response, 0) {
             void update() {
                 switch (Settings.getAutomaticResponse(getActivity())) {
                 case Settings.AUTOMATIC_RESPONSE_ALLOW:
@@ -238,17 +239,19 @@ public class SettingsFragment extends BetterListFragment {
                 });
                 builder.create().show();
             }
-        });
+        })
+        .setAttrDrawable(R.attr.automaticResponseIcon);
 
-        pinItem = addItem(R.string.security, new ListItem(this, R.string.pin_protection, Settings.isPinProtected(getActivity()) ? R.string.pin_set : R.string.pin_protection_summary, R.drawable.ic_protected) {
+        pinItem = addItem(R.string.security, new ListItem(this, R.string.pin_protection, Settings.isPinProtected(getActivity()) ? R.string.pin_set : R.string.pin_protection_summary) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
                 checkPin();
             }            
-        });
+        })
+        .setAttrDrawable(R.attr.pinProtectionIcon);
 
-        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity())), R.drawable.ic_timeout) {
+        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity()))) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -267,19 +270,21 @@ public class SettingsFragment extends BetterListFragment {
                 });
                 builder.create().show();
             }
-        });
+        })
+        .setAttrDrawable(R.attr.requestTimeoutIcon);
 
-        addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary, R.drawable.ic_logging) {
+        addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
                 Settings.setLogging(getActivity(), getChecked());
             }
         })
+        .setAttrDrawable(R.attr.loggingIcon)
         .setCheckboxVisible(true)
         .setChecked(Settings.getLogging(getActivity()));
 
-        addItem(R.string.settings, new ListItem(this, R.string.notifications, 0, R.drawable.ic_notifications) {
+        addItem(R.string.settings, new ListItem(this, R.string.notifications, 0) {
             void update() {
                 switch (Settings.getNotificationType(getActivity())) {
                 case Settings.NOTIFICATION_TYPE_NONE:
@@ -323,6 +328,7 @@ public class SettingsFragment extends BetterListFragment {
                 });
                 builder.create().show();
             }
-        });
+        })
+        .setAttrDrawable(R.attr.notificationsIcon);
     }
 }

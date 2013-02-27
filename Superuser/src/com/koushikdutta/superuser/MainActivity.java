@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
 import android.text.format.DateFormat;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -116,7 +115,8 @@ public class MainActivity extends BetterListActivity {
 
                 setContent(this, up);
             };
-        });
+        })
+        .setTheme(R.style.Superuser_PolicyIcon);
         Drawable icon = Helper.loadPackageIcon(this, up.packageName);
         if (icon == null)
             li.setIcon(R.drawable.ic_launcher);

@@ -1,9 +1,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="FlatButton" parent="@android:style/TextAppearance.Inverse">
+    <style name="BottomButton">
         <item name="android:background">?android:attr/selectableItemBackground</item>
-    </style>
+        <item name="android:textColor">?attr/bottomButtonBarText</item>
+        </style>
 
-    <style name="RequestTheme" parent="@style/AppTheme"></style>
+    <style name="RequestTheme" parent="@style/Superuser"></style>
 
 </resources>
