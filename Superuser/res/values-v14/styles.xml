@@ -3,8 +3,8 @@
     <style name="BottomButton">
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:textColor">?attr/bottomButtonBarText</item>
-        </style>
+    </style>
 
-    <style name="RequestTheme" parent="@style/Superuser"></style>
+    <style name="RequestTheme" parent="Superuser"></style>
 
 </resources>

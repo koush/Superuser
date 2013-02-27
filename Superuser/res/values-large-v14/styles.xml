@@ -1,3 +1,14 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="RequestTheme"  parent="@android:style/Theme.Holo.Light.Dialog"></style>
+
+    <style name="RequestThemeLight" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="bottomButtonBar">@color/background_dark</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
+    </style>
+
+    <style name="RequestThemeDark" parent="@android:style/Theme.Holo.Dialog">
+        <item name="bottomButtonBar">@null</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="RequestTheme" parent="RequestThemeDark" />
 </resources>
