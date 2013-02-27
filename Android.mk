@@ -5,6 +5,10 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
+SUPERUSER_EMBEDDED := true
+ifdef SUPERUSER_EMBEDDED
+SUPERUSER_PACKAGE := com.android.settings
+endif
 
 ifeq ($(SUPERUSER_PACKAGE),)
 SUPERUSER_PACKAGE := com.thirdparty.superuser
