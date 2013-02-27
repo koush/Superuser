@@ -37,8 +37,14 @@
 #define CM_ROOT_ACCESS_ADB_ONLY      2
 #define CM_ROOT_ACCESS_APPS_AND_ADB  3
 
+// DO NOT CHANGE LINE BELOW, java package name will always be the same
+#define JAVA_PACKAGE_NAME "com.koushikdutta.superuser"
+
+// If --rename-manifest-package is used in AAPT, this
+// must be changed to correspond to the new APK package name
+// See the two Android.mk files for more details.
 #ifndef REQUESTOR
-#define REQUESTOR "com.koushikdutta.superuser"
+#define REQUESTOR JAVA_PACKAGE_NAME
 #endif
 #define REQUESTOR_DATA_PATH "/data/data/"
 #define REQUESTOR_FILES_PATH REQUESTOR_DATA_PATH REQUESTOR "/files"
@@ -52,9 +58,9 @@
 #define REQUESTOR_MULTIUSER_MODE REQUESTOR_FILES_PATH "/multiuser_mode"
 
 /* intent actions */
-#define ACTION_REQUEST "start -n " REQUESTOR "/.RequestActivity"
-#define ACTION_NOTIFY "start -n " REQUESTOR "/.NotifyActivity"
-#define ACTION_RESULT "broadcast -n " REQUESTOR "/.SuReceiver"
+#define ACTION_REQUEST "start -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".RequestActivity"
+#define ACTION_NOTIFY "start -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".NotifyActivity"
+#define ACTION_RESULT "broadcast -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".SuReceiver"
 
 #define DEFAULT_SHELL "/system/bin/sh"
 
