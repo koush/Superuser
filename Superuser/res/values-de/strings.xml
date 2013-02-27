@@ -49,8 +49,10 @@
     <string name="declared_permission">Deklaration erfordern</string>
     <string name="declared_permission_summary">Anfragen von Apps, die die Superuser-Berechtigung nicht im Manifest deklarieren, ignorieren</string>
     <string name="automatic_response">Automatische Beantwortung</string>
-    <string name="automatic_response_summary">Neue Anfragen %s</string>
-    <string name="prompt">Abfragen</string>
+    <string name="automatic_response_allow_summary">Neue Anfragen automatisch gewähren</string>
+    <string name="automatic_response_deny_summary">Neue Anfragen automatisch verweigern</string>
+    <string name="automatic_response_prompt_summary">Bei neuen Anfragen Bestätigungsdialog anzeigen</string>
+    <string name="prompt">Nachfragen</string>
     <string name="security">Sicherheit</string>
     <string name="multiuser_policy">Mehrbenutzer-Verhalten</string>
     <string name="multiuser_owner_only_summary">Nur der Eigentümer kann Superuser anfordern</string>
