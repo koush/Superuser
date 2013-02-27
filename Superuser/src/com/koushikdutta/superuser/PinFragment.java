@@ -16,10 +16,12 @@ public class PinFragment extends Fragment {
         View ret = inflater.inflate(R.layout.pin, container, false);
 
         final EditText password = (EditText)ret.findViewById(R.id.password);
-        int[] ids = new int[] { R.id.p1, R.id.p2, R.id.p3, R.id.p4, R.id.p5, R.id.p6, R.id.p7, R.id.p8, R.id.p9, R.id.p0, };
-        for (int id : ids) {
+        int[] ids = new int[] { R.id.p0, R.id.p1, R.id.p2, R.id.p3, R.id.p4, R.id.p5, R.id.p6, R.id.p7, R.id.p8, R.id.p9, };
+        for (int i = 0; i < ids.length; i++) {
+            int id = ids[i];
             Button b = (Button)ret.findViewById(id);
-            final String text = b.getText().toString();
+            final String text = String.valueOf(i);
+            b.setText(text);
             b.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -6,7 +6,6 @@
     <color name="background_dark">#1F1F1F</color>
 
     <style name="PinButton" parent="@android:style/TextAppearance.Large">
-        <item name="android:background">@drawable/border</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">64dp</item>
         <item name="android:layout_weight">1</item>
