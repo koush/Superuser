@@ -100,7 +100,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     }
     
     void setContent(final ListItem li, final UidPolicy up) {
-        if (getFragment() instanceof FragmentActivity) {
+        if (getActivity() instanceof FragmentActivity) {
             LogFragment l = new LogFragment() {
                 @Override
                 void onDelete() {
