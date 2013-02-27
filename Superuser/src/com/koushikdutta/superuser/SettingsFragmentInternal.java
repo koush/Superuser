@@ -205,13 +205,13 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
             void update() {
                 switch (Settings.getAutomaticResponse(getActivity())) {
                 case Settings.AUTOMATIC_RESPONSE_ALLOW:
-                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.allow)));
+                    setSummary(R.string.automatic_response_allow_summary);
                     break;
                 case Settings.AUTOMATIC_RESPONSE_DENY:
-                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.deny)));
+                    setSummary(R.string.automatic_response_deny_summary);
                     break;
                 case Settings.AUTOMATIC_RESPONSE_PROMPT:
-                    setSummary(getString(R.string.automatic_response_summary, getString(R.string.prompt)));
+                    setSummary(R.string.automatic_response_prompt_summary);
                     break;
                 }
             }
