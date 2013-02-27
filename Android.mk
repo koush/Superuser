@@ -5,14 +5,15 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-SUPERUSER_EMBEDDED := true
 ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
-endif
-
+else
 ifeq ($(SUPERUSER_PACKAGE),)
 SUPERUSER_PACKAGE := com.thirdparty.superuser
 endif
+include $(LOCAL_PATH)/Superuser/Android.mk
+endif
+
 
 LOCAL_MODULE := su
 LOCAL_FORCE_STATIC_EXECUTABLE := true
@@ -23,4 +24,3 @@ LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION -DREQUESTOR=\"$(SUPERUSER_PACKAGE)\
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 include $(BUILD_EXECUTABLE)
 
-include $(LOCAL_PATH)/Superuser/Android.mk

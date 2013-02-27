@@ -2,7 +2,6 @@
 <resources>
 
     <string name="superuser">Superuser</string>
-    <string name="app_name">Superuser</string>
     <string name="allow">Gewähren</string>
     <string name="deny">Verweigern</string>
     <string name="status_incoming">Eingehende Superuser-Anfrage\u2026</string>
