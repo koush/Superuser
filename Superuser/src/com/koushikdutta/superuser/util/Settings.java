@@ -230,6 +230,7 @@ public class Settings {
         byte[] buffer = new byte[(int) file.length()];
         DataInputStream input = new DataInputStream(new FileInputStream(file));
         input.readFully(buffer);
+        input.close();
         return new String(buffer);
     }
     
