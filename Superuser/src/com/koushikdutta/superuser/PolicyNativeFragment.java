@@ -1,5 +1,7 @@
 package com.koushikdutta.superuser;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -18,12 +20,29 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
         return mWrapper;
     }
 
+    @SuppressLint("NewApi")
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        System.out.println("ondetach");
+        Fragment c = getFragmentManager().findFragmentByTag("content");
+        if (c != null)
+            getFragmentManager().beginTransaction().remove(c).commit();
+        else
+            System.out.println("nothing");
+    }
+    
     @Override
     public PolicyFragmentInternal createFragmentInterface() {
         return new PolicyFragmentInternal(this) {
             @Override
             public Context getContext() {
                 return PolicyNativeFragment.this.getContext(super.getContext());
+            }
+            
+            @Override
+            protected int getListFragmentResource() {
+                return R.layout.policy_list_content;
             }
             
             @Override

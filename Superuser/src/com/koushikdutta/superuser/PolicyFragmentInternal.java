@@ -24,7 +24,6 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     public PolicyFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
     }
-
     
     void showAllLogs() {
         setContent(null, null);
@@ -133,7 +132,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             mContent = setContentNative(li, up);
         }
 
-        setContent(mContent, up == null);
+        setContent(mContent, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
     
     @Override
@@ -159,7 +158,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                         super.onConfigurationChanged(newConfig);
                         onMenuItemClick(item);
                     }
-                }, true);
+                }, true, getString(R.string.settings));
             }
             
             @Override
@@ -171,7 +170,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                             super.onConfigurationChanged(newConfig);
                             onMenuItemClick(item);
                         }
-                    }, true);
+                    }, true, getString(R.string.settings));
                 }
                 else {
                     openSettingsNative(item);
