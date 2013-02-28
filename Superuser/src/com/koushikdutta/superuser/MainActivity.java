@@ -10,10 +10,4 @@ public class MainActivity extends BetterListActivity {
     public PolicyFragmentInternal getFragment() {
         return (PolicyFragmentInternal)super.getFragment();
     }
-
-    public void onBackPressed() {
-        if (getFragment().onBackPressed())
-            return;
-        super.onBackPressed();
-    };
 }
