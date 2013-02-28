@@ -186,22 +186,23 @@ index 0805d68..bc0a933 100644
  # Keep click responders
  -keepclassmembers class com.android.settings.inputmethod.UserDictionaryAddWordActivity {
 diff --git a/res/xml/settings_headers.xml b/res/xml/settings_headers.xml
-index 156d63f..6a903e3 100644
+index 156d63f..63b7077 100644
 --- a/res/xml/settings_headers.xml
 +++ b/res/xml/settings_headers.xml
-@@ -215,6 +215,13 @@
+@@ -213,6 +213,13 @@
+     <header android:id="@+id/system_section"
+         android:title="@string/header_category_system" />
  
-     <!-- Date & Time -->
-     <header
++    <!-- Superuser -->
++    <header
 +        android:id="@+id/superuser"
 +        android:fragment="com.koushikdutta.superuser.PolicyNativeFragment"
 +        android:icon="@drawable/ic_action_permission"
 +        android:title="@string/superuser" />
 +
-+    <!-- Date & Time -->
-+    <header
+     <!-- Date & Time -->
+     <header
          android:id="@+id/date_time_settings"
-         android:fragment="com.android.settings.DateTimeSettings"
-         android:icon="@drawable/ic_settings_date_time"
+
 
 ```
