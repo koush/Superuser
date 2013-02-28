@@ -82,7 +82,7 @@ into the com.android.settings package.
 First, in a product makefile (like vendor/cm/config/common.mk), specify the following:
 
 ```
-SUPERUSER_EMBEDDED :+ true
+SUPERUSER_EMBEDDED := true
 ```
 
 To modify the Settings app, you will need this [patch](https://gist.github.com/koush/5059098).
