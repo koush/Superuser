@@ -78,8 +78,8 @@ SUPERUSER_PACKAGE := com.mypackagename.superuser
 
 You will not need to change the package name as described above. Superuser will simply go
 into the com.android.settings package. To modify the Settings app, you will need this [patch](https://gist.github.com/koush/5059098).
-The patch simply references the sources checked out to external/koush and makes a few changes
-too XML preference files. It is a very minimal change:
+The patch simply references the sources checked out to external/koush and makes changes
+to XML preference files and the AndroidManifest.xml. It is a very minimal change:
 
 ```diff
 
