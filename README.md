@@ -79,7 +79,7 @@ SUPERUSER_PACKAGE := com.mypackagename.superuser
 You will not need to change the package name as described above. Superuser will simply go
 into the com.android.settings package.
 
-First, in a product makefile, specify the following:
+First, in a product makefile (like vendor/cm/config/common.mk), specify the following:
 
 ```
 SUPERUSER_EMBEDDED :+ true
