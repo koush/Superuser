@@ -24,6 +24,11 @@ public class SettingsNativeFragment extends NativeFragment<SettingsFragmentInter
     public SettingsFragmentInternal createFragmentInterface() {
         return new SettingsFragmentInternal(this) {
             @Override
+            protected void setPadding() {
+                super.setPadding();
+                getListView().setPadding(0, 0, 0, 0);
+            }
+            @Override
             public Context getContext() {
                 return SettingsNativeFragment.this.getContext(super.getContext());
             }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Superuser</string>
+    <string name="superuser">Superuser</string>
     <string name="allow">Permitir</string>
     <string name="deny">Denegar</string>
     <string name="status_incoming">Petición Superuser entrante...</string>

@@ -2,7 +2,6 @@ package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Menu;
@@ -70,6 +69,18 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
         super.onCreate(savedInstanceState, view);
         
         getFragment().setHasOptionsMenu(true);
+        
+        if (up == null) {
+            Bundle bundle = getFragment().getArguments();
+            if (bundle != null) {
+                String command = bundle.getString("command");
+                int uid = bundle.getInt("uid", -1);
+                int desiredUid = bundle.getInt("desiredUid", -1);
+                if (uid != -1 && desiredUid != -1) {
+                    up = SuDatabaseHelper.get(getContext(), uid, desiredUid, command);
+                }
+            }
+        }
         
         ArrayList<LogEntry> logs;
         java.text.DateFormat day = DateFormat.getDateFormat(getActivity());

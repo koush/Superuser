@@ -10,8 +10,8 @@ import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.MenuItem.OnMenuItemClickListener;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
@@ -24,7 +24,6 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     public PolicyFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
     }
-
     
     void showAllLogs() {
         setContent(null, null);
@@ -79,23 +78,34 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         else
             li.setDrawable(icon);
     }
+    
+    public void onConfigurationChanged(Configuration newConfig) {
+    };
 
     FragmentInterfaceWrapper setContentNative(final ListItem li, final UidPolicy up) {
-        LogNativeFragment l = new LogNativeFragment() {
-            @Override
-            void onDelete() {
-                super.onDelete();
-                removeItem(li);
-                showAllLogs();
-            }
-
-            @Override
-            public void onConfigurationChanged(Configuration newConfig) {
-                super.onConfigurationChanged(newConfig);
-                setContent(li, up);
-            }
-        };
+        LogNativeFragment l = new LogNativeFragment();
+//        {
+//            @Override
+//            void onDelete() {
+//                super.onDelete();
+//                removeItem(li);
+//                showAllLogs();
+//            }
+//
+//            @Override
+//            public void onConfigurationChanged(Configuration newConfig) {
+//                super.onConfigurationChanged(newConfig);
+//                setContent(li, up);
+//            }
+//        };
         l.getInternal().setUidPolicy(up);
+        if (up != null) {
+            Bundle args = new Bundle();
+            args.putString("command", up.command);
+            args.putInt("uid", up.uid);
+            args.putInt("desiredUid", up.desiredUid);
+            l.setArguments(args);
+        }
         return l;
     }
     
@@ -122,7 +132,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             mContent = setContentNative(li, up);
         }
 
-        setContent(mContent, up == null);
+        setContent(mContent, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
     
     @Override
@@ -148,7 +158,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                         super.onConfigurationChanged(newConfig);
                         onMenuItemClick(item);
                     }
-                }, true);
+                }, true, getString(R.string.settings));
             }
             
             @Override
@@ -160,7 +170,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                             super.onConfigurationChanged(newConfig);
                             onMenuItemClick(item);
                         }
-                    }, true);
+                    }, true, getString(R.string.settings));
                 }
                 else {
                     openSettingsNative(item);
