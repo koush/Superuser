@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -65,32 +64,22 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
         return R.layout.policy_fragment;
     }
     
-    static int counter = 0;
-    private static final String LOGTAG = "LogFragment";
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
-        final int me = counter++;
         
         getFragment().setHasOptionsMenu(true);
         
         if (up == null) {
-            Log.i(LOGTAG, "Attempting to restore state " + me);
             Bundle bundle = getFragment().getArguments();
             if (bundle != null) {
-                Log.i(LOGTAG, "Attempting to restore state 2");
                 String command = bundle.getString("command");
                 int uid = bundle.getInt("uid", -1);
                 int desiredUid = bundle.getInt("desiredUid", -1);
                 if (uid != -1 && desiredUid != -1) {
-                    Log.i(LOGTAG, "Attempting to restore state 3");
                     up = SuDatabaseHelper.get(getContext(), uid, desiredUid, command);
-                    Log.i(LOGTAG, "" + (up == null));
                 }
             }
-        }
-        else {
-            Log.i(LOGTAG, "state exists " + me);
         }
         
         ArrayList<LogEntry> logs;
