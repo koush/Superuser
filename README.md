@@ -53,6 +53,10 @@ The su binary will built into Superuser/Superuser/libs/armeabi/su.
 
 ## Building with AOSP, CyanogenMod, etc
 
+ROM developers are welcome to distribute the official Superuser APK and binary that I publish. That will
+allow them to receive updates with Google Play. However, you can also build Superuser as part of your
+build, if you choose to.
+
 There are two ways to include Superuser in your build. The easiest is to build the APK as a separate app.
 To do that, simply add the local_manifest.xml as described below. The second way is by embedding it
 into the native Android System Settings.
