@@ -3,8 +3,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-include $(CLEAR_VARS)
-
 ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
 else
@@ -13,6 +11,8 @@ SUPERUSER_PACKAGE := com.thirdparty.superuser
 endif
 include $(LOCAL_PATH)/Superuser/Android.mk
 endif
+
+include $(CLEAR_VARS)
 
 
 LOCAL_MODULE := su
