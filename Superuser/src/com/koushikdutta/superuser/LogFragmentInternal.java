@@ -102,7 +102,6 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 int uid = bundle.getInt("uid", -1);
                 int desiredUid = bundle.getInt("desiredUid", -1);
                 if (uid != -1 && desiredUid != -1) {
-                    System.out.println("refreshing up");
                     up = SuDatabaseHelper.get(getContext(), uid, desiredUid, command);
                 }
             }
