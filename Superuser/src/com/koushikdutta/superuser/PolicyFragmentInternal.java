@@ -68,11 +68,13 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         
         load();
 
-        ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
-        if (watermark != null)
-            watermark.setImageResource(R.drawable.clockwork512);
-        if (!isPaged())
-            showAllLogs();
+        if ("com.koushikdutta.superuser".equals(getContext().getPackageName())) {
+            ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
+            if (watermark != null)
+                watermark.setImageResource(R.drawable.clockwork512);
+            if (!isPaged())
+                showAllLogs();
+        }
     }
     
 
