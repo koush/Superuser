@@ -35,7 +35,7 @@
     <string name="enter_new_pin">הכנס PIN חדש</string>
     <string name="incorrect_pin">לא נכון PIN</string>
     <string name="confirm_pin">אשר PIN</string>
-    <string name="pin_mismatch">PIN לא מתאים/string>
+    <string name="pin_mismatch">PIN לא מתאים</string>
     <string name="pin_set">הגנת PIN מופעלת</string>
     <string name="number_seconds">%s שניות</string>
     <string name="superuser_granted">Superuser אושר למשך %s</string>
