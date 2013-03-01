@@ -49,6 +49,7 @@ Outputs:
 ## Building the su binary
 
 You can use ant as shown above, to build the binary, but it can also be built without building the APK.
+
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
 * $ cd /path/to/src/
