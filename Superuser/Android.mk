@@ -1,5 +1,3 @@
-ifndef SUPERUSER_EMBEDDED
-
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -11,5 +9,3 @@ LOCAL_AAPT_INCLUDE_ALL_RESOURCES := true
 LOCAL_AAPT_FLAGS := --extra-packages com.koushikdutta.widgets -S $(LOCAL_PATH)/../../Widgets/Widgets/res --auto-add-overlay --rename-manifest-package $(SUPERUSER_PACKAGE)
 
 include $(BUILD_PACKAGE)
-
-endif

@@ -20,7 +20,7 @@
         android:description="@string/superuser_description_more"
         android:icon="@drawable/ic_action_permission"
         android:label="@string/superuser"
-        android:priority="0" />
+        android:priority="10000" />
 
     <permission
         android:name="android.permission.ACCESS_SUPERUSER"

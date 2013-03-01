@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Koushik Dutta (@koush)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.koushikdutta.superuser.db;
 
 import java.util.ArrayList;
@@ -13,13 +29,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.koushikdutta.superuser.util.Settings;
 
 public class SuDatabaseHelper extends SQLiteOpenHelper {
+    private static final int CURRENT_VERSION = 3;
     public SuDatabaseHelper(Context context) {
-        super(context, "su.sqlite", null, 1);
+        super(context, "su.sqlite", null, CURRENT_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        onUpgrade(db, 0, 1);
+        onUpgrade(db, 0, CURRENT_VERSION);
     }
 
     @Override
@@ -32,6 +49,11 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("create index if not exists log_command_index on log(command)");
             db.execSQL("create index if not exists log_date_index on log(date)");
             oldVersion = 1;
+        }
+        
+        if (oldVersion == 1 || oldVersion == 2) {
+            db.execSQL("create table if not exists settings (key TEXT PRIMARY KEY, value TEXT)");
+            oldVersion = 3;
         }
     }
     
@@ -166,6 +188,25 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         else
             db.delete("uid_policy", "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) });
         db.close();
+    }
+    
+    public static UidPolicy get(Context context, int uid, int desiredUid, String command) {
+        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        Cursor c;
+        if (command != null)
+            c = db.query("uid_policy", null, "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(uid), command, String.valueOf(desiredUid) }, null, null, null);
+        else
+            c = db.query("uid_policy", null, "uid = ? and desired_uid = ?", new String[] { String.valueOf(uid), String.valueOf(desiredUid) }, null, null, null);
+        try {
+            if (c.moveToNext()) {
+                return getPolicy(context, c);
+            }
+        }
+        finally {
+            c.close();
+            db.close();
+        }
+        return null;
     }
 
     public static void deleteLogs(Context context) {

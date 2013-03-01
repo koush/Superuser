@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package com.koushikdutta.superuser.util;
+package com.koushikdutta.superuser;
 
-import android.graphics.drawable.Drawable;
+import com.koushikdutta.widgets.BetterListFragment;
 
-public final class ImageCache extends SoftReferenceHashTable<String, Drawable> {
-    private static ImageCache mInstance = new ImageCache();
-    
-    public static ImageCache getInstance() {
-        return mInstance;
+public class PolicyFragment extends BetterListFragment {
+
+    @Override
+    public PolicyFragmentInternal createFragmentInterface() {
+        return new PolicyFragmentInternal(this);
     }
-    
-    private ImageCache() {
-    }
+
 }

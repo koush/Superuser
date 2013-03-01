@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project name="koush/Superuser" path="external/koush/Superuser" remote="github" revision="master" />
+  <project name="koush/Widgets" path="external/koush/Widgets" remote="github" revision="master" />
+</manifest>

@@ -20,7 +20,7 @@
     <string name="logs">Журнал</string>
     <string name="settings">Настройки</string>
     <string name="delete">Очистить</string>
-    <string name="no_logs">Команда</string>
+    <string name="no_logs">Журнал пуст</string>
     <string name="no_apps">Нет приложений для управления.</string>
     <string name="logging">Включить логгирование</string>
     <string name="logging_summary">Включить ведение журнала</string>
@@ -48,9 +48,11 @@
     <string name="superuser_description_more">Суперпользователь предоставляет полный доступ к функциям и памяти устройства. Это может представлять опасность.</string>
     <string name="declared_permission">Описанный запрос</string>
     <string name="declared_permission_summary">Разрешение будет только у приложений с описанным android.permission.ACCESS_SUPERUSER</string>
-    <string name="automatic_response">Автоматический ответ</string>
-    <string name="automatic_response_summary">Суперпользователь будет will %s новые запросы</string>
-    <string name="prompt">Подсказка</string>
+    <string name="automatic_response">Автоматическиое решение</string>
+    <string name="prompt">Спрашивать каждый раз</string>
+    <string name="automatic_response_allow_summary">Новые запросы будут подтверждены</string>
+    <string name="automatic_response_deny_summary">Новые запросы будут запрещены</string>
+    <string name="automatic_response_prompt_summary">Запрашивать разрешение каждый раз</string>
     <string name="security">Безопасность</string>
     <string name="multiuser_policy">Многопользовательские настройки</string>
     <string name="multiuser_owner_only_summary">Только владелец может запрашивать Суперпользователя</string>
@@ -61,4 +63,5 @@
     <string name="multiuser_user">Все пользователи</string>
     <string name="multiuser_require_owner">Многопользовательские настройки управляются только владельцем.</string>
     <string name="owner_login_info">Пожалуйста перейдите в аккаунт владельца для управления запросом.</string>
+    <string name="all_commands">Все комманды</string>
 </resources>
