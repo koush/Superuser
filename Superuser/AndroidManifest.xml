@@ -43,8 +43,8 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/superuser"
-            android:noHistory="true" >
+            android:excludeFromRecents="true"
+            android:label="@string/superuser" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,9 +56,9 @@
         <activity
             android:name=".RequestActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/superuser"
             android:launchMode="singleTask"
-            android:noHistory="true"
             android:permission="android.permission.REQUEST_SUPERUSER"
             android:theme="@style/RequestTheme" />
         <!-- Only system/su can open this activity -->
@@ -67,9 +67,9 @@
         <activity
             android:name=".NotifyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
             android:label="@string/superuser"
             android:launchMode="singleTask"
-            android:noHistory="true"
             android:permission="android.permission.REQUEST_SUPERUSER"
             android:theme="@style/RequestTheme" />
 
@@ -77,6 +77,7 @@
         <activity
             android:name=".MultitaskSuRequestActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
             android:exported="false"
             android:label="@string/request"
             android:theme="@style/RequestTheme" />
