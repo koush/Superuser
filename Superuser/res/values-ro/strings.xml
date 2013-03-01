@@ -2,8 +2,8 @@
 <resources>
 
     <string name="superuser">Superuser</string>
-    <string name="allow">Permite</string>
-    <string name="deny">Refuza</string>
+    <string name="allow">Permiteţi</string>
+    <string name="deny">Refuzaţi</string>
     <string name="status_incoming">Cerere superuser de intrare...</string>
     <string name="unknown_uid">UID necunoscut: %s</string>
     <string name="application_request">%s cere acces Superuser.</string>
@@ -49,7 +49,11 @@
     <string name="declared_permission">Permisiune declarată</string>
     <string name="declared_permission_summary">Permiteţi doar cererile de la aplicațiile care declară android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Răspuns automat</string>
+<<<<<<< HEAD
     <string name="prompt">Întreba</string>
+=======
+    <string name="prompt">Întrebare</string>
+>>>>>>> ygorigor/master
     <string name="security">Securitate</string>
     <string name="multiuser_policy">Politică multi-utilizator</string>
     <string name="multiuser_owner_only_summary">Doar proprietarul dispozitivului poate cere Superuser</string>
