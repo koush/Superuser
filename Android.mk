@@ -12,8 +12,10 @@ endif
 include $(LOCAL_PATH)/Superuser/Android.mk
 endif
 
-include $(CLEAR_VARS)
 
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
 LOCAL_MODULE_TAGS := eng debug
