@@ -13,13 +13,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.koushikdutta.superuser.util.Settings;
 
 public class SuDatabaseHelper extends SQLiteOpenHelper {
+    private static final int CURRENT_VERSION = 2;
     public SuDatabaseHelper(Context context) {
-        super(context, "su.sqlite", null, 1);
+        super(context, "su.sqlite", null, CURRENT_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        onUpgrade(db, 0, 1);
+        onUpgrade(db, 0, CURRENT_VERSION);
     }
 
     @Override
@@ -32,6 +33,11 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("create index if not exists log_command_index on log(command)");
             db.execSQL("create index if not exists log_date_index on log(date)");
             oldVersion = 1;
+        }
+        
+        if (oldVersion == 1) {
+            db.execSQL("CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT);");
+            oldVersion = 2;
         }
     }
     
