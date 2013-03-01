@@ -26,11 +26,18 @@ In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work 
 
 ## Ant
 
-Same old, same old.
-
 * $ mkdir /path/to/src
 * $ cd /path/to/src
 * $ cd Superuser/Superuser
+
+In this directory, create a file called local.properties. This file is used by ant for custom properties. You need to specify the location of the ndk directory:
+
+```
+ndk.dir=/Users/koush/src/android-ndk
+```
+
+Then you can build:
+
 * $ ant release
 
 Outputs:
@@ -40,6 +47,8 @@ Outputs:
 * libs/x86/su - x86 su binary
 
 ## Building the su binary
+
+You can use ant as shown above, to build the binary, but it can also be built without building the APK.
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
@@ -85,7 +94,7 @@ First, in a product makefile (like vendor/cm/config/common.mk), specify the foll
 SUPERUSER_EMBEDDED := true
 ```
 
-To modify the Settings app, you will need this [patch](https://gist.github.com/koush/5059098).
+To modify the Settings app, you will need this [patch](http://review.cyanogenmod.org/#/c/32957/).
 The patch simply references the sources checked out to external/koush and makes changes
 to XML preference files and the AndroidManifest.xml. It is a very minimal change:
 

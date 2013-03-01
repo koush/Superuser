@@ -1,7 +1,7 @@
 # Root AOSP source makefile
 # su is built here, and 
 
-LOCAL_PATH := $(call my-dir)
+my_path := $(call my-dir)
 
 ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
@@ -9,11 +9,13 @@ else
 ifeq ($(SUPERUSER_PACKAGE),)
 SUPERUSER_PACKAGE := com.thirdparty.superuser
 endif
-include $(LOCAL_PATH)/Superuser/Android.mk
+include $(my_path)/Superuser/Android.mk
 endif
 
-include $(CLEAR_VARS)
 
+LOCAL_PATH := $(my_path)
+
+include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
 LOCAL_MODULE_TAGS := eng debug

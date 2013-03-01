@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Koushik Dutta (@koush)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
@@ -31,6 +47,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     }
     
     void load() {
+        clear();
         final ArrayList<UidPolicy> policies = SuDatabaseHelper.getPolicies(getActivity());
         
         for (UidPolicy up: policies) {
@@ -51,11 +68,13 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         
         load();
 
-        ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
-        if (watermark != null)
-            watermark.setImageResource(R.drawable.clockwork512);
-        if (!isPaged())
-            showAllLogs();
+        if ("com.koushikdutta.superuser".equals(getContext().getPackageName())) {
+            ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
+            if (watermark != null)
+                watermark.setImageResource(R.drawable.clockwork512);
+            if (!isPaged())
+                showAllLogs();
+        }
     }
     
 
@@ -84,20 +103,6 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
 
     FragmentInterfaceWrapper setContentNative(final ListItem li, final UidPolicy up) {
         LogNativeFragment l = new LogNativeFragment();
-//        {
-//            @Override
-//            void onDelete() {
-//                super.onDelete();
-//                removeItem(li);
-//                showAllLogs();
-//            }
-//
-//            @Override
-//            public void onConfigurationChanged(Configuration newConfig) {
-//                super.onConfigurationChanged(newConfig);
-//                setContent(li, up);
-//            }
-//        };
         l.getInternal().setUidPolicy(up);
         if (up != null) {
             Bundle args = new Bundle();
@@ -106,32 +111,21 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             args.putInt("desiredUid", up.desiredUid);
             l.setArguments(args);
         }
+        l.getInternal().setListContentId(getFragment().getId());
         return l;
     }
     
     void setContent(final ListItem li, final UidPolicy up) {
         if (getActivity() instanceof FragmentActivity) {
-            LogFragment l = new LogFragment() {
-                @Override
-                void onDelete() {
-                    super.onDelete();
-                    removeItem(li);
-                    showAllLogs();
-                }
-
-                @Override
-                public void onConfigurationChanged(Configuration newConfig) {
-                    super.onConfigurationChanged(newConfig);
-                    setContent(li, up);
-                }
-            };
+            LogFragment l = new LogFragment();
             l.getInternal().setUidPolicy(up);
+            l.getInternal().setListContentId(getFragment().getId());
             mContent = l;
         }
         else {
             mContent = setContentNative(li, up);
         }
-
+        
         setContent(mContent, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
     

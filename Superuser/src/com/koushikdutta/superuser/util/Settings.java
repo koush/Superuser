@@ -14,100 +14,81 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 
 import com.koushikdutta.superuser.Helper;
+import com.koushikdutta.superuser.db.SuDatabaseHelper;
 
 public class Settings {
     SQLiteDatabase mDatabase;
     Context mContext;
 
-    private Settings(Context context) {
-        mContext = context;
-        SQLiteOpenHelper helper = new SQLiteOpenHelper(mContext, "settings.db", null, 1) {
-            private final static String mDDL = "CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT);";
-
-            @Override
-            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-                onCreate(db);
-            }
-
-            @Override
-            public void onCreate(SQLiteDatabase db) {
-                db.execSQL(mDDL);
-            }
-        };
-        mDatabase = helper.getWritableDatabase();
-    }
-
-    private static Settings mInstance;
-
-    public static Settings getInstance(Context context) {
-        if (mInstance == null) {
-            mInstance = new Settings(context.getApplicationContext());
-        }
-        return mInstance;
-    }
-
-    public void setString(String name, String value) {
+    public static void setString(Context context, String name, String value) {
         ContentValues cv = new ContentValues();
         cv.put("key", name);
         cv.put("value", value);
-        mDatabase.replace("settings", null, cv);
+        SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
+        try {
+            db.replace("settings", null, cv);
+        }
+        finally {
+            db.close();
+        }
     }
 
-    public String getString(String name) {
-        return getString(name, null);
+    public static String getString(Context context, String name) {
+        return getString(context, name, null);
     }
 
-    public String getString(String name, String defaultValue) {
-        Cursor cursor = mDatabase.query("settings", new String[] { "value" }, "key='" + name + "'", null, null, null, null);
+    public static String getString(Context context, String name, String defaultValue) {
+        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        Cursor cursor = db.query("settings", new String[] { "value" }, "key='" + name + "'", null, null, null, null);
         try {
             if (cursor.moveToNext())
                 return cursor.getString(0);
         }
         finally {
             cursor.close();
+            db.close();
         }
         return defaultValue;
     }
 
-    public void setInt(String name, int value) {
-        setString(name, ((Integer) value).toString());
+    public static void setInt(Context context, String name, int value) {
+        setString(context, name, ((Integer) value).toString());
     }
 
-    public int getInt(String name, int defaultValue) {
+    public static int getInt(Context context, String name, int defaultValue) {
         try {
-            return Integer.parseInt(getString(name, null));
+            return Integer.parseInt(getString(context, name, null));
         }
         catch (Exception ex) {
             return defaultValue;
         }
     }
 
-    public void setLong(String name, long value) {
-        setString(name, ((Long) value).toString());
+    public static void setLong(Context context, String name, long value) {
+        setString(context, name, ((Long) value).toString());
     }
 
-    public long getLong(String name, long defaultValue) {
+    public static long getLong(Context context, String name, long defaultValue) {
         try {
-            return Long.parseLong(getString(name, null));
+            return Long.parseLong(getString(context, name, null));
         }
         catch (Exception ex) {
             return defaultValue;
         }
     }
 
-    public void setBoolean(String name, boolean value) {
-        setString(name, ((Boolean) value).toString());
+    public static void setBoolean(Context context, String name, boolean value) {
+        setString(context, name, ((Boolean) value).toString());
     }
 
-    public boolean getBoolean(String name, boolean defaultValue) {
+    public static boolean getBoolean(Context context, String name, boolean defaultValue) {
         try {
-            return Boolean.parseBoolean(getString(name, ((Boolean) defaultValue).toString()));
+            return Boolean.parseBoolean(getString(context, name, ((Boolean) defaultValue).toString()));
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -117,21 +98,21 @@ public class Settings {
     
     private static final String KEY_LOGGING = "logging";
     public static boolean getLogging(Context context) {
-        return getInstance(context).getBoolean(KEY_LOGGING, true);
+        return getBoolean(context, KEY_LOGGING, true);
     }
     
     public static void setLogging(Context context, boolean logging) {
-        getInstance(context).setBoolean(KEY_LOGGING, logging);
+        setBoolean(context, KEY_LOGGING, logging);
     }
     
     private static final String KEY_TIMEOUT = "timeout";
     public static final int REQUEST_TIMEOUT_DEFAULT = 30;
     public static int getRequestTimeout(Context context) {
-        return getInstance(context).getInt(KEY_TIMEOUT, REQUEST_TIMEOUT_DEFAULT);
+        return getInt(context, KEY_TIMEOUT, REQUEST_TIMEOUT_DEFAULT);
     }
     
     public static void setTimeout(Context context, int timeout) {
-        getInstance(context).setInt(KEY_TIMEOUT, timeout);
+        setInt(context, KEY_TIMEOUT, timeout);
     }
 
     private static final String KEY_NOTIFICATION = "notification";
@@ -140,7 +121,7 @@ public class Settings {
     public static final int NOTIFICATION_TYPE_NOTIFICATION = 2;
     public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_TOAST;
     public static int getNotificationType(Context context) {
-        switch (getInstance(context).getInt(KEY_NOTIFICATION, NOTIFICATION_TYPE_DEFAULT)) {
+        switch (getInt(context, KEY_NOTIFICATION, NOTIFICATION_TYPE_DEFAULT)) {
         case NOTIFICATION_TYPE_NONE:
             return NOTIFICATION_TYPE_NONE;
         case NOTIFICATION_TYPE_NOTIFICATION:
@@ -153,12 +134,12 @@ public class Settings {
     }
     
     public static void setNotificationType(Context context, int notification) {
-        getInstance(context).setInt(KEY_NOTIFICATION, notification);
+        setInt(context, KEY_NOTIFICATION, notification);
     }
     
     public static final String KEY_PIN = "pin";
     public static final boolean isPinProtected(Context context) {
-        return Settings.getInstance(context).getString(KEY_PIN) != null;
+        return Settings.getString(context, KEY_PIN) != null;
     }
     
     private static String digest(String value) {
@@ -179,12 +160,12 @@ public class Settings {
     }
     
     public static void setPin(Context context, String pin) {
-        Settings.getInstance(context).setString(KEY_PIN, digest(pin));
+        Settings.setString(context, KEY_PIN, digest(pin));
     }
     
     public static boolean checkPin(Context context, String pin) {
         pin = digest(pin);
-        String hashed = Settings.getInstance(context).getString(KEY_PIN);
+        String hashed = Settings.getString(context, KEY_PIN);
         if (TextUtils.isEmpty(pin))
             return TextUtils.isEmpty(hashed);
         return pin.equals(hashed);
@@ -192,11 +173,11 @@ public class Settings {
 
     private static final String KEY_REQUIRE_PREMISSION = "require_permission";
     public static boolean getRequirePermission(Context context) {
-        return getInstance(context).getBoolean(KEY_REQUIRE_PREMISSION, false);
+        return getBoolean(context, KEY_REQUIRE_PREMISSION, false);
     }
     
     public static void setRequirePermission(Context context, boolean require) {
-        getInstance(context).setBoolean(KEY_REQUIRE_PREMISSION, require);
+        setBoolean(context, KEY_REQUIRE_PREMISSION, require);
     }
     
     private static final String KEY_AUTOMATIC_RESPONSE = "automatic_response";
@@ -205,7 +186,7 @@ public class Settings {
     public static final int AUTOMATIC_RESPONSE_DENY = 2;
     public static final int AUTOMATIC_RESPONSE_DEFAULT = AUTOMATIC_RESPONSE_PROMPT;
     public static int getAutomaticResponse(Context context) {
-        switch (getInstance(context).getInt(KEY_AUTOMATIC_RESPONSE, AUTOMATIC_RESPONSE_DEFAULT)) {
+        switch (getInt(context, KEY_AUTOMATIC_RESPONSE, AUTOMATIC_RESPONSE_DEFAULT)) {
         case AUTOMATIC_RESPONSE_ALLOW:
             return AUTOMATIC_RESPONSE_ALLOW;
         case AUTOMATIC_RESPONSE_PROMPT:
@@ -218,7 +199,7 @@ public class Settings {
     }
 
     public static void setAutomaticResponse(Context context, int response) {
-        getInstance(context).setInt(KEY_AUTOMATIC_RESPONSE, response);
+        setInt(context, KEY_AUTOMATIC_RESPONSE, response);
     }
     
     

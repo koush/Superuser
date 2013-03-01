@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2013 Koushik Dutta (@koush)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.koushikdutta.superuser;
 
 import java.io.DataInputStream;
@@ -445,17 +461,16 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 
                 ViewGroup ready = (ViewGroup)findViewById(R.id.root);
                 ready.removeAllViews();
-                getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.root, new PinFragment() {
+                
+                PinViewHelper pin = new PinViewHelper(getLayoutInflater(), ready, null) {
                     @Override
                     public void onEnter(String password) {
                         super.onEnter(password);
-                        if (Settings.checkPin(getActivity(), password)) {
+                        if (Settings.checkPin(MultitaskSuRequestActivity.this, password)) {
                             approve();
                         }
                         else {
-                            Toast.makeText(getActivity(), getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MultitaskSuRequestActivity.this, getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
                         }
                     }
                     @Override
@@ -463,9 +478,9 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                         super.onCancel();
                         deny();
                     }
-                })
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                };
+                
+                ready.addView(pin.getView());
             }
         });
         mDeny.setOnClickListener(new OnClickListener() {

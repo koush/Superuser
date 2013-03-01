@@ -1,17 +1,30 @@
+/*
+ * Copyright (C) 2013 Koushik Dutta (@koush)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.koushikdutta.superuser;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -30,51 +43,52 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
         return R.layout.settings;
     }
     
-    static final int containerId = 100001;
-    public static class MyPinFragment extends DialogFragment {
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            FrameLayout ret =  new FrameLayout(getActivity());
-            ret.setId(containerId);
-            return ret;
-        };
-        
-        private int title;
-        public void setTitle(int title) {
-            this.title = title;
-        }
+//    static final int containerId = 100001;
+//    public static class MyPinFragment extends DialogFragment {
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//            FrameLayout ret =  new FrameLayout(getActivity());
+//            ret.setId(containerId);
+//            return ret;
+//        };
+//        
+//        private int title;
+//        public void setTitle(int title) {
+//            this.title = title;
+//        }
+//
+//        Dialog d;
+//        @Override
+//        public Dialog onCreateDialog(Bundle savedInstanceState) {
+//            d = super.onCreateDialog(savedInstanceState);
+//            d.setTitle(title);
+//            PinView pf = new PinView() {
+//                @Override
+//                public void onCancel() {
+//                    super.onCancel();
+//                    d.dismiss();
+//                }
+//                
+//                @Override
+//                public void onEnter(String password) {
+//                    super.onEnter(password);
+//                    MyPinFragment.this.onEnter(password);
+//                }
+//            };
+//            getChildFragmentManager().beginTransaction().add(containerId, pf).commit();
+//
+//            return d;
+//        }
+//        
+//        public void onEnter(String password) {
+//            d.dismiss();
+//        }
+//    };
 
-        Dialog d;
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            d = super.onCreateDialog(savedInstanceState);
-            d.setTitle(title);
-            PinFragment pf = new PinFragment() {
-                @Override
-                public void onCancel() {
-                    super.onCancel();
-                    d.dismiss();
-                }
-                
-                @Override
-                public void onEnter(String password) {
-                    super.onEnter(password);
-                    MyPinFragment.this.onEnter(password);
-                }
-            };
-            getChildFragmentManager().beginTransaction().add(containerId, pf).commit();
-
-            return d;
-        }
-        
-        public void onEnter(String password) {
-            d.dismiss();
-        }
-    };
-    
     ListItem pinItem;
     void confirmPin(final String pin) {
-        MyPinFragment p = new MyPinFragment() {
-            @Override
+        final Dialog d = new Dialog(getContext());
+        d.setTitle(R.string.confirm_pin);
+        d.setContentView(new PinViewHelper((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), null, null) {
             public void onEnter(String password) {
                 super.onEnter(password);
                 if (pin.equals(password)) {
@@ -82,42 +96,60 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     pinItem.setSummary(Settings.isPinProtected(getActivity()) ? R.string.pin_set : R.string.pin_protection_summary);
                     if (password != null && password.length() > 0)
                         Toast.makeText(getActivity(), getString(R.string.pin_set), Toast.LENGTH_SHORT).show();
+                    d.dismiss();
                     return;
                 }
                 Toast.makeText(getActivity(), getString(R.string.pin_mismatch), Toast.LENGTH_SHORT).show();
-            }
-        };
-        p.setTitle(R.string.confirm_pin);
-//        p.show(getFragmentManager(), "pin");
+            };
+            
+            public void onCancel() {
+                super.onCancel();
+                d.dismiss();
+            };
+        }.getView());
+        d.show();
     }
     
     void setPin() {
-        MyPinFragment p = new MyPinFragment() {
-            @Override
+        final Dialog d = new Dialog(getContext());
+        d.setTitle(R.string.enter_new_pin);
+        d.setContentView(new PinViewHelper((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), null, null) {
             public void onEnter(String password) {
                 super.onEnter(password);
                 confirmPin(password);
-            }
-        };
-        p.setTitle(R.string.enter_new_pin);
-//        p.show(getFragmentManager(), "pin");
+                d.dismiss();
+            };
+            
+            public void onCancel() {
+                super.onCancel();
+                d.dismiss();
+            };
+        }.getView());
+        d.show();
     }
 
     void checkPin() {
         if (Settings.isPinProtected(getActivity())) {
-            MyPinFragment p = new MyPinFragment() {
-                @Override
+            final Dialog d = new Dialog(getContext());
+            d.setTitle(R.string.enter_pin);
+            d.setContentView(new PinViewHelper((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), null, null) {
                 public void onEnter(String password) {
+                    super.onEnter(password);
                     if (Settings.checkPin(getActivity(), password)) {
                         super.onEnter(password);
                         setPin();
+                        d.dismiss();
                         return;
                     }
                     Toast.makeText(getActivity(), getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
-                }
-            };
-            p.setTitle(R.string.enter_pin);
-//            p.show(getFragmentManager(), "pin");
+                };
+                
+                public void onCancel() {
+                    super.onCancel();
+                    d.dismiss();
+                };
+            }.getView());
+            d.show();
         }
         else {
             setPin();
