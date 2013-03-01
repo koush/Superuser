@@ -29,7 +29,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.koushikdutta.superuser.util.Settings;
 
 public class SuDatabaseHelper extends SQLiteOpenHelper {
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 3;
     public SuDatabaseHelper(Context context) {
         super(context, "su.sqlite", null, CURRENT_VERSION);
     }
@@ -51,9 +51,9 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             oldVersion = 1;
         }
         
-        if (oldVersion == 1) {
-            db.execSQL("CREATE TABLE settings (key TEXT PRIMARY KEY, value TEXT);");
-            oldVersion = 2;
+        if (oldVersion == 1 || oldVersion == 2) {
+            db.execSQL("create table if not exists settings (key TEXT PRIMARY KEY, value TEXT)");
+            oldVersion = 3;
         }
     }
     

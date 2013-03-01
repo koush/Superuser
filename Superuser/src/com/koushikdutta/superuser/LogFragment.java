@@ -16,6 +16,9 @@
 
 package com.koushikdutta.superuser;
 
+
+import android.support.v4.app.Fragment;
+
 import com.koushikdutta.widgets.SupportFragment;
 
 public class LogFragment extends SupportFragment<LogFragmentInternal> {
@@ -26,12 +29,19 @@ public class LogFragment extends SupportFragment<LogFragmentInternal> {
             @Override
             void onDelete() {
                 super.onDelete();
-                LogFragment.this.onDelete();
+                LogFragment.this.onDelete(getListContentId());
             }
         };
     }
 
-    void onDelete() {
-        
+    void onDelete(int id) {
+//        getFragmentManager().beginTransaction().remove(this).commit();
+//        getFragmentManager().popBackStack("content", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment f = getFragmentManager().findFragmentById(id);
+        if (f != null && f instanceof PolicyFragment) {
+            PolicyFragment p = (PolicyFragment)f;
+            ((PolicyFragmentInternal)p.getInternal()).load();
+            ((PolicyFragmentInternal)p.getInternal()).showAllLogs();
+        }
     }
 }

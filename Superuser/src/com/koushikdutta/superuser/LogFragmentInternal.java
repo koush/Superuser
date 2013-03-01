@@ -49,6 +49,15 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
         return this;
     }
     
+    int mListContentId;
+    public void setListContentId(int id) {
+        mListContentId = id;
+    }
+    
+    public int getListContentId() {
+        return mListContentId;
+    }
+    
     void onDelete() {
     }
     

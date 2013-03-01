@@ -16,6 +16,8 @@
 
 package com.koushikdutta.superuser;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -25,6 +27,7 @@ import android.view.ViewGroup;
 
 import com.koushikdutta.widgets.NativeFragment;
 
+@SuppressLint("NewApi")
 public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
     ContextThemeWrapper mWrapper;
     public Context getContext(Context ctx) {
@@ -47,6 +50,12 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
                 super.setPadding();
                 getListView().setPadding(0, 0, 0, 0);
             }
+            
+            @Override
+            void onDelete() {
+                super.onDelete();
+                LogNativeFragment.this.onDelete(getListContentId());
+            }
         };
     }
     
@@ -54,7 +63,15 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView((LayoutInflater)getContext(inflater.getContext()).getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);
     }
-    void onDelete() {
-        
+
+    void onDelete(int id) {
+//        getFragmentManager().beginTransaction().remove(this).commit();
+//        getFragmentManager().popBackStack("content", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Fragment f = getFragmentManager().findFragmentById(id);
+        if (f != null && f instanceof PolicyNativeFragment) {
+            PolicyNativeFragment p = (PolicyNativeFragment)f;
+            ((PolicyFragmentInternal)p.getInternal()).load();
+            ((PolicyFragmentInternal)p.getInternal()).showAllLogs();
+        }
     }
 }
