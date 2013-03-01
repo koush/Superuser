@@ -82,7 +82,7 @@
         <delete file="bin/Superuser.apk"/>
     </target>
 
-    <target name="zip">
+    <target name="-post-build">
         <exec executable="zip" failonerror="true" dir="../recoveryzip">
           <arg value="-ry"/>
           <arg value="../Superuser/bin/update.zip"/>
