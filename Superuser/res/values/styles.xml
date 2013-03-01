@@ -43,6 +43,10 @@
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
+    <style name="SuperuserDark.PolicyIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
     <style name="RequestThemeDark" parent="SuperuserDark" />
     <style name="RequestThemeLight" parent="SuperuserLight" />
     
