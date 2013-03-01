@@ -72,9 +72,9 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
             if (watermark != null)
                 watermark.setImageResource(R.drawable.clockwork512);
-            if (!isPaged())
-                showAllLogs();
         }
+        if (!isPaged())
+            showAllLogs();
     }
     
 
