@@ -1,7 +1,6 @@
 package com.koushikdutta.superuser;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class PinFragment extends Fragment {
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+public class PinViewHelper {
+    public PinViewHelper(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View ret = inflater.inflate(R.layout.pin, container, false);
 
         final EditText password = (EditText)ret.findViewById(R.id.password);
@@ -56,14 +53,17 @@ public class PinFragment extends Fragment {
             }
         });
         
-        return ret;
+        mView = ret;
+    }
+    
+    View mView;
+    public View getView() {
+        return mView;
     }
     
     public void onEnter(String password) {
-        
     }
     
     public void onCancel() {
-        
     }
 }

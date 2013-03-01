@@ -445,17 +445,16 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 
                 ViewGroup ready = (ViewGroup)findViewById(R.id.root);
                 ready.removeAllViews();
-                getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.root, new PinFragment() {
+                
+                PinViewHelper pin = new PinViewHelper(getLayoutInflater(), ready, null) {
                     @Override
                     public void onEnter(String password) {
                         super.onEnter(password);
-                        if (Settings.checkPin(getActivity(), password)) {
+                        if (Settings.checkPin(MultitaskSuRequestActivity.this, password)) {
                             approve();
                         }
                         else {
-                            Toast.makeText(getActivity(), getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MultitaskSuRequestActivity.this, getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
                         }
                     }
                     @Override
@@ -463,9 +462,9 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                         super.onCancel();
                         deny();
                     }
-                })
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+                };
+                
+                ready.addView(pin.getView());
             }
         });
         mDeny.setOnClickListener(new OnClickListener() {
