@@ -47,7 +47,7 @@
     <string name="superuser_description">fuld adgang til alle enheds-funktioner og lager</string>
     <string name="superuser_description_more">Superuser giver fuld adgang til alle enheds-funktioner og lager, inklusiv de sikre og følsomme hardware-elementer af din enhed. Denne tilladelse kan være farlig.</string>
     <string name="declared_permission">Deklareret tilladelse</string>
-    <string name="declared_permission_summary">Tillad kun anmodninger fra apps der deklarere android.permission.ACCESS_SUPERUSER</string>
+    <string name="declared_permission_summary">Tillad kun anmodninger fra apps der deklarerer android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Automatisk svar</string>
     <string name="prompt">Prompt</string>
     <string name="automatic_response_allow_summary">Tillad automatisk nye anmodninger</string>
