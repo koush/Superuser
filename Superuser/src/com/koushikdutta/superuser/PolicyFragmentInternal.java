@@ -18,11 +18,13 @@ package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +41,15 @@ import com.koushikdutta.widgets.ListItem;
 public class PolicyFragmentInternal extends ListContentFragmentInternal {
     public PolicyFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
+    }
+    
+    ContextThemeWrapper mWrapper;
+    @Override
+    public Context getContext() {
+        if (mWrapper != null)
+            return mWrapper;
+        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.Superuser_PolicyIcon);
+        return mWrapper;
     }
     
     void showAllLogs() {
@@ -72,9 +83,9 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             ImageView watermark = (ImageView)view.findViewById(R.id.watermark);
             if (watermark != null)
                 watermark.setImageResource(R.drawable.clockwork512);
-            if (!isPaged())
-                showAllLogs();
         }
+        if (!isPaged())
+            showAllLogs();
     }
     
 
@@ -89,8 +100,8 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
 
                 setContent(this, up);
             };
-        })
-        .setTheme(R.style.Superuser_PolicyIcon);
+        });
+        
         Drawable icon = Helper.loadPackageIcon(getActivity(), up.packageName);
         if (icon == null)
             li.setIcon(R.drawable.ic_launcher);

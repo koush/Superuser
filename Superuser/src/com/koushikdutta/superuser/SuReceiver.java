@@ -56,7 +56,11 @@ public class SuReceiver extends BroadcastReceiver {
         le.desiredUid = desiredUid;
         le.desiredName = desiredName;
         le.username = fromName;
-        SuDatabaseHelper.addLog(context, le);
+        try {
+            SuDatabaseHelper.addLog(context, le);
+        }
+        catch (Exception e) {
+        }
 
         String toast;
         if (UidPolicy.ALLOW.equals(action)) {

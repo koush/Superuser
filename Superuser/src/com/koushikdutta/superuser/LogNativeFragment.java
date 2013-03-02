@@ -30,10 +30,10 @@ import com.koushikdutta.widgets.NativeFragment;
 @SuppressLint("NewApi")
 public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
     ContextThemeWrapper mWrapper;
-    public Context getContext(Context ctx) {
+    public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(ctx, R.style.SuperuserDark);
+        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark);
         return mWrapper;
     }
 
@@ -42,7 +42,7 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
         return new LogFragmentInternal(this) {
             @Override
             public Context getContext() {
-                return LogNativeFragment.this.getContext(super.getContext());
+                return LogNativeFragment.this.getContext();
             }
             
             @Override
@@ -61,7 +61,7 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView((LayoutInflater)getContext(inflater.getContext()).getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);
+        return super.onCreateView((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);
     }
 
     void onDelete(int id) {

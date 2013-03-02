@@ -38,18 +38,19 @@
         <item name="loggingIcon">@drawable/ic_logging</item>
         <item name="notificationsIcon">@drawable/ic_notifications</item>
     </style>
-    
-    <style name="Superuser" parent="SuperuserDark">
-        
+
+    <style name="Superuser.PolicyIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
-    <style name="Superuser.PolicyIcon">
+    <style name="SuperuserDark.PolicyIcon">
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
     <style name="RequestThemeDark" parent="SuperuserDark" />
     <style name="RequestThemeLight" parent="SuperuserLight" />
     
-    <style name="RequestTheme" parent="RequestThemeDark" />
+    <style name="RequestTheme" parent="RequestThemeLight" />
+    <style name="Superuser" parent="SuperuserLight" />
     
 </resources>
