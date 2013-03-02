@@ -33,10 +33,10 @@ import android.net.LocalSocketAddress.Namespace;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -74,6 +74,29 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         return 10;
     }
     
+    int getUntil() {
+        int until = -1;
+        if (mSpinner.isShown()) {
+            int pos = mSpinner.getSelectedItemPosition();
+            int id = mSpinnerIds[pos];
+            if (id == R.string.remember_for) {
+                until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+            }
+            else if (id == R.string.remember_forever) {
+                until = 0;
+            }
+        }
+        else if (mRemember.isShown()) {
+            if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
+                until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
+            }
+            else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
+                until = 0;
+            }
+        }
+        return until;
+    }
+    
     void handleAction(boolean action, Integer until) {
         Assert.assertTrue(!mHandled);
         mHandled = true;
@@ -84,25 +107,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         }
         try {
             if (until == null) {
-                until = -1;
-                if (mSpinner.isShown()) {
-                    int pos = mSpinner.getSelectedItemPosition();
-                    int id = mSpinnerIds[pos];
-                    if (id == R.string.remember_for) {
-                        until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
-                    }
-                    else if (id == R.string.remember_forever) {
-                        until = 0;
-                    }
-                }
-                else if (mRemember.isShown()) {
-                    if (mRemember.getCheckedRadioButtonId() == R.id.remember_for) {
-                        until = (int)(System.currentTimeMillis() / 1000) + getGracePeriod() * 60;
-                    }
-                    else if (mRemember.getCheckedRadioButtonId() == R.id.remember_forever) {
-                        until = 0;
-                    }
-                }
+                until = getUntil();
             }
             // got a policy? let's set it.
             if (until != -1) {
@@ -460,14 +465,17 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                 }
                 
                 ViewGroup ready = (ViewGroup)findViewById(R.id.root);
+                final int until = getUntil();
                 ready.removeAllViews();
                 
-                PinViewHelper pin = new PinViewHelper(getLayoutInflater(), ready, null) {
+                PinViewHelper pin = new PinViewHelper(getLayoutInflater(), (ViewGroup)findViewById(android.R.id.content), null) {
                     @Override
                     public void onEnter(String password) {
                         super.onEnter(password);
                         if (Settings.checkPin(MultitaskSuRequestActivity.this, password)) {
-                            approve();
+                            mAllow.setEnabled(false);
+                            mDeny.setEnabled(false);
+                            handleAction(true, until);
                         }
                         else {
                             Toast.makeText(MultitaskSuRequestActivity.this, getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();

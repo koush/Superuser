@@ -16,6 +16,7 @@
 
 package com.koushikdutta.superuser;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -25,12 +26,14 @@ import android.view.ViewGroup;
 
 import com.koushikdutta.widgets.NativeFragment;
 
+@SuppressLint("NewApi")
 public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal> {
     ContextThemeWrapper mWrapper;
-    public Context getContext(Context ctx) {
+    @Override
+    public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(ctx, R.style.SuperuserDark);
+        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_PolicyIcon);
         return mWrapper;
     }
 
@@ -39,7 +42,7 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
         return new PolicyFragmentInternal(this) {
             @Override
             public Context getContext() {
-                return PolicyNativeFragment.this.getContext(super.getContext());
+                return PolicyNativeFragment.this.getContext();
             }
             
             @Override
@@ -57,6 +60,6 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
     
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView((LayoutInflater)getContext(inflater.getContext()).getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);
+        return super.onCreateView((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);
     }
 }

@@ -19,7 +19,7 @@
     <string name="interactive">Интерактивно</string>
     <string name="logs">Журнал</string>
     <string name="settings">Настройки</string>
-    <string name="delete">Очистить</string>
+    <string name="delete">Очистить журнал</string>
     <string name="no_logs">Журнал пуст</string>
     <string name="no_apps">Нет приложений для управления.</string>
     <string name="logging">Включить логгирование</string>
@@ -46,9 +46,9 @@
     <string name="developer_warning">Предупреждение:\nandroid.permission.ACCESS_SUPERUSER\nне были объявлены в манифесте.</string>
     <string name="superuser_description">полный доступ к функциям телефона и памяти</string>
     <string name="superuser_description_more">Суперпользователь предоставляет полный доступ к функциям и памяти устройства. Это может представлять опасность.</string>
-    <string name="declared_permission">Описанный запрос</string>
-    <string name="declared_permission_summary">Разрешение будет только у приложений с описанным android.permission.ACCESS_SUPERUSER</string>
-    <string name="automatic_response">Автоматическиое решение</string>
+    <string name="declared_permission">Заявленный запрос</string>
+    <string name="declared_permission_summary">Разрешение будут получать только у приложений с заявленным android.permission.ACCESS_SUPERUSER</string>
+    <string name="automatic_response">Автоматический режим</string>
     <string name="prompt">Спрашивать каждый раз</string>
     <string name="automatic_response_allow_summary">Новые запросы будут подтверждены</string>
     <string name="automatic_response_deny_summary">Новые запросы будут запрещены</string>
