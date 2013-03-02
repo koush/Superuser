@@ -96,5 +96,5 @@ SUPERUSER_EMBEDDED := true
 
 To modify packages/apps/Settings, you will need this [patch](https://gist.github.com/koush/5069228).
 The patch simply references the sources checked out to external/koush and makes changes
-to XML preference files and the AndroidManifest.xml. It is a very minimal change:
+to XML preference files and the AndroidManifest.xml. It is a very minimal change.
 
