@@ -3,11 +3,11 @@
 
     <string name="superuser">Superuser</string>
     <string name="allow">Aceptar</string>
-    <string name="deny">Negar</string>
+    <string name="deny">Rechazar</string>
     <string name="status_incoming">Petición de Superuser...</string>
     <string name="unknown_uid">UID desconocido: %s</string>
     <string name="application_request">%s esta solicitando acceso a Superuser.</string>
-    <string name="info">Atención: Si no comprendes esto, debes negar la petición.</string>
+    <string name="info">Atención: Si no comprendes esto, debes rechazar la petición.</string>
     <string name="request">Petición Superuser</string>
     <string name="package_header">Paquete:</string>
     <string name="app_header">App:</string>
@@ -15,7 +15,7 @@
     <string name="command_header">Comando:</string>
     <string name="this_time_only">Solo esta vez</string>
     <string name="remember_for">Recordar selección por %s minutos</string>
-    <string name="remember_forever">Recordar selección infinitamente</string>
+    <string name="remember_forever">Recordar selección indefinidamente</string>
     <string name="interactive">Interactivo</string>
     <string name="logs">Registro</string>
     <string name="settings">Preferencias</string>
@@ -38,14 +38,14 @@
     <string name="pin_mismatch">El PIN no coincide</string>
     <string name="pin_set">Protección por PIN de Superuser activado</string>
     <string name="number_seconds">%s segundos</string>
-    <string name="superuser_granted">Superuser a garantizado a %s</string>
-    <string name="superuser_denied">Superuser rechazó a %s</string>
+    <string name="superuser_granted">Superuser permitido a %s</string>
+    <string name="superuser_denied">Superuser rechazado a %s</string>
     <string name="toast">Toast</string>
     <string name="notification">Notificación</string>
     <string name="no_notification">No se mostrará notificación alguna</string>
     <string name="developer_warning">Advertencia del Desarrollador:\nandroid.permission.ACCESS_SUPERUSER\nno declarado en manifest.</string>
     <string name="superuser_description">Pleno acceso a todas las funciones y almacenamiento del dispositivo</string>
-    <string name="superuser_description_more">Superuser ayuda en el de todas las funciones y almacenamiento del dispositivo, incluyendo los elementos de hardware seguros y sensibles de tu dispositivo. Este permiso es potencialmente peligroso.</string>
+    <string name="superuser_description_more">Superuser permite pleno acceso a todas las funciones y almacenamiento del dispositivo, incluyendo los elementos de hardware seguros y sensibles de tu dispositivo. Este permiso es potencialmente peligroso.</string>
     <string name="declared_permission">Permiso Declarado</string>
     <string name="declared_permission_summary">Solo permitir peticiones de apps que declaran android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Respuesta Automática</string>
@@ -62,6 +62,6 @@
     <string name="multiuser_owner_managed">Administrado por el Propietario</string>
     <string name="multiuser_user">Todos los Usuarios</string>
     <string name="multiuser_require_owner">La política multiusuario solo puede ser administrada por el propietario del dispositivo.</string>
-    <string name="owner_login_info">Por favor, cambié la cuenta del propietario para permitir o rechazar esta petición.</string>
+    <string name="owner_login_info">Por favor, cambia a la cuenta del propietario para permitir o rechazar esta petición.</string>
     <string name="all_commands">Todos los Comandos</string>
 </resources>
