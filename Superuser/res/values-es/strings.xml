@@ -63,4 +63,6 @@
     <string name="multiuser_require_owner">La política multiusuario sólo puede ser administrada por el propietario del dispositivo.</string>
     <string name="owner_login_info">Por favor, cambie a la cuenta del propietario para permitir o rechazar esta petición.</string>
     <string name="all_commands">Todos los comandos</string>
+    <string name="about">Acerca de</string>
+    <string name="apps">Aplicaciones</string>
 </resources>
