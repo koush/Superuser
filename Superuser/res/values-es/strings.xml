@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="superuser">Superusuario</string>
     <string name="allow">Permitir</string>
     <string name="deny">Denegar</string>
@@ -29,9 +30,6 @@
     <string name="request_timeout_summary">Las peticiones tienen un tiempo de espera y se rechazarán después de %s segundos</string>
     <string name="notifications">Notificaciones</string>
     <string name="none">Ninguna</string>
-    <string name="toast">Notificación emergente</string>
-    <string name="notification">Barra de estado</string>
-    <string name="no_notification">No se mostrará ninguna notificación</string>
     <string name="notifications_summary">Notificación que se mostrará cuando a una aplicación se la concede acceso administrativo: %s</string>
     <string name="enter_pin">Introducir PIN</string>
     <string name="enter_new_pin">Introducir nuevo PIN</string>
@@ -42,6 +40,9 @@
     <string name="number_seconds">%s segundos</string>
     <string name="superuser_granted">Acceso administrativo permitido a %s</string>
     <string name="superuser_denied">Acceso administrativo denegado a %s</string>
+    <string name="toast">Notificación emergente</string>
+    <string name="notification">Barra de estado</string>
+    <string name="no_notification">No se mostrará ninguna notificación</string>
     <string name="developer_warning">Advertencia al desarrollador:\nandroid.permission.ACCESS_SUPERUSER\nno declarado en manifest.</string>
     <string name="superuser_description">Acceso completo a todas las funciones y almacenamiento del dispositivo</string>
     <string name="superuser_description_more">Superusuario permite el acceso a todas las funciones y almacenamiento del dispositivo, incluyendo los elementos de hardware seguros y sensibles del dispositivo. Este permiso es potencialmente peligroso.</string>
@@ -63,4 +64,15 @@
     <string name="multiuser_require_owner">La política multiusuario sólo puede ser administrada por el propietario del dispositivo.</string>
     <string name="owner_login_info">Por favor, cambie a la cuenta del propietario para permitir o rechazar esta petición.</string>
     <string name="all_commands">Todos los comandos</string>
+    <string name="about">Acerca de\u2026</string>
+    <string name="apps">Aplicaciones</string>
+    <string name="installing">Instalando</string>
+    <string name="installing_superuser">Instalando Superuser\u2026</string>
+    <string name="install_superuser">Instalar Superuser</string>
+    <string name="install_superuser_info">El binario de Superuser (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\n\Se recomienda el modo recuperación para los dispositivos HTC.</string>
+    <string name="recovery_install">Instalar en modo recuperación</string>
+    <string name="install">Instalar</string>
+    <string name="checking_superuser">Probando Superuser\u2026</string>
+    <string name="install_error">Ha ocurrido un error mientras se instalaba Superuser. Por favor, envíe un registro del error al desarrollador</string>
+    <string name="install_success">La instalación de Superuser se ha realizado con éxito.</string>
 </resources>
