@@ -137,11 +137,11 @@ public class MainActivity extends BetterListActivity {
                 "mount -orw,remount /system\n" +
                 "rm /system/xbin/su\n" +
                 "rm /system/bin/su\n" +
-                "rm -f /system/app/Supersu.*\n" +
-                "rm -f /system/app/superuser.*\n" +
-                "rm -f /system/app/supersu.*\n" +
-                "rm -f /system/app/SuperUser.*\n" +
-                "rm -f /system/app/SuperSU.*\n" +
+                "rm /system/app/Supersu.*\n" +
+                "rm /system/app/superuser.*\n" +
+                "rm /system/app/supersu.*\n" +
+                "rm /system/app/SuperUser.*\n" +
+                "rm /system/app/SuperSU.*\n" +
                 String.format("cat %s > /system/xbin/su\n", libsu.getAbsolutePath()) +
                 "chmod 6777 /system/xbin/su\n" +
                 "ln -s /system/xbin/su /system/bin/su\n" +
