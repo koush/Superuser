@@ -720,7 +720,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (stat(ctx.user.base_path, &st) < 0) {
-        // TODO: open market link via "am start" to get the user to install superuser
+        silent_run("am start -d market://details?id=" JAVA_PACKAGE_NAME);
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
@@ -732,7 +732,7 @@ int main(int argc, char *argv[]) {
     }
     
     if (ctx.from.uid == st.st_uid) {
-        // automatically the superuser app itself
+        // automatically grant the superuser app itself
         allow(&ctx);
     }
 

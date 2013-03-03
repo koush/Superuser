@@ -27,7 +27,7 @@
 #include "su.h"
 
 // TODO: leverage this with exec_log?
-static int silent_run(char* command) {
+int silent_run(char* command) {
     char *args[] = { "sh", "-c", command, NULL, };
     set_identity(0);
     pid_t pid;

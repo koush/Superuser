@@ -144,6 +144,7 @@ extern policy_t database_check(struct su_context *ctx);
 extern void set_identity(unsigned int uid);
 extern int send_request(struct su_context *ctx);
 extern int send_result(struct su_context *ctx, policy_t policy);
+extern int silent_run(char* command);
 
 static inline char *get_command(const struct su_request *to)
 {
