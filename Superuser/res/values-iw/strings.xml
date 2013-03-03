@@ -49,7 +49,6 @@
     <string name="declared_permission">רשות מוצהרת</string>
     <string name="declared_permission_summary">התר רק בקשות מאפליקציות שמצהירות android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">תגובה אוטומטית</string>
-    <string name="automatic_response_summary">Superuser %s בקשות חדשות</string>
     <string name="prompt">התרע</string>
     <string name="security">אבטחה</string>
     <string name="multiuser_policy">מדיניות ריבוי משתמשים</string>

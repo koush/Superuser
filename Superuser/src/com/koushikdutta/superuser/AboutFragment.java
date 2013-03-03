@@ -62,7 +62,7 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });        
-        addItem(R.string.apps, new ListItem(getInternal(), "Carbon", "Android's missing backup solution", R.drawable.carbon512) {
+        addItem(R.string.apps, new ListItem(getInternal(), "Carbon", "Android's missing backup solution", R.drawable.carbon) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -82,7 +82,7 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });
-        addItem(R.string.apps, new ListItem(getInternal(), "Tether", "Use your phone's web connection on a laptop or PC", R.drawable.tether_icon_usb_512) {
+        addItem(R.string.apps, new ListItem(getInternal(), "Tether", "Use your phone's web connection on a laptop or PC", R.drawable.tether) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
