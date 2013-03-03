@@ -47,6 +47,7 @@ public class AboutFragment extends BetterListFragment {
             public void onClick(View view) {
                 super.onClick(view);
                 Intent i = new Intent();
+                i.setAction(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(uri));
                 startActivity(i);
             }
