@@ -69,7 +69,7 @@
     <string name="installing">Installerar</string>
     <string name="installing_superuser">Installerar Superuser...</string>
     <string name="install_superuser">Installera Superuser</string>
-    <string name="install_superuser_info">Superuserbinären (su) måste uppdateras.\n\nVälj en installationsmetod.\n\Recoveryinstallation rekommenderas för enheter från HTC.</string>
+    <string name="install_superuser_info">Superuserbinären (su) måste uppdateras.\n\nVälj en installationsmetod.\nRecoveryinstallation rekommenderas för enheter från HTC.</string>
     <string name="recovery_install">Recoveryinstallation</string>
     <string name="install">Installation</string>
     <string name="checking_superuser">Kontrollerar Superuser...</string>
