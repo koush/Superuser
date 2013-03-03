@@ -30,7 +30,7 @@
     <string name="request_timeout_summary">Приложения, которые не запомнены будут иметь доступ на %s секунд после запроса</string>
     <string name="notifications">Оповещения</string>
     <string name="none">Отключены</string>
-    <string name="notifications_summary">%s будет показано когда приложение получает SU разрешения</string>
+    <string name="notifications_summary">Будет показано %s когда приложение получает SU разрешения</string>
     <string name="enter_pin">Введите PIN-код</string>
     <string name="enter_new_pin">Введите новый PIN-код</string>
     <string name="incorrect_pin">Неправильный PIN-код</string>
@@ -44,7 +44,7 @@
     <string name="notification">Уведомление</string>
     <string name="no_notification">Оповещения отключены</string>
     <string name="developer_warning">Предупреждение:\nandroid.permission.ACCESS_SUPERUSER\nне были объявлены в манифесте.</string>
-    <string name="superuser_description">полный доступ к функциям телефона и памяти</string>
+    <string name="superuser_description">Полный доступ к функциям телефона и памяти</string>
     <string name="superuser_description_more">Суперпользователь предоставляет полный доступ к функциям и памяти устройства. Это может представлять опасность.</string>
     <string name="declared_permission">Заявленное разрешение</string>
     <string name="declared_permission_summary">Разрешение будут получать только у приложений с заявленным android.permission.ACCESS_SUPERUSER</string>
@@ -64,4 +64,6 @@
     <string name="multiuser_require_owner">Многопользовательские настройки управляются только владельцем.</string>
     <string name="owner_login_info">Пожалуйста перейдите в аккаунт владельца для управления запросом.</string>
     <string name="all_commands">Все комманды</string>
+    <string name="about">О приложении</string>
+    <string name="apps">Другие приложения</string>
 </resources>
