@@ -62,6 +62,27 @@ public class MainActivity extends BetterListActivity {
         return super.onCreateOptionsMenu(menu);
     }
     
+    File extractSu() throws IOException, InterruptedException {
+        Process p = Runtime.getRuntime().exec("cat /proc/cpuinfo");
+        String contents = StreamUtility.readToEnd(p.getInputStream());
+        p.getInputStream().close();
+        p.waitFor();
+        contents = contents.toLowerCase();
+        String arch = "armeabi";
+        if (contents.contains("x86"))
+            arch = "x86";
+        ZipFile zf = new ZipFile(getPackageCodePath());
+        ZipEntry su = zf.getEntry("assets/" + arch + "/su");
+        InputStream zin = zf.getInputStream(su);
+        File ret = getFileStreamPath("su");
+        FileOutputStream fout = new FileOutputStream(ret);
+        StreamUtility.copyStream(zin, fout);
+        zin.close();
+        zf.close();
+        fout.close();
+        return ret;
+    }
+    
     void doRecoveryInstall() {
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.installing);
@@ -87,13 +108,11 @@ public class MainActivity extends BetterListActivity {
                     doEntry(zout, "assets/update-binary", "META-INF/com/google/android/update-binary");
                     zout.close();
 
-                    final File libsu = new File(getApplicationInfo().dataDir, "lib/libsu.so");
-                    if (!libsu.exists())
-                        throw new Exception(libsu.getAbsolutePath() + " not found");
+                    final File su = extractSu();
 
                     String command =
                             String.format("cat %s > /cache/superuser.zip\n", zip.getAbsolutePath()) +
-                            String.format("cat %s > /cache/su\n", libsu.getAbsolutePath()) +
+                            String.format("cat %s > /cache/su\n", su.getAbsolutePath()) +
                             String.format("cat %s > /cache/Superuser.apk\n", getPackageCodePath()) +
                             "mkdir /cache/recovery\n" +
                             "echo '--update_package=CACHE:superuser.zip' > /cache/recovery/command\n" +
@@ -132,27 +151,25 @@ public class MainActivity extends BetterListActivity {
         dlg.setMessage(getString(R.string.installing_superuser));
         dlg.setIndeterminate(true);
         dlg.show();
-        final File libsu = new File(getApplicationInfo().dataDir, "lib/libsu.so");
-        final String command =
-                "mount -orw,remount /system\n" +
-                "rm /system/xbin/su\n" +
-                "rm /system/bin/su\n" +
-                "rm /system/app/Supersu.*\n" +
-                "rm /system/app/superuser.*\n" +
-                "rm /system/app/supersu.*\n" +
-                "rm /system/app/SuperUser.*\n" +
-                "rm /system/app/SuperSU.*\n" +
-                String.format("cat %s > /system/xbin/su\n", libsu.getAbsolutePath()) +
-                "chmod 6777 /system/xbin/su\n" +
-                "ln -s /system/xbin/su /system/bin/su\n" +
-                "mount -oro,remount /system\n" +
-                "sync\n";
         new Thread() {
             public void run() {
                 boolean _error = false;
                 try {
-                    if (!libsu.exists())
-                        throw new Exception(libsu.getAbsolutePath() + " not found");
+                    final File su = extractSu();
+                    final String command =
+                            "mount -orw,remount /system\n" +
+                            "rm /system/xbin/su\n" +
+                            "rm /system/bin/su\n" +
+                            "rm /system/app/Supersu.*\n" +
+                            "rm /system/app/superuser.*\n" +
+                            "rm /system/app/supersu.*\n" +
+                            "rm /system/app/SuperUser.*\n" +
+                            "rm /system/app/SuperSU.*\n" +
+                            String.format("cat %s > /system/xbin/su\n", su.getAbsolutePath()) +
+                            "chmod 6777 /system/xbin/su\n" +
+                            "ln -s /system/xbin/su /system/bin/su\n" +
+                            "mount -oro,remount /system\n" +
+                            "sync\n";
                     Process p = Runtime.getRuntime().exec("su");
                     p.getOutputStream().write(command.getBytes());
                     p.getOutputStream().close();
