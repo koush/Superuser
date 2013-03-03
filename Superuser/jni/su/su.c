@@ -720,6 +720,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (stat(ctx.user.base_path, &st) < 0) {
+        silent_run("am start -d market://details?id=" JAVA_PACKAGE_NAME);
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
@@ -728,6 +729,11 @@ int main(int argc, char *argv[]) {
         LOGE("Bad uid/gid %d/%d for Superuser Requestor application",
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);
+    }
+    
+    if (ctx.from.uid == st.st_uid) {
+        // automatically grant the superuser app itself
+        allow(&ctx);
     }
 
     int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);

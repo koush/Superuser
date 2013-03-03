@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koushikdutta.superuser"
-    android:versionCode="1000"
-    android:versionName="1.0.0.0" >
+    android:versionCode="1005"
+    android:versionName="1.0.0.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -43,7 +43,6 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:excludeFromRecents="true"
             android:label="@string/superuser" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,6 +59,7 @@
             android:label="@string/superuser"
             android:launchMode="singleTask"
             android:permission="android.permission.REQUEST_SUPERUSER"
+            android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
         <!-- Only system/su can open this activity -->
         <!-- This is activity is started in multiuser mode when the user invoking su -->
@@ -71,6 +71,7 @@
             android:label="@string/superuser"
             android:launchMode="singleTask"
             android:permission="android.permission.REQUEST_SUPERUSER"
+            android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
 
         <!-- Multiple instances of this activity can be running for multiple su requests -->
@@ -80,6 +81,7 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:label="@string/request"
+            android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
 
         <receiver
