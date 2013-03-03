@@ -88,6 +88,8 @@ public class MainActivity extends BetterListActivity {
                     zout.close();
 
                     final File libsu = new File(getApplicationInfo().dataDir, "lib/libsu.so");
+                    if (!libsu.exists())
+                        throw new Exception(libsu.getAbsolutePath() + " not found");
 
                     String command =
                             String.format("cat %s > /cache/superuser.zip\n", zip.getAbsolutePath()) +
