@@ -64,6 +64,6 @@
     <string name="multiuser_require_owner">Fleranvändarpolicyn kan endast hanteras av enhetsägaren.</string>
     <string name="owner_login_info">Byt till ägarkontot för att bevilja eller neka denna begäran.</string>
     <string name="all_commands">Alla kommandon</string>
-	<string name="about">Om</string>
+    <string name="about">Om</string>
     <string name="apps">Appar</string>
 </resources>
