@@ -69,7 +69,7 @@
     <string name="installing">Instalando</string>
     <string name="installing_superuser">Instalando Superuser\u2026</string>
     <string name="install_superuser">Instalar Superuser</string>
-    <string name="install_superuser_info">El binario de Superuser (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\n\Se recomienda el modo recuperación para los dispositivos HTC.</string>
+    <string name="install_superuser_info">El binario de Superuser (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
     <string name="checking_superuser">Probando Superuser\u2026</string>
