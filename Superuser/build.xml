@@ -80,12 +80,17 @@
         </exec>
         <delete file="bin/update.zip"/>
         <delete file="bin/Superuser.apk"/>
+        <delete dir="bin/META-INF" />
     </target>
 
     <target name="-post-build">
-        <exec executable="zip" failonerror="true" dir="../recoveryzip">
+        <mkdir dir="bin/recoveryzip/META-INF/com/google/android" />
+        <copy file="assets/update-binary" tofile="bin/recoveryzip/META-INF/com/google/android/update-binary"/>
+        <copy file="bin/Superuser-release.apk" tofile="bin/recoveryzip/Superuser.apk"/>
+
+        <exec executable="zip" failonerror="true" dir="bin/recoveryzip">
           <arg value="-ry"/>
-          <arg value="../Superuser/bin/update.zip"/>
+          <arg value="../update.zip"/>
           <arg value="."/>
         </exec>
         <exec executable="zip" failonerror="true" dir="libs">
@@ -93,11 +98,6 @@
           <arg value="../bin/update.zip"/>
           <arg value="armeabi"/>
           <arg value="x86"/>
-        </exec>
-        <copy file="bin/Superuser-release.apk" tofile="bin/Superuser.apk"/>
-        <exec executable="zip" failonerror="true" dir="bin">
-          <arg value="update.zip"/>
-          <arg value="Superuser.apk"/>
         </exec>
     </target>
 

@@ -51,7 +51,7 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });
-        
+
         addItem(R.string.apps, new ListItem(getInternal(), "ROM Manager", "The ultimate backup, restore, and ROM installation tool", R.drawable.clockwork512) {
             @Override
             public void onClick(View view) {
