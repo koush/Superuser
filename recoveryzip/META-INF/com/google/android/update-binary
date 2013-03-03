@@ -29,7 +29,7 @@ rm -f /system/app/Superuser.apk
 cp $PLATFORM/su /system/xbin/su
 chown 0:0 /system/xbin/su
 chmod 6755 /system/xbin/su
-ln -s /system/xbin/su ../bin/su
+ln -s /system/xbin/su /system/bin/su
 
 cp Superuser.apk /system/app
 
