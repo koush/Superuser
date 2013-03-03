@@ -86,15 +86,7 @@ public class MainActivity extends BetterListActivity {
                     ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zip));
                     doEntry(zout, "assets/update-binary", "META-INF/com/google/android/update-binary");
                     zout.close();
-                    
-//                    doEntry(zout, "lib/armeabi/libsu.so", "armeabi/su");
-//                    doEntry(zout, "lib/x86/libsu.so", "x86/su");
-//                    zout.putNextEntry(new ZipEntry("Superuser.apk"));
-//                    FileInputStream fin = new FileInputStream(getPackageCodePath());
-//                    StreamUtility.copyStream(fin, zout);
-//                    fin.close();
-//                    zout.closeEntry();
-//                    zout.close();
+
                     final File libsu = new File(getApplicationInfo().dataDir, "lib/libsu.so");
 
                     String command =
