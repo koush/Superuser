@@ -32,6 +32,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
@@ -50,7 +51,9 @@ public class MainActivity extends BetterListActivity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem about = menu.add(R.string.about);
+        MenuInflater mi = new MenuInflater(this);
+        mi.inflate(R.menu.app, menu);
+        MenuItem about = menu.findItem(R.id.about);
         about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
