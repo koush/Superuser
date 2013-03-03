@@ -64,4 +64,15 @@
     <string name="multiuser_require_owner">Multibruger-politikken kan kun styres af enhends-ejeren.</string>
     <string name="owner_login_info">Skift venligst til ejer-kontoen for at bekræfte eller afvise denne anmodning.</string>
     <string name="all_commands">Alle kommandoer</string>
+    <string name="about">Om</string>
+    <string name="apps">Apps</string>
+    <string name="installing">Installerer</string>
+    <string name="installing_superuser">Installerer Superuser...</string>
+    <string name="install_superuser">Installer Superuser</string>
+    <string name="install_superuser_info">Superuser-binaryet (su) skal opdateres.\n\nVælg venligst en installationsmetode.\nInstallation gennem recovery anbefales til HTC-enheder.</string>
+    <string name="recovery_install">Recovery-installering</string>
+    <string name="install">Installer</string>
+    <string name="checking_superuser">Checker Superuser...</string>
+    <string name="install_error">Der skete en fejl i installationen af Superuser. Send venligst en log af fejlen til udvikleren.</string>
+    <string name="install_success">Installationen af Superuser var sucessfuld.</string>
 </resources>
