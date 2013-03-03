@@ -64,4 +64,6 @@
     <string name="multiuser_require_owner">The Multiuser Policy can only be managed by the device owner.</string>
     <string name="owner_login_info">Please switch to the owner account to approve or deny this request.</string>
     <string name="all_commands">All Commands</string>
+    <string name="about">About</string>
+    <string name="apps">Apps</string>
 </resources>

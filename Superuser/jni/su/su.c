@@ -720,6 +720,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (stat(ctx.user.base_path, &st) < 0) {
+        // TODO: open market link via "am start" to get the user to install superuser
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
@@ -728,6 +729,11 @@ int main(int argc, char *argv[]) {
         LOGE("Bad uid/gid %d/%d for Superuser Requestor application",
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);
+    }
+    
+    if (ctx.from.uid == st.st_uid) {
+        // automatically the superuser app itself
+        allow(&ctx);
     }
 
     int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);

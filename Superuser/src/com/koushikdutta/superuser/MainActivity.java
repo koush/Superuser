@@ -16,6 +16,10 @@
 
 package com.koushikdutta.superuser;
 
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+
 import com.koushikdutta.widgets.BetterListActivity;
 
 public class MainActivity extends BetterListActivity {
@@ -25,5 +29,19 @@ public class MainActivity extends BetterListActivity {
 
     public PolicyFragmentInternal getFragment() {
         return (PolicyFragmentInternal)super.getFragment();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem about = menu.add(R.string.about);
+        about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                getFragment().setContent(new AboutFragment(), true, getString(R.string.about));
+                return true;
+            }
+        });
+        
+        return super.onCreateOptionsMenu(menu);
     }
 }
