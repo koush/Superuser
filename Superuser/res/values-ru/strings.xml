@@ -11,7 +11,7 @@
     <string name="request">Запрос прав Суперпользователя</string>
     <string name="package_header">Пакет:</string>
     <string name="app_header">Приложение:</string>
-    <string name="uid_header">Запрашиваемый UID:</string>
+    <string name="uid_header">Требуемый UID:</string>
     <string name="command_header">Команда:</string>
     <string name="this_time_only">Только в этот раз</string>
     <string name="remember_for">Предоставить доступ на %s минут</string>
