@@ -27,13 +27,16 @@ import java.util.zip.ZipOutputStream;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
+import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.StreamUtility;
 import com.koushikdutta.superuser.util.SuHelper;
 import com.koushikdutta.widgets.BetterListActivity;
@@ -223,10 +226,40 @@ public class MainActivity extends BetterListActivity {
         });
         builder.create().show();
     }
+    
+    private void saveWhatsNew() {
+        Settings.setString(this, "whats_new", WHATS_NEW);
+    }
+    
+    // this is intentionally not localized as it will change constantly.
+    private static final String WHATS_NEW = "Fixed PIN Protect crashing on Froyo and Gingerbread.\n\nThe Superuser binary will show a browser message if Superuser was uninstalled and su is broken.";
+    protected void doWhatsNew() {
+        if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
+            return;
+        saveWhatsNew();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.whats_new);
+        builder.setMessage(WHATS_NEW);
+        builder.setPositiveButton(R.string.rate, new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent i = new Intent();
+                i.setData(Uri.parse("market://details?id=com.koushikdutta.superuser"));
+                startActivity(i);
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if (Settings.getBoolean(this, "first_run", true)) {
+            saveWhatsNew();
+            Settings.setBoolean(this, "first_run", false);
+        }
         
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.superuser);
@@ -235,23 +268,27 @@ public class MainActivity extends BetterListActivity {
         dlg.show();
         new Thread() {
             public void run() {
-                boolean error = false;
+                boolean _error = false;
                 try {
                     SuHelper.checkSu(MainActivity.this);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
-                    error = true;
+                    _error = true;
                 }
+                final boolean error = _error;
                 dlg.dismiss();
-                if (error) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (error) {
                             doInstall();
                         }
-                    });
-                }
+                        else {
+                            doWhatsNew();
+                        }
+                    }
+                });
             };
         }.start();
     }
