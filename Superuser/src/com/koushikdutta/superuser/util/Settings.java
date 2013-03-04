@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 
 import android.content.ContentValues;
@@ -302,6 +303,45 @@ public class Settings {
                 writeFile(file, MULTIUSER_VALUE_OWNER_ONLY);
                 break;
             }
+        }
+        catch (Exception ex) {
+        }
+    }
+    
+    
+    public static final int SUPERUSER_ACCESS_DISABLED = 0;
+    public static final int SUPERUSER_ACCESS_APPS_ONLY = 1;
+    public static final int SUPERUSER_ACCESS_ADB_ONLY = 2;
+    public static final int SUPERUSER_ACCESS_APPS_AND_ADB = 3;
+    public static int getSuperuserAccess() {
+        try {
+            Class c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("get", String.class);
+            String value = (String)m.invoke(null, "persist.sys.root_access");
+            int val = Integer.valueOf(value);
+            switch (val) {
+            case SUPERUSER_ACCESS_DISABLED:
+            case SUPERUSER_ACCESS_APPS_ONLY:
+            case SUPERUSER_ACCESS_ADB_ONLY:
+            case SUPERUSER_ACCESS_APPS_AND_ADB:
+                return val;
+            default:
+                return SUPERUSER_ACCESS_APPS_AND_ADB;
+            }
+        }
+        catch (Exception e) {
+            return SUPERUSER_ACCESS_APPS_AND_ADB;
+        }
+    }
+    
+    public static void setSuperuserAccess(int mode) {
+        // TODO: fallback to using SystemProperties.set if this has system uid (ie, embedded)
+        try {
+            String command = "setprop persist.sys.root_access " + mode;
+            Process p = Runtime.getRuntime().exec("su");
+            p.getOutputStream().write(command.getBytes());
+            p.getOutputStream().close();
+            p.waitFor();
         }
         catch (Exception ex) {
         }

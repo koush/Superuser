@@ -15,7 +15,10 @@ public class SuHelper {
             throw new Exception("no data");
         if (!result.contains(context.getPackageName()))
             throw new Exception("unknown su");
-        // TODO: upgrades herp derp
+        
+        String[] parts = result.split(" ");
+        if (!"2".equals(parts[0]))
+            throw new Exception("binary is old");
     }
 
 }

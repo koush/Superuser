@@ -65,6 +65,11 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             addPolicy(up);
         }
     }
+    
+    public void onResume() {
+        super.onResume();
+        load();
+    }
 
     FragmentInterfaceWrapper mContent;
 

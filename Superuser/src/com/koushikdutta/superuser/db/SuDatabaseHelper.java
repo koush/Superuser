@@ -114,6 +114,9 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<UidPolicy> getPolicies(Context context) {
         ArrayList<UidPolicy> ret = new ArrayList<UidPolicy>();
         SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        
+        db.delete("uid_policy", "until > 0 and until < ?", new String[] { String.valueOf(System.currentTimeMillis()) });
+        
         Cursor c = db.query("uid_policy", null, null, null, null, null, null);
         try {
             while (c.moveToNext()) {

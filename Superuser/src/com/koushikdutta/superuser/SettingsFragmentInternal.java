@@ -42,47 +42,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
     protected int getListFragmentResource() {
         return R.layout.settings;
     }
-    
-//    static final int containerId = 100001;
-//    public static class MyPinFragment extends DialogFragment {
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//            FrameLayout ret =  new FrameLayout(getActivity());
-//            ret.setId(containerId);
-//            return ret;
-//        };
-//        
-//        private int title;
-//        public void setTitle(int title) {
-//            this.title = title;
-//        }
-//
-//        Dialog d;
-//        @Override
-//        public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            d = super.onCreateDialog(savedInstanceState);
-//            d.setTitle(title);
-//            PinView pf = new PinView() {
-//                @Override
-//                public void onCancel() {
-//                    super.onCancel();
-//                    d.dismiss();
-//                }
-//                
-//                @Override
-//                public void onEnter(String password) {
-//                    super.onEnter(password);
-//                    MyPinFragment.this.onEnter(password);
-//                }
-//            };
-//            getChildFragmentManager().beginTransaction().add(containerId, pf).commit();
-//
-//            return d;
-//        }
-//        
-//        public void onEnter(String password) {
-//            d.dismiss();
-//        }
-//    };
 
     ListItem pinItem;
     void confirmPin(final String pin) {
@@ -159,6 +118,64 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
+        
+        // NOTE to future koush
+        // dark icons use the color #f3f3f3
+        
+        addItem(R.string.security, new ListItem(this, R.string.superuser_access, 0, 0) {
+            void update() {
+                switch (Settings.getSuperuserAccess()) {
+                case Settings.SUPERUSER_ACCESS_ADB_ONLY:
+                    setSummary(R.string.adb_only);
+                    break;
+                case Settings.SUPERUSER_ACCESS_APPS_ONLY:
+                    setSummary(R.string.apps_only);
+                    break;
+                case Settings.SUPERUSER_ACCESS_APPS_AND_ADB:
+                    setSummary(R.string.apps_and_adb);
+                    break;
+                case Settings.SUPERUSER_ACCESS_DISABLED:
+                    setSummary(R.string.disabled);
+                    break;
+                default:
+                    setSummary(R.string.apps_and_adb);
+                    break;
+                }
+            }
+            {
+                update();
+            }
+            
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.superuser_access);
+                String[] items = new String[] { getString(R.string.disabled), getString(R.string.apps_only), getString(R.string.adb_only), getString(R.string.apps_and_adb) };
+                builder.setItems(items, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            Settings.setSuperuserAccess(Settings.SUPERUSER_ACCESS_DISABLED);
+                            break;
+                        case 1:
+                            Settings.setSuperuserAccess(Settings.SUPERUSER_ACCESS_APPS_ONLY);
+                            break;
+                        case 2:
+                            Settings.setSuperuserAccess(Settings.SUPERUSER_ACCESS_ADB_ONLY);
+                            break;
+                        case 3:
+                            Settings.setSuperuserAccess(Settings.SUPERUSER_ACCESS_APPS_AND_ADB);
+                            break;
+                        }
+                        update();
+                    }
+                });
+                builder.create().show();
+            }
+        }).setAttrDrawable(R.attr.toggleIcon);
         
         if (Settings.getMultiuserMode(getActivity()) != Settings.MULTIUSER_MODE_NONE) {
             addItem(R.string.security, new ListItem(this, R.string.multiuser_policy, 0) {
