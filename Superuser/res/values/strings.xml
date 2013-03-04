@@ -76,4 +76,9 @@
     <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
     <string name="install_success">Installation of Superuser was successful.</string>
     <string name="su_binary_outdated">The su binary is out of date.</string>
+    <string name="superuser_access">Superuser Access</string>
+    <string name="disabled">Disabled</string>
+    <string name="apps_only">Apps only</string>
+    <string name="adb_only">ADB only</string>
+    <string name="apps_and_adb">Apps and ADB</string>
 </resources>

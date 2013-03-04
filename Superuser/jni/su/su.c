@@ -703,36 +703,43 @@ int main(int argc, char *argv[]) {
     read_options(&ctx);
     user_init(&ctx);
     
-    if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0) {
-        deny(&ctx);
-    }
-
-    if (access_disabled(&ctx.from)) {
-        LOGD("access_disabled");
-        deny(&ctx);
-    }
-
-    ctx.umask = umask(027);
-
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
-        LOGD("Allowing root/shell.");
-        allow(&ctx);
-    }
-
+    // verify superuser is installed
     if (stat(ctx.user.base_path, &st) < 0) {
+        // send to market
         silent_run("am start -d market://details?id=" JAVA_PACKAGE_NAME);
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
 
+    // odd perms on superuser data dir
     if (st.st_gid != st.st_uid) {
         LOGE("Bad uid/gid %d/%d for Superuser Requestor application",
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);
     }
     
+    // always allow if this is the superuser uid
+    // superuser needs to be able to reenable itself when disabled...
     if (ctx.from.uid == st.st_uid) {
-        // automatically grant the superuser app itself
+        allow(&ctx);
+    }
+
+    // check if superuser is disabled completely
+    if (access_disabled(&ctx.from)) {
+        LOGD("access_disabled");
+        deny(&ctx);
+    }
+
+    // deny if this is a non owner request and owner mode only
+    if (ctx.user.multiuser_mode == MULTIUSER_MODE_OWNER_ONLY && ctx.user.android_user_id != 0) {
+        deny(&ctx);
+    }
+
+    ctx.umask = umask(027);
+
+    // TODO: customizable behavior for shell? It can currently be toggled via settings.
+    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing root/shell.");
         allow(&ctx);
     }
 

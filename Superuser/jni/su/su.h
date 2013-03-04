@@ -67,7 +67,7 @@
 #define xstr(a) str(a)
 #define str(a) #a
 
-#define VERSION_CODE 1
+#define VERSION_CODE 2
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
 #define PROTO_VERSION 1
