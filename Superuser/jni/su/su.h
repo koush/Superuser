@@ -46,6 +46,9 @@
 #ifndef REQUESTOR
 #define REQUESTOR JAVA_PACKAGE_NAME
 #endif
+#ifndef REQUESTOR_PREFIX
+#define REQUESTOR_PREFIX JAVA_PACKAGE_NAME
+#endif
 #define REQUESTOR_DATA_PATH "/data/data/"
 #define REQUESTOR_FILES_PATH REQUESTOR_DATA_PATH REQUESTOR "/files"
 #define REQUESTOR_USER_PATH "/data/user/"
@@ -58,9 +61,9 @@
 #define REQUESTOR_MULTIUSER_MODE REQUESTOR_FILES_PATH "/multiuser_mode"
 
 /* intent actions */
-#define ACTION_REQUEST "start -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".RequestActivity"
-#define ACTION_NOTIFY "start -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".NotifyActivity"
-#define ACTION_RESULT "broadcast -n " REQUESTOR "/" JAVA_PACKAGE_NAME ".SuReceiver"
+#define ACTION_REQUEST "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".RequestActivity"
+#define ACTION_NOTIFY "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".NotifyActivity"
+#define ACTION_RESULT "broadcast -n " REQUESTOR "/" REQUESTOR_PREFIX ".SuReceiver"
 
 #define DEFAULT_SHELL "/system/bin/sh"
 

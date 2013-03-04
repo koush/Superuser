@@ -19,6 +19,7 @@ package com.koushikdutta.superuser;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class RequestActivity extends Activity {
     @Override
@@ -32,7 +33,9 @@ public class RequestActivity extends Activity {
         }
         
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setClass(this, MultitaskSuRequestActivity.class);
+        String name = getClass().getPackage().getName() + "." + MultitaskSuRequestActivity.class.getSimpleName();
+        Log.i("Superuser", "Launching: " + name);
+        intent.setClassName(this, name);
         startActivity(intent);
         finish();
         return;
