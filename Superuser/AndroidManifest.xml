@@ -32,6 +32,7 @@
         android:protectionLevel="dangerous" />
 
     <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".SuApplication"
@@ -87,6 +88,13 @@
         <receiver
             android:name=".SuReceiver"
             android:permission="android.permission.REPORT_SUPERUSER" />
+
+        <receiver android:name=".SuCheckerReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- <action android:name="internal.superuser.BOOT_TEST" /> -->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

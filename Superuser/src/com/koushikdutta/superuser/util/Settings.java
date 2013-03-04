@@ -306,4 +306,13 @@ public class Settings {
         catch (Exception ex) {
         }
     }
+    
+    private static final String CHECK_SU_QUIET = "check_su_quiet";
+    public static final int getCheckSuQuietCounter(Context context) {
+        return getInt(context, CHECK_SU_QUIET, 0);
+    }
+    
+    public static final void setCheckSuQuietCounter(Context context, int counter) {
+        setInt(context, CHECK_SU_QUIET, counter);
+    }
 }

@@ -75,4 +75,5 @@
     <string name="checking_superuser">Checking Superuser...</string>
     <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
     <string name="install_success">Installation of Superuser was successful.</string>
+    <string name="su_binary_outdated">The su binary is out of date.</string>
 </resources>
