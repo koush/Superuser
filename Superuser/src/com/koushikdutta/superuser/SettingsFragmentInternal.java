@@ -25,6 +25,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -65,7 +67,8 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 super.onCancel();
                 d.dismiss();
             };
-        }.getView());
+        }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
     
@@ -84,6 +87,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 d.dismiss();
             };
         }.getView());
+        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
 
@@ -107,7 +111,8 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     super.onCancel();
                     d.dismiss();
                 };
-            }.getView());
+            }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             d.show();
         }
         else {
