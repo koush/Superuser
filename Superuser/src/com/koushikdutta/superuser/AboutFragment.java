@@ -2,6 +2,9 @@ package com.koushikdutta.superuser;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -23,6 +26,26 @@ public class AboutFragment extends BetterListFragment {
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
+        
+        
+        PackageManager manager = getContext().getPackageManager();
+        String version = "unknown";
+        try {
+            PackageInfo info = manager.getPackageInfo(getContext().getPackageName(), 0);
+            version = info.versionName;
+        }
+        catch (NameNotFoundException e) {
+        }
+        
+        addItem(R.string.about, new ListItem(getInternal(), getString(R.string.superuser), version, R.drawable.ic_launcher) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                Intent i = new Intent();
+                i.setData(Uri.parse("market://details?id=com.koushikdutta.superuser"));
+                startActivity(i);
+            }
+        });
         
         addItem(R.string.about, new ListItem(getInternal(), "Koushik Dutta", "@koush", R.drawable.koush) {
             @Override
@@ -57,7 +80,6 @@ public class AboutFragment extends BetterListFragment {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
-                super.onClick(view);
                 Intent i = new Intent();
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.rommanager"));
                 startActivity(i);
@@ -66,7 +88,6 @@ public class AboutFragment extends BetterListFragment {
         addItem(R.string.apps, new ListItem(getInternal(), "Carbon", "Android's missing backup solution", R.drawable.carbon) {
             @Override
             public void onClick(View view) {
-                super.onClick(view);
                 super.onClick(view);
                 Intent i = new Intent();
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.backup"));
@@ -77,7 +98,6 @@ public class AboutFragment extends BetterListFragment {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
-                super.onClick(view);
                 Intent i = new Intent();
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.desktopsms"));
                 startActivity(i);
@@ -86,7 +106,6 @@ public class AboutFragment extends BetterListFragment {
         addItem(R.string.apps, new ListItem(getInternal(), "Tether", "Use your phone's web connection on a laptop or PC", R.drawable.tether) {
             @Override
             public void onClick(View view) {
-                super.onClick(view);
                 super.onClick(view);
                 Intent i = new Intent();
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.tether"));
