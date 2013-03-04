@@ -67,12 +67,12 @@
     <string name="about">Acerca de\u2026</string>
     <string name="apps">Aplicaciones</string>
     <string name="installing">Instalando</string>
-    <string name="installing_superuser">Instalando Superuser\u2026</string>
-    <string name="install_superuser">Instalar Superuser</string>
-    <string name="install_superuser_info">El binario de Superuser (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\n\Se recomienda el modo recuperación para los dispositivos HTC.</string>
+    <string name="installing_superuser">Instalando Superusuario\u2026</string>
+    <string name="install_superuser">Instalar Superusuario</string>
+    <string name="install_superuser_info">El binario de Superusuario (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
-    <string name="checking_superuser">Probando Superuser\u2026</string>
-    <string name="install_error">Ha ocurrido un error mientras se instalaba Superuser. Por favor, envíe un registro del error al desarrollador</string>
-    <string name="install_success">La instalación de Superuser se ha realizado con éxito.</string>
+    <string name="checking_superuser">Probando Superusuario\u2026</string>
+    <string name="install_error">Ha ocurrido un error mientras se instalaba Superusuario. Por favor, envíe un registro del error al desarrollador</string>
+    <string name="install_success">La instalación de Superusuario se ha realizado con éxito.</string>
 </resources>

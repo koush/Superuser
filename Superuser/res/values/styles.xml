@@ -17,6 +17,7 @@
         <item name="bottomButtonBar">@null</item>
         <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
 
+        <item name="toggleIcon">@drawable/ic_toggle_dark</item>
         <item name="multiuserIcon">@drawable/ic_users_dark</item>
         <item name="declaredPermissionsIcon">@drawable/ic_declare_dark</item>
         <item name="automaticResponseIcon">@drawable/ic_alert_dark</item>
@@ -30,6 +31,7 @@
         <item name="bottomButtonBar">@color/background_dark</item>
         <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
         
+        <item name="toggleIcon">@drawable/ic_toggle</item>
         <item name="multiuserIcon">@drawable/ic_users</item>
         <item name="declaredPermissionsIcon">@drawable/ic_declare</item>
         <item name="automaticResponseIcon">@drawable/ic_alert</item>

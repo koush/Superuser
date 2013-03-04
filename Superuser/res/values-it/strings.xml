@@ -66,4 +66,13 @@
     <string name="all_commands">Tutti i comandi</string>
     <string name="about">About</string>
     <string name="apps">App</string>
+    <string name="installing">Installazione</string>
+    <string name="installing_superuser">Sto installando Superuser...</string>
+    <string name="install_superuser">Installa Superuser</string>
+    <string name="install_superuser_info">Il file binario di Superuser (su) deve essere aggiornato.\n\nPerfavore scegli un metodo per installarlo.\nL\'installazione tramite Recovery è raccomandata per i dispositivi HTC.</string>
+    <string name="recovery_install">Installa da Recovery</string>
+    <string name="install">Installa</string>
+    <string name="checking_superuser">Sto controllando Superuser...</string>
+    <string name="install_error">C\'è stato un errore durante l\'installazione di Superuser. Perfavore invia un log dell\'errore allo sviluppatore.</string>
+    <string name="install_success">L\'installazione di Superuser è avvenuta con successo.</string>
 </resources>

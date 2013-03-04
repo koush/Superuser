@@ -17,7 +17,6 @@
 package com.koushikdutta.superuser;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,13 +29,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 
-import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.StreamUtility;
+import com.koushikdutta.superuser.util.SuHelper;
 import com.koushikdutta.widgets.BetterListActivity;
 
 public class MainActivity extends BetterListActivity {
@@ -50,7 +49,9 @@ public class MainActivity extends BetterListActivity {
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem about = menu.add(R.string.about);
+        MenuInflater mi = new MenuInflater(this);
+        mi.inflate(R.menu.app, menu);
+        MenuItem about = menu.findItem(R.id.about);
         about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -175,7 +176,7 @@ public class MainActivity extends BetterListActivity {
                     p.getOutputStream().close();
                     if (p.waitFor() != 0)
                         throw new Exception("non zero result");
-                    checkSu();
+                    SuHelper.checkSu(MainActivity.this);
                 }
                 catch (Exception ex) {
                     _error = true;
@@ -222,19 +223,6 @@ public class MainActivity extends BetterListActivity {
         });
         builder.create().show();
     }
-    
-    void checkSu() throws Exception {
-        Process p = Runtime.getRuntime().exec("su -v");
-        String result = Settings.readToEnd(p.getInputStream());
-        Log.i("Superuser", "Result: " + result);
-        if (0 != p.waitFor())
-            throw new Exception("non zero result");
-        if (result == null)
-            throw new Exception("no data");
-        if (!result.contains(getPackageName()))
-            throw new Exception("unknown su");
-        // TODO: upgrades herp derp
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,7 +237,7 @@ public class MainActivity extends BetterListActivity {
             public void run() {
                 boolean error = false;
                 try {
-                    checkSu();
+                    SuHelper.checkSu(MainActivity.this);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

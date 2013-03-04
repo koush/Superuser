@@ -65,6 +65,11 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             addPolicy(up);
         }
     }
+    
+    public void onResume() {
+        super.onResume();
+        load();
+    }
 
     FragmentInterfaceWrapper mContent;
 
@@ -157,25 +162,13 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         MenuItem settings = menu.findItem(R.id.settings);
         settings.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             void openSettingsNative(final MenuItem item) {
-                setContent(new SettingsNativeFragment() {
-                    @Override
-                    public void onConfigurationChanged(Configuration newConfig) {
-                        super.onConfigurationChanged(newConfig);
-                        onMenuItemClick(item);
-                    }
-                }, true, getString(R.string.settings));
+                setContent(new SettingsNativeFragment(), true, getString(R.string.settings));
             }
             
             @Override
             public boolean onMenuItemClick(final MenuItem item) {
                 if (getActivity() instanceof FragmentActivity) {
-                    setContent(new SettingsFragment() {
-                        @Override
-                        public void onConfigurationChanged(Configuration newConfig) {
-                            super.onConfigurationChanged(newConfig);
-                            onMenuItemClick(item);
-                        }
-                    }, true, getString(R.string.settings));
+                    setContent(new SettingsFragment(), true, getString(R.string.settings));
                 }
                 else {
                     openSettingsNative(item);

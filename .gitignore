@@ -4,3 +4,4 @@ x86
 obj
 local.properties
 gen
+.DS_Store
