@@ -70,7 +70,7 @@
     <string name="installing_superuser">Установка Суперпользователя...</string>
     <string name="install_superuser">Установить Суперпользователя</string>
     <string name="install_superuser_info">Программа Суперпользователь (su) нуждается в обновлении.\n\nПожалуйста, выберите метод установки.\nСпособ установки через Recovery рекомендуется для устройств HTC</string>
-    <string name="recovery_install">Установить в Recovery</string>
+    <string name="recovery_install">Через Recovery</string>
     <string name="install">Установить</string>
     <string name="checking_superuser">Проверка Суперпользователя...</string>
     <string name="install_error">Произошла ошибка при установке Суперпользователя. Пожалуйста, отправте лог ошибки разработчику</string>
