@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Superuser</string>
+    <string name="superuser">Superuser</string>
     <string name="allow">Permiteţi</string>
     <string name="deny">Refuzaţi</string>
     <string name="status_incoming">Cerere superuser de intrare...</string>
@@ -48,8 +48,11 @@
     <string name="superuser_description_more">Superuser acordă acces deplin pentru toate caracteristicile dispozitivului şi stocare, inclusiv elementele sigure și sensibile hardware ale dispozitivului dvs. Această permisiune este potențial periculoasă.</string>
     <string name="declared_permission">Permisiune declarată</string>
     <string name="declared_permission_summary">Permiteţi doar cererile de la aplicațiile care declară android.permission.ACCESS_SUPERUSER</string>
-    <string name="automatic_response">Răspuns automat</string>
-    <string name="prompt">Întrebare</string>
+    <string name="automatic_response">Răspuns automat</string>    
+    <string name="prompt">Întrebaţi</string>
+    <string name="automatic_response_allow_summary">Permiteţi automat cererile noi</string>
+    <string name="automatic_response_deny_summary">Refuzaţi automat cererile noi</string>
+    <string name="automatic_response_prompt_summary">Afişaţi dialog de confirmare pentru cererile noi</string>
     <string name="security">Securitate</string>
     <string name="multiuser_policy">Politică multi-utilizator</string>
     <string name="multiuser_owner_only_summary">Doar proprietarul dispozitivului poate cere Superuser</string>
@@ -60,4 +63,22 @@
     <string name="multiuser_user">Toţi utilizatorii</string>
     <string name="multiuser_require_owner">Politica multi-utilizator poate fi gestionată doar de proprietarul dispozitivului.</string>
     <string name="owner_login_info">Vă rugăm să comutaţi la contul proprietarului pentru a acorda sau refuza această cerere.</string>
+    <string name="all_commands">Toate comenzile</string>
+    <string name="about">Despre</string>
+    <string name="apps">Aplicaţii</string>
+    <string name="installing">Instalare</string>
+    <string name="installing_superuser">Instalare Superuser...</string>
+    <string name="install_superuser">Instalaţi Superuser</string>
+    <string name="install_superuser_info">Este necesară actualizarea fişierului binar su pentru Superuser.\n\nSelectaţi o metodă de actualizare.\nModul Recuperare este recomandat pentru dispozitivele HTC.</string>
+    <string name="recovery_install">Instalţi din Recuperare</string>
+    <string name="install">Instalaţi</string>
+    <string name="checking_superuser">Verificare Superuser...</string>
+    <string name="install_error">A fost o eroare la instalarea Superuser. Trimiteţi un log al erorii către dezvoltator.</string>
+    <string name="install_success">Instalarea cu succes Superuser.</string>
+    <string name="su_binary_outdated">Fişierul binar su este expirat.</string>
+    <string name="superuser_access">Acces Superuser</string>
+    <string name="disabled">Dezactivat</string>
+    <string name="apps_only">Numai pentru aplicaţii</string>
+    <string name="adb_only">Numai pentru ADB</string>
+    <string name="apps_and_adb">Pentru aplicaţii şi ADB</string>
 </resources>
