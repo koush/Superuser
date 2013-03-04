@@ -1,0 +1,60 @@
+<resources>
+
+    <style name="BottomButton">
+        <item name="android:textColor">?attr/bottomButtonBarText</item>
+    </style>
+
+    <color name="background_dark">#1F1F1F</color>
+
+    <style name="PinButton" parent="@android:style/TextAppearance.Large">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="SuperuserDark" parent="@style/AppDarkTheme">
+        <item name="bottomButtonBar">@null</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
+
+        <item name="multiuserIcon">@drawable/ic_users_dark</item>
+        <item name="declaredPermissionsIcon">@drawable/ic_declare_dark</item>
+        <item name="automaticResponseIcon">@drawable/ic_alert_dark</item>
+        <item name="pinProtectionIcon">@drawable/ic_protected_dark</item>
+        <item name="requestTimeoutIcon">@drawable/ic_timeout_dark</item>
+        <item name="loggingIcon">@drawable/ic_logging_dark</item>
+        <item name="notificationsIcon">@drawable/ic_notifications_dark</item>
+    </style>
+
+    <style name="SuperuserLight" parent="@style/AppTheme">
+        <item name="bottomButtonBar">@color/background_dark</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
+        
+        <item name="multiuserIcon">@drawable/ic_users</item>
+        <item name="declaredPermissionsIcon">@drawable/ic_declare</item>
+        <item name="automaticResponseIcon">@drawable/ic_alert</item>
+        <item name="pinProtectionIcon">@drawable/ic_protected</item>
+        <item name="requestTimeoutIcon">@drawable/ic_timeout</item>
+        <item name="loggingIcon">@drawable/ic_logging</item>
+        <item name="notificationsIcon">@drawable/ic_notifications</item>
+    </style>
+
+    <style name="Superuser.PolicyIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
+    <style name="SuperuserDark.PolicyIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
+    <style name="RequestThemeDark" parent="SuperuserDark" />
+    <style name="RequestThemeLight" parent="SuperuserLight" />
+    
+    <style name="RequestTheme" parent="RequestThemeLight" />
+    <style name="Superuser" parent="SuperuserLight" />
+    
+    <style name="AboutTheme" parent="Superuser">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
+</resources>
