@@ -80,4 +80,9 @@ android.permission.ACCESS_SUPERUSER
     <string name="install_error">安装超级用户时出错。请将错误日志发送给开发人员。</string>
     <string name="install_success">超级用户安装成功。</string>
     <string name="su_binary_outdated">su 二进制可执行文件已过期。</string>
+    <string name="superuser_access">超级用户使用权</string>
+    <string name="disabled">禁用</string>
+    <string name="apps_only">仅应用</string>
+    <string name="adb_only">仅 ADB</string>
+    <string name="apps_and_adb">应用和 ADB</string>
 </resources>
