@@ -707,7 +707,7 @@ int main(int argc, char *argv[]) {
     if (stat(ctx.user.base_path, &st) < 0) {
         // send to market
         if (0 == strcmp(JAVA_PACKAGE_NAME, REQUESTOR))
-            silent_run("am start -d market://details?id=" JAVA_PACKAGE_NAME);
+            silent_run("am start -d http://www.clockworkmod.com/superuser/install.html -a android.intent.action.VIEW");
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
