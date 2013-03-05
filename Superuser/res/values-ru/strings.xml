@@ -81,4 +81,6 @@
     <string name="apps_only">Только приложения</string>
     <string name="adb_only">Только ADB</string>
     <string name="apps_and_adb">Приложения и ADB</string>
+    <string name="whats_new">Что нового</string>
+    <string name="rate">Оценить</string>
 </resources>
