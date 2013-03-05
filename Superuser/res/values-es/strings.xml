@@ -81,4 +81,6 @@
     <string name="apps_only">Sólo aplicaciones</string>
     <string name="adb_only">Sólo ADB</string>
     <string name="apps_and_adb">Aplicaciones y ADB</string>
+    <string name="whats_new">Novedades</string>
+    <string name="rate">Valorar</string>
 </resources>
