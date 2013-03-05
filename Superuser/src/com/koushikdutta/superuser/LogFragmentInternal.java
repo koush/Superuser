@@ -18,8 +18,11 @@ package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -84,15 +87,13 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
     protected int getListItemResource() {
         return R.layout.log_item;
     }
-    
-    @Override
-    protected int getListFragmentResource() {
-        return R.layout.policy_fragment;
-    }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
+        
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        getListView().addHeaderView(inflater.inflate(R.layout.policy_header, null));
         
         getFragment().setHasOptionsMenu(true);
         
@@ -118,7 +119,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             name.setText(up.name);
             
             ((TextView)view.findViewById(R.id.uid_header)).setText(Integer.toString(up.desiredUid));
-            ((TextView)view.findViewById(R.id.command_header)).setText(up.command == null ? getString(R.string.all_commands) : up.command);
+            ((TextView)view.findViewById(R.id.command_header)).setText(TextUtils.isEmpty(up.command) ? getString(R.string.all_commands) : up.command);
             String app = up.username;
             if (app == null || app.length() == 0)
                 app = String.valueOf(up.uid);
@@ -130,11 +131,10 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             logs = SuperuserDatabaseHelper.getLogs(getActivity(), up, -1);
         }
         else {
-            view.findViewById(R.id.title_container).setVisibility(View.GONE);
+            setEmpty(R.string.no_logs);
+            view.findViewById(R.id.policy_header).setVisibility(View.GONE);
             logs = SuperuserDatabaseHelper.getLogs(getActivity());
         }
-        
-        setEmpty(R.string.no_logs);
         
         for (LogEntry log: logs) {
             final String date = time.format(log.getDate());
@@ -155,24 +155,43 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             });
         }
 
-        final CompoundButton cb = (CompoundButton)view.findViewById(R.id.logging);
-        cb.setOnClickListener(new OnClickListener() {
+        final CompoundButton logging = (CompoundButton)view.findViewById(R.id.logging);
+        logging.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (up == null) {
-                    Settings.setLogging(getActivity(), cb.isChecked());
+                    Settings.setLogging(getActivity(), logging.isChecked());
                 }
                 else {
-                    up.logging = cb.isChecked();
+                    up.logging = logging.isChecked();
                     SuDatabaseHelper.setPolicy(getActivity(), up);
                 }
             }
         });
         if (up == null) {
-            cb.setChecked(Settings.getLogging(getActivity()));
+            logging.setChecked(Settings.getLogging(getActivity()));
         }
         else {
-            cb.setChecked(up.logging);
+            logging.setChecked(up.logging);
+        }
+
+        final CompoundButton notification = (CompoundButton)view.findViewById(R.id.notification);
+        notification.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (up == null) {
+                }
+                else {
+                    up.notification = notification.isChecked();
+                    SuDatabaseHelper.setPolicy(getActivity(), up);
+                }
+            }
+        });
+        if (up == null) {
+            view.findViewById(R.id.notification_container).setVisibility(View.GONE);
+        }
+        else {
+            notification.setChecked(up.notification);
         }
     }
 }

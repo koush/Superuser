@@ -59,18 +59,8 @@ public class SuReceiver extends BroadcastReceiver {
         le.username = fromName;
         le.date = (int)(System.currentTimeMillis() / 1000);
         le.getPackageInfo(context);
-        // wait a bit before logging... lots of concurrent su requests at the same time
-        // cause a db lock
-        // TODO: this hack should no longer be necessary
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                try {
-                    SuperuserDatabaseHelper.addLog(context, le);
-                }
-                catch (Exception e) {
-                }
-            };
-        }, 5000L);
+
+        UidPolicy u = SuperuserDatabaseHelper.addLog(context, le);
 
         String toast;
         if (UidPolicy.ALLOW.equals(action)) {
@@ -79,6 +69,9 @@ public class SuReceiver extends BroadcastReceiver {
         else {
             toast = context.getString(R.string.superuser_denied, le.getName());
         }
+
+        if (u != null && !u.notification)
+            return;
 
         switch (Settings.getNotificationType(context)) {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:

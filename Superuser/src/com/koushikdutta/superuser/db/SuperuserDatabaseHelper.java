@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 
 import com.koushikdutta.superuser.util.Settings;
 
@@ -40,12 +41,12 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 0) {
-            db.execSQL("create table if not exists log (id integer primary key autoincrement, desired_name text, username text, uid integer, desired_uid integer, command text, date integer, action text, package_name text, name text)");
+            db.execSQL("create table if not exists log (id integer primary key autoincrement, desired_name text, username text, uid integer, desired_uid integer, command text not null, date integer, action text, package_name text, name text)");
             db.execSQL("create index if not exists log_uid_index on log(uid)");
             db.execSQL("create index if not exists log_desired_uid_index on log(desired_uid)");
             db.execSQL("create index if not exists log_command_index on log(command)");
             db.execSQL("create index if not exists log_date_index on log(date)");
-            db.execSQL("create table if not exists settings (key TEXT PRIMARY KEY, value TEXT)");
+            db.execSQL("create table if not exists settings (key text primary key not null, value text)");
             oldVersion = 1;
         }
     }
@@ -62,7 +63,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
     public static ArrayList<LogEntry> getLogs(SQLiteDatabase db, UidPolicy policy, int limit) {
         ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         Cursor c;
-        if (policy.command != null)
+        if (!TextUtils.isEmpty(policy.command))
             c = db.query("log", null, "uid = ? and desired_uid = ? and command = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid), policy.command }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
         else
             c = db.query("log", null, "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
@@ -123,6 +124,10 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
     static void addLog(SQLiteDatabase db, LogEntry log) {
         ContentValues values = new ContentValues();
         values.put("uid", log.uid);
+        // nulls are considered unique, even from other nulls. blerg.
+        // http://stackoverflow.com/questions/3906811/null-permitted-in-primary-key-why-and-in-which-dbms
+        if (log.command == null)
+            log.command = "";
         values.put("command", log.command);
         values.put("action", log.action);
         values.put("date", log.date);
@@ -134,32 +139,40 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         db.insert("log", null, values);
     }
     
-    public static void addLog(Context context, LogEntry log) {
-        if (!Settings.getLogging(context))
-            return;
-        
-        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
-        Cursor c = db.query("uid_policy", null, "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(log.uid), log.command, String.valueOf(log.desiredUid) }, null, null, null, null);
+    public static UidPolicy addLog(Context context, LogEntry log) {
+        // nulls are considered unique, even from other nulls. blerg.
+        // http://stackoverflow.com/questions/3906811/null-permitted-in-primary-key-why-and-in-which-dbms
+        if (log.command == null)
+            log.command = "";
+
+        // grab the policy and add a log
+        UidPolicy u = null;
+        SQLiteDatabase su = new SuDatabaseHelper(context).getReadableDatabase();
+        Cursor c = su.query("uid_policy", null, "uid = ? and (command = ? or command = ?) and desired_uid = ?", new String[] { String.valueOf(log.uid), log.command, "", String.valueOf(log.desiredUid) }, null, null, null, null);
         try {
             if (c.moveToNext()) {
-                UidPolicy u = SuDatabaseHelper.getPolicy(context, c);
-                if (!u.logging) {
-                    db.close();
-                    return;
-                }
+                u = SuDatabaseHelper.getPolicy(c);
             }
         }
         finally {
             c.close();
-            db.close();
+            su.close();
         }
 
-        db = new SuperuserDatabaseHelper(context).getReadableDatabase();
+        if (u != null && !u.logging)
+            return u;
+
+        if (!Settings.getLogging(context))
+            return u;
+
+        SQLiteDatabase superuser = new SuperuserDatabaseHelper(context).getWritableDatabase();
         try {
-            addLog(db, log);
+            addLog(superuser, log);
         }
         finally {
-            db.close();
+            superuser.close();
         }
+        
+        return u;
     }
 }
