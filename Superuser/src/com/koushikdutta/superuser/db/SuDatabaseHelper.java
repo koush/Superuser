@@ -219,8 +219,6 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     }
     
     public static void addLog(Context context, LogEntry log) {
-        getPackageInfoForUid(context, log);
-
         if (!Settings.getLogging(context))
             return;
         
@@ -243,7 +241,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         values.put("uid", log.uid);
         values.put("command", log.command);
         values.put("action", log.action);
-        values.put("date", (int)(System.currentTimeMillis() / 1000));
+        values.put("date", log.date);
         values.put("name", log.name);
         values.put("desired_uid", log.desiredUid);
         values.put("package_name", log.packageName);
