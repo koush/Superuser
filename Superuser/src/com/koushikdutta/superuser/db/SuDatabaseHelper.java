@@ -113,7 +113,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     
     public static ArrayList<UidPolicy> getPolicies(Context context) {
         ArrayList<UidPolicy> ret = new ArrayList<UidPolicy>();
-        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
         
         db.delete("uid_policy", "until > 0 and until < ?", new String[] { String.valueOf(System.currentTimeMillis()) });
         
