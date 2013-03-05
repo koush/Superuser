@@ -81,4 +81,6 @@
     <string name="apps_only">Endast Appar</string>
     <string name="adb_only">Endast ADB</string>
     <string name="apps_and_adb">Appar och ADB</string>
+    <string name="whats_new">Nyheter</string>
+    <string name="rate">Recensera</string>
 </resources>
