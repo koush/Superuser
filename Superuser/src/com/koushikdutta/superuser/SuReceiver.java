@@ -16,8 +16,6 @@
 
 package com.koushikdutta.superuser;
 
-import java.util.Random;
-
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -27,7 +25,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.db.LogEntry;
-import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
 
@@ -60,13 +58,13 @@ public class SuReceiver extends BroadcastReceiver {
         le.desiredName = desiredName;
         le.username = fromName;
         le.date = (int)(System.currentTimeMillis() / 1000);
-        SuDatabaseHelper.getPackageInfoForUid(context, le);
+        le.getPackageInfo(context);
         // wait a bit before logging... lots of concurrent su requests at the same time
         // cause a db lock
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 try {
-                    SuDatabaseHelper.addLog(context, le);
+                    SuperuserDatabaseHelper.addLog(context, le);
                 }
                 catch (Exception e) {
                 }

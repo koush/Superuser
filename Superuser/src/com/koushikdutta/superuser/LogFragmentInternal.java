@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.koushikdutta.superuser.db.LogEntry;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.widgets.BetterListFragmentInternal;
@@ -72,7 +73,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 if (up != null)
                     SuDatabaseHelper.delete(getActivity(), up);
                 else
-                    SuDatabaseHelper.deleteLogs(getActivity());
+                    SuperuserDatabaseHelper.deleteLogs(getActivity());
                 onDelete();
                 return true;
             }
@@ -126,11 +127,11 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
 
             getListView().setSelector(android.R.color.transparent);
 
-            logs = SuDatabaseHelper.getLogs(getActivity(), up, -1);
+            logs = SuperuserDatabaseHelper.getLogs(getActivity(), up, -1);
         }
         else {
             view.findViewById(R.id.title_container).setVisibility(View.GONE);
-            logs = SuDatabaseHelper.getLogs(getActivity());
+            logs = SuperuserDatabaseHelper.getLogs(getActivity());
         }
         
         setEmpty(R.string.no_logs);

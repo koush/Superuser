@@ -20,7 +20,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.koushikdutta.superuser.Helper;
-import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 
 public class Settings {
     SQLiteDatabase mDatabase;
@@ -30,7 +30,7 @@ public class Settings {
         ContentValues cv = new ContentValues();
         cv.put("key", name);
         cv.put("value", value);
-        SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
+        SQLiteDatabase db = new SuperuserDatabaseHelper(context).getWritableDatabase();
         try {
             db.replace("settings", null, cv);
         }
@@ -44,7 +44,7 @@ public class Settings {
     }
 
     public static String getString(Context context, String name, String defaultValue) {
-        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        SQLiteDatabase db = new SuperuserDatabaseHelper(context).getReadableDatabase();
         Cursor cursor = db.query("settings", new String[] { "value" }, "key='" + name + "'", null, null, null, null);
         try {
             if (cursor.moveToNext())
