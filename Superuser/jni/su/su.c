@@ -703,6 +703,12 @@ int main(int argc, char *argv[]) {
     read_options(&ctx);
     user_init(&ctx);
     
+    // TODO: customizable behavior for shell? It can currently be toggled via settings.
+    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing root/shell.");
+        allow(&ctx);
+    }
+
     // verify superuser is installed
     if (stat(ctx.user.base_path, &st) < 0) {
         // send to market
@@ -737,12 +743,6 @@ int main(int argc, char *argv[]) {
     }
 
     ctx.umask = umask(027);
-
-    // TODO: customizable behavior for shell? It can currently be toggled via settings.
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
-        LOGD("Allowing root/shell.");
-        allow(&ctx);
-    }
 
     int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);
     if (chown(REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid)) {
