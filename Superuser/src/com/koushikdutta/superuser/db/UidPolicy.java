@@ -39,9 +39,4 @@ public class UidPolicy extends UidCommand {
             return R.string.interactive;
         return R.string.deny;
     }
-    
-    public int last;
-    public Date getLastDate() {
-        return new Date((long)last * 1000);
-    }
 }

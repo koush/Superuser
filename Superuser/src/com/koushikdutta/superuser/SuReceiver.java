@@ -61,6 +61,7 @@ public class SuReceiver extends BroadcastReceiver {
         le.getPackageInfo(context);
         // wait a bit before logging... lots of concurrent su requests at the same time
         // cause a db lock
+        // TODO: this hack should no longer be necessary
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 try {

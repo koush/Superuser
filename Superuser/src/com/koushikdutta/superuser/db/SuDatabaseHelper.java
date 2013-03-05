@@ -20,13 +20,9 @@ import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.koushikdutta.superuser.util.Settings;
 
 public class SuDatabaseHelper extends SQLiteOpenHelper {
     private static final int CURRENT_VERSION = 4;
@@ -45,6 +41,7 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion == 0) {
             db.execSQL("create table if not exists uid_policy (logging integer, desired_name text, username text, policy text, until integer, command text, uid integer, desired_uid integer, package_name text, name text, primary key(uid, command, desired_uid))");
+            // skip past to v4, as the next migrations have legacy tables, which were moved
             oldVersion = 4;
         }
 
@@ -53,8 +50,9 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             oldVersion = 3;
         }
         
+        // migrate the logs and settings outta this db. fix for db locking issues by su, which
+        // only needs a readonly db.
         if (oldVersion == 3) {
-            // grab all old logs and migrate
             SQLiteDatabase superuser = new SuperuserDatabaseHelper(mContext).getWritableDatabase();
             
             ArrayList<LogEntry> logs = SuperuserDatabaseHelper.getLogs(mContext, db);
@@ -116,10 +114,6 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         u.policy = c.getString(c.getColumnIndex("policy"));
         u.until = c.getInt(c.getColumnIndex("until"));
         u.logging = c.getInt(c.getColumnIndex("logging")) != 0;
-        
-        ArrayList<LogEntry> logs = SuperuserDatabaseHelper.getLogs(context, u, 1);
-        if (logs.size() > 0)
-            u.last = logs.get(0).date;
         return u;
     }
     

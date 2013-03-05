@@ -51,8 +51,16 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
     }
     
     public static ArrayList<LogEntry> getLogs(Context context, UidPolicy policy, int limit) {
-        ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         SQLiteDatabase db = new SuperuserDatabaseHelper(context).getReadableDatabase();
+        try {
+            return getLogs(db, policy, limit);
+        }
+        finally {
+            db.close();
+        }
+    }    
+    public static ArrayList<LogEntry> getLogs(SQLiteDatabase db, UidPolicy policy, int limit) {
+        ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         Cursor c;
         if (policy.command != null)
             c = db.query("log", null, "uid = ? and desired_uid = ? and command = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid), policy.command }, null, null, "date DESC", limit == -1 ? null : String.valueOf(limit));
@@ -72,7 +80,6 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         }
         finally {
             c.close();
-            db.close();
         }
         return ret;
     }
@@ -147,6 +154,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
 
+        db = new SuperuserDatabaseHelper(context).getReadableDatabase();
         try {
             addLog(db, log);
         }

@@ -17,9 +17,11 @@
 package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -32,7 +34,9 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.koushikdutta.superuser.db.LogEntry;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.widgets.FragmentInterfaceWrapper;
 import com.koushikdutta.widgets.ListContentFragmentInternal;
@@ -61,8 +65,18 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         clear();
         final ArrayList<UidPolicy> policies = SuDatabaseHelper.getPolicies(getActivity());
         
-        for (UidPolicy up: policies) {
-            addPolicy(up);
+        SQLiteDatabase db = new SuperuserDatabaseHelper(getActivity()).getReadableDatabase(); 
+        try {
+            for (UidPolicy up: policies) {
+                int last = 0;
+                ArrayList<LogEntry> logs = SuperuserDatabaseHelper.getLogs(db, up, 1);
+                if (logs.size() > 0)
+                    last = logs.get(0).date;
+                addPolicy(up, last);
+            }
+        }
+        finally {
+            db.close();
         }
     }
     
@@ -93,12 +107,17 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             showAllLogs();
     }
     
+    public Date getLastDate(int last) {
+        return new Date((long)last * 1000);
+    }
 
-    void addPolicy(final UidPolicy up) {
+    void addPolicy(final UidPolicy up, final int last) {
         java.text.DateFormat df = DateFormat.getLongDateFormat(getActivity());
-        String date = df.format(up.getLastDate());
-        if (up.last == 0)
+        String date;
+        if (last == 0)
             date = null;
+        else
+            date = df.format(getLastDate(last));
         ListItem li = addItem(up.getPolicyResource(), new ListItem(this, up.name, date) {
             public void onClick(View view) {
                 super.onClick(view);
