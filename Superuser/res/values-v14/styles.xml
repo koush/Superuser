@@ -4,5 +4,9 @@
         <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:textColor">?attr/bottomButtonBarText</item>
     </style>
+    
 
+    <style name="PinButton" parent="PinButtonBase">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
 </resources>

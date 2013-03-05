@@ -7,9 +7,9 @@
     <string name="status_incoming">Richiesta di Superuser in arrivo...</string>
     <string name="unknown_uid">UID Sconosciuto: %s</string>
     <string name="application_request">%s richiede l\'accesso a Superuser.</string>
-    <string name="info">Attenzione: se non comprendi cosa significa dovresti negare l\'accesso.</string>
+    <string name="info">Attenzione: se non comprendi cosa significhi dovresti negare l\'accesso.</string>
     <string name="request">Superuser Request</string>
-    <string name="package_header">Package:</string>
+    <string name="package_header">Pacchetto:</string>
     <string name="app_header">App:</string>
     <string name="uid_header">UID Richiesto:</string>
     <string name="command_header">Comando:</string>
@@ -21,7 +21,7 @@
     <string name="settings">Impostazioni</string>
     <string name="delete">Cancella</string>
     <string name="no_logs">Nessun Log</string>
-    <string name="no_apps">Non c\'è nessuna gestione dell\'app da parte di Superuser.</string>
+    <string name="no_apps">Nessuna App gestita da Superuser.</string>
     <string name="logging">Logging</string>
     <string name="logging_summary">Abilitare o disabilitare tutte le richieste di log da parte di Superuser</string>
     <string name="pin_protection">Protezione con PIN</string>
@@ -30,7 +30,7 @@
     <string name="request_timeout_summary">Le richieste da parte di Superuser scadranno dopo %s secondi e saranno rifiutate</string>
     <string name="notifications">Notifiche</string>
     <string name="none">Nessuna</string>
-    <string name="notifications_summary"> Un %s verrà mostrato quando ad un\'app sono stati garantiti o rifiutati i permessi di Superuser</string>
+    <string name="notifications_summary"> Una %s verrà mostrata quando ad un\'app sono stati garantiti o rifiutati i permessi di Superuser</string>
     <string name="enter_pin">Inserisci il PIN</string>
     <string name="enter_new_pin">Inserisci un nuovo PIN</string>
     <string name="incorrect_pin">PIN errato</string>
@@ -38,16 +38,16 @@
     <string name="pin_mismatch">Il PIN non corrisponde</string>
     <string name="pin_set">Protezione di Superuser con PIN abilitata</string>
     <string name="number_seconds">%s secondi</string>
-    <string name="superuser_granted">A Superuser è stato garantito a %s</string>
+    <string name="superuser_granted">A %s è stato garantito l\'accesso a Superuser</string>
     <string name="superuser_denied">A Superuser è stato negato a %s</string>
-    <string name="toast">Toast</string>
+    <string name="toast">Finestra di dialogo</string>
     <string name="notification">Notifiche</string>
     <string name="no_notification">Nessuna notifica verrà mostrata</string>
     <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot dichiarato nel manifesto.</string>
     <string name="superuser_description">massimi privilegi per accedere a tutti gli stumenti e memoria del dispositivo</string>
-    <string name="superuser_description_more">Superuser garantisce completo accesso a tutti gli stumenti e spazio di archiviazione del dispositivo, compresi gli elementi hardware in sicurezza del tuo dispositivo. Questo permesso è potenzialmente dannoso.</string>
+    <string name="superuser_description_more">Superuser garantisce completo accesso a tutti gli stumenti e memoria interna del dispositivo, compresi gli elementi hardware in sicurezza del tuo dispositivo. Questo permesso è potenzialmente dannoso.</string>
     <string name="declared_permission">Dichiarazione dei Permessi</string>
-    <string name="declared_permission_summary">Abilita solo richieste da app che dichiarano android.permission.ACCESS_SUPERUSER</string>
+    <string name="declared_permission_summary">Abilita solo richieste da App che dichiarano android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Risposta Automatica</string>
     <string name="prompt">Prompt</string>
     <string name="automatic_response_allow_summary">Abilita automaticamente le nuove richieste</string>
@@ -73,6 +73,12 @@
     <string name="recovery_install">Installa da Recovery</string>
     <string name="install">Installa</string>
     <string name="checking_superuser">Sto controllando Superuser...</string>
-    <string name="install_error">C\'è stato un errore durante l\'installazione di Superuser. Perfavore invia un log dell\'errore allo sviluppatore.</string>
+    <string name="install_error">Si è verificato un errore durante l\'installazione di Superuser. Perfavore invia un log dell\'errore allo sviluppatore.</string>
     <string name="install_success">L\'installazione di Superuser è avvenuta con successo.</string>
+    <string name="su_binary_outdated">Il file binario su è obsoleto.</string>
+    <string name="superuser_access">Accesso a Superuser</string>
+    <string name="disabled">Disabilitato</string>
+    <string name="apps_only">Solo App</string>
+    <string name="adb_only">Solo ADB</string>
+    <string name="apps_and_adb">App e ADB</string>
 </resources>

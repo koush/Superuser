@@ -49,12 +49,6 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
             protected int getListFragmentResource() {
                 return R.layout.policy_list_content;
             }
-            
-            @Override
-            protected void setPadding() {
-                getListView().setPadding(0, 0, 0, 0);
-                getContainer().setPadding(0, 0, 0, 0);
-            }
         };
     }
     

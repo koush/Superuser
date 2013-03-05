@@ -2,7 +2,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
     <EditText
         android:id="@+id/password"
         style="@android:style/TextAppearance.Large"
@@ -136,4 +140,5 @@
             android:text="@android:string/ok" />
     </LinearLayout>
 
+</LinearLayout>
 </LinearLayout>

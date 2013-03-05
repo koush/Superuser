@@ -6,13 +6,15 @@
 
     <color name="background_dark">#1F1F1F</color>
 
-    <style name="PinButton" parent="@android:style/TextAppearance.Large">
+    <style name="PinButtonBase" parent="@android:style/TextAppearance.Large">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">64dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
+    <style name="PinButton" parent="PinButtonBase">
+    </style>
+    
     <style name="SuperuserDark" parent="@style/AppDarkTheme">
         <item name="bottomButtonBar">@null</item>
         <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
@@ -51,10 +53,18 @@
     
     <style name="RequestThemeDark" parent="SuperuserDark" />
     <style name="RequestThemeLight" parent="SuperuserLight" />
-    
+
+    <!-- Want to switch to the dark theme? Change these three styles to Dark. -->
     <style name="RequestTheme" parent="RequestThemeLight" />
     <style name="Superuser" parent="SuperuserLight" />
+    <style name="SuperuserActivity" parent="@style/AppActivityTheme" />
+
+    <style name="AppActivityBaseTheme" parent="SuperuserLight">
+    </style>
     
+    <style name="AppDarkActivityBaseTheme" parent="SuperuserDark">
+    </style>
+
     <style name="AboutTheme" parent="Superuser">
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
