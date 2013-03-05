@@ -174,10 +174,10 @@ static int get_multiuser_mode() {
     char mode[12];
     FILE *fp;
     if ((fp = fopen(REQUESTOR_MULTIUSER_MODE, "r"))) {
+        fgets(mode, sizeof(mode), fp);
         int last = strlen(mode) - 1;
         if (mode[last] == '\n')
             mode[last] = '\0';
-        fgets(mode, sizeof(mode), fp);
         if (strcmp(mode, MULTIUSER_VALUE_USER) == 0) {
             ret = MULTIUSER_MODE_USER;
         } else if (strcmp(mode, MULTIUSER_VALUE_OWNER_MANAGED) == 0) {
