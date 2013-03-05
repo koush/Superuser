@@ -17,7 +17,7 @@ public class SuHelper {
             throw new Exception("unknown su");
         
         String[] parts = result.split(" ");
-        if (!"2".equals(parts[0]))
+        if (!"4".equals(parts[0]))
             throw new Exception("binary is old");
     }
 

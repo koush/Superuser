@@ -81,4 +81,6 @@
     <string name="apps_only">Apps only</string>
     <string name="adb_only">ADB only</string>
     <string name="apps_and_adb">Apps and ADB</string>
+    <string name="whats_new">What\'s New</string>
+    <string name="rate">Rate</string>
 </resources>

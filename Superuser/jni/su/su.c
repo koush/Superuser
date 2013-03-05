@@ -703,11 +703,17 @@ int main(int argc, char *argv[]) {
     read_options(&ctx);
     user_init(&ctx);
     
+    // TODO: customizable behavior for shell? It can currently be toggled via settings.
+    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing root/shell.");
+        allow(&ctx);
+    }
+
     // verify superuser is installed
     if (stat(ctx.user.base_path, &st) < 0) {
         // send to market
         if (0 == strcmp(JAVA_PACKAGE_NAME, REQUESTOR))
-            silent_run("am start -d market://details?id=" JAVA_PACKAGE_NAME);
+            silent_run("am start -d http://www.clockworkmod.com/superuser/install.html -a android.intent.action.VIEW");
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
@@ -737,12 +743,6 @@ int main(int argc, char *argv[]) {
     }
 
     ctx.umask = umask(027);
-
-    // TODO: customizable behavior for shell? It can currently be toggled via settings.
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
-        LOGD("Allowing root/shell.");
-        allow(&ctx);
-    }
 
     int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);
     if (chown(REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid)) {
