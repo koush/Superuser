@@ -83,8 +83,6 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingLeft="@dimen/section_padding"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:scrollbars="none" />
 
         <TextView
@@ -95,8 +93,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
             android:textAppearance="@android:style/TextAppearance.Medium"
             android:visibility="gone" />
     </LinearLayout>

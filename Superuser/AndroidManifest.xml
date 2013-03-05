@@ -42,6 +42,7 @@
         android:label="@string/superuser"
         android:theme="@style/Superuser" >
         <activity
+            android:theme="@style/SuperuserActivity"
             android:name=".MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/superuser" >

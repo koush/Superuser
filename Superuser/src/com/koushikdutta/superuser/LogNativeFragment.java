@@ -46,12 +46,6 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
             }
             
             @Override
-            protected void setPadding() {
-                super.setPadding();
-                getListView().setPadding(0, 0, 0, 0);
-            }
-            
-            @Override
             void onDelete() {
                 super.onDelete();
                 LogNativeFragment.this.onDelete(getListContentId());
