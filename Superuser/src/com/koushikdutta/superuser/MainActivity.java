@@ -232,13 +232,14 @@ public class MainActivity extends BetterListActivity {
     }
     
     // this is intentionally not localized as it will change constantly.
-    private static final String WHATS_NEW = "Fixed PIN Protect crashing on Froyo and Gingerbread.\n\nThe Superuser binary will show a browser message if Superuser was uninstalled and su is broken.";
+    private static final String WHATS_NEW = "The Superuser binary will show a browser message if Superuser was uninstalled and su is broken.\n\nNotifications can now be configured per app.";
     protected void doWhatsNew() {
         if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
             return;
         saveWhatsNew();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.whats_new);
+        builder.setIcon(R.drawable.ic_launcher);
         builder.setMessage(WHATS_NEW);
         builder.setPositiveButton(R.string.rate, new OnClickListener() {
             @Override
