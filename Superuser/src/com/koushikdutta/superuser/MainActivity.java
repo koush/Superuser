@@ -170,7 +170,7 @@ public class MainActivity extends BetterListActivity {
                             "rm /system/app/SuperUser.*\n" +
                             "rm /system/app/SuperSU.*\n" +
                             String.format("cat %s > /system/xbin/su\n", su.getAbsolutePath()) +
-                            "chmod 6777 /system/xbin/su\n" +
+                            "chmod 6755 /system/xbin/su\n" +
                             "ln -s /system/xbin/su /system/bin/su\n" +
                             "mount -oro,remount /system\n" +
                             "sync\n";
