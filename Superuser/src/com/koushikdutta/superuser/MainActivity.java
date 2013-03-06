@@ -232,7 +232,7 @@ public class MainActivity extends BetterListActivity {
     }
     
     // this is intentionally not localized as it will change constantly.
-    private static final String WHATS_NEW = "The Superuser binary will show a browser message if Superuser was uninstalled and su is broken.\n\nNotifications can now be configured per app.";
+    private static final String WHATS_NEW = "Notifications can now be configured per app.\n\nThe Superuser theme can be configured in Settings.";
     protected void doWhatsNew() {
         if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
             return;
