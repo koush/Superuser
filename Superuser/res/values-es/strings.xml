@@ -83,4 +83,7 @@
     <string name="apps_and_adb">Aplicaciones y ADB</string>
     <string name="whats_new">Novedades</string>
     <string name="rate">Valorar</string>
+    <string name="theme">Apariencia</string>
+    <string name="light">Clara</string>
+    <string name="dark">Oscura</string>
 </resources>
