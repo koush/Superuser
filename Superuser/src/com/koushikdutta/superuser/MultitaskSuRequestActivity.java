@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
+import com.koushikdutta.superuser.util.SuHelper;
 
 @SuppressLint("ValidFragment")
 public class MultitaskSuRequestActivity extends FragmentActivity {
@@ -343,6 +344,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                         }
                     });                    
                     
+                    if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version")))
+                        SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
                 }
                 catch (Exception ex) {
                     Log.i(LOGTAG, ex.getMessage(), ex);
