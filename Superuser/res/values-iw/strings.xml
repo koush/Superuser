@@ -75,4 +75,10 @@
 	<string name="checking_superuser">בודק Superuser...</string>
 	<string name="install_error">אירעה שגיאה בעת התקנת Superuser. בבקשה שלח דוח למפתח התוכנה.</string>
 	<string name="install_success">התקנת Superuser הצליחה.</string>
+	<string name="disabled">מבוטל</string>
+	<string name="apps_only">יישומים בלבד</string>
+	<string name="adb_only">ADB בלבד</string>
+	<string name="apps_and_adb">יישומים ו-ADB</string>
+	<string name="whats_new">מה חדש?</string>
+	<string name="rate">דרג</string>
 </resources>
