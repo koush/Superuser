@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 
@@ -19,15 +20,16 @@ public class AboutFragment extends BetterListFragment {
     public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.AboutTheme);
+        TypedValue value = new TypedValue();
+        super.getContext().getTheme().resolveAttribute(R.attr.largeIconTheme, value, true);
+        mWrapper = new ContextThemeWrapper(super.getContext(), value.resourceId);
         return mWrapper;
     }
     
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
-        
-        
+
         PackageManager manager = getContext().getPackageManager();
         String version = "unknown";
         try {

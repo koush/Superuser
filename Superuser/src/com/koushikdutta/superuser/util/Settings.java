@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,7 +21,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.koushikdutta.superuser.Helper;
-import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 
 public class Settings {
     SQLiteDatabase mDatabase;
@@ -30,7 +31,7 @@ public class Settings {
         ContentValues cv = new ContentValues();
         cv.put("key", name);
         cv.put("value", value);
-        SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
+        SQLiteDatabase db = new SuperuserDatabaseHelper(context).getWritableDatabase();
         try {
             db.replace("settings", null, cv);
         }
@@ -44,7 +45,7 @@ public class Settings {
     }
 
     public static String getString(Context context, String name, String defaultValue) {
-        SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
+        SQLiteDatabase db = new SuperuserDatabaseHelper(context).getReadableDatabase();
         Cursor cursor = db.query("settings", new String[] { "value" }, "key='" + name + "'", null, null, null, null);
         try {
             if (cursor.moveToNext())
@@ -354,5 +355,27 @@ public class Settings {
     
     public static final void setCheckSuQuietCounter(Context context, int counter) {
         setInt(context, CHECK_SU_QUIET, counter);
+    }
+    
+    private static final String KEY_THEME = "theme";
+    public static final int THEME_LIGHT = 0;
+    public static final int THEME_DARK = 1;
+    public static void applyDarkThemeSetting(Activity activity, int dark) {
+        if (!"com.koushikdutta.superuser".equals(activity.getPackageName()))
+            return;
+        try {
+            if (getTheme(activity) == THEME_DARK)
+                activity.setTheme(dark);
+        }
+        catch (Exception e) {
+        }
+    }
+    
+    public static final int getTheme(Context context) {
+        return getInt(context, KEY_THEME, THEME_LIGHT);
+    }
+    
+    public static final void setTheme(Context context, int theme) {
+        setInt(context, KEY_THEME, theme);
     }
 }

@@ -46,6 +46,8 @@
 #ifndef REQUESTOR
 #define REQUESTOR JAVA_PACKAGE_NAME
 #endif
+// This is used if wrapping the fragment classes and activities
+// with classes in another package. CM requirement.
 #ifndef REQUESTOR_PREFIX
 #define REQUESTOR_PREFIX JAVA_PACKAGE_NAME
 #endif
@@ -70,7 +72,7 @@
 #define xstr(a) str(a)
 #define str(a) #a
 
-#define VERSION_CODE 4
+#define VERSION_CODE 7
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
 #define PROTO_VERSION 1

@@ -13,7 +13,7 @@ import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.SuHelper;
 
 public class SuCheckerReceiver extends BroadcastReceiver {
-    public void doNotification(Context context) {
+    public static void doNotification(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setTicker(context.getString(R.string.install_superuser));
         builder.setContentTitle(context.getString(R.string.install_superuser));
