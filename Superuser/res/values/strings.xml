@@ -83,4 +83,7 @@
     <string name="apps_and_adb">Apps and ADB</string>
     <string name="whats_new">What\'s New</string>
     <string name="rate">Rate</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
 </resources>

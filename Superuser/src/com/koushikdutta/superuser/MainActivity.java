@@ -255,6 +255,7 @@ public class MainActivity extends BetterListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Settings.applyDarkThemeSetting(this, R.style.SuperuserDark);
         super.onCreate(savedInstanceState);
         
         if (Settings.getBoolean(this, "first_run", true)) {

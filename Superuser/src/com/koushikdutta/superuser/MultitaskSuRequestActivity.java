@@ -324,8 +324,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                         is.readFully(dataBytes);
                         String data = new String(dataBytes);
                         payload.put(name, data);
-//                        Log.i(LOGTAG, name);
-//                        Log.i(LOGTAG, data);
+                        Log.i(LOGTAG, name);
+                        Log.i(LOGTAG, data);
                         if ("eof".equals(name))
                             break;
                     }
@@ -373,6 +373,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     LocalSocket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();

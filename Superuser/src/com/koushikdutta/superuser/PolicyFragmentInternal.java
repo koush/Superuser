@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,7 +53,9 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.Superuser_PolicyIcon);
+        TypedValue value = new TypedValue();
+        super.getContext().getTheme().resolveAttribute(R.attr.largeIconTheme, value, true);
+        mWrapper = new ContextThemeWrapper(super.getContext(), value.resourceId);
         return mWrapper;
     }
     

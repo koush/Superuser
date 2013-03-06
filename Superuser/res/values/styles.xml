@@ -27,6 +27,9 @@
         <item name="requestTimeoutIcon">@drawable/ic_timeout_dark</item>
         <item name="loggingIcon">@drawable/ic_logging_dark</item>
         <item name="notificationsIcon">@drawable/ic_notifications_dark</item>
+        <item name="themeIcon">@drawable/ic_theme_dark</item>
+        
+        <item name="largeIconTheme">@style/SuperuserDark.LargeIcon</item>
     </style>
 
     <style name="SuperuserLight" parent="@style/AppTheme">
@@ -41,13 +44,16 @@
         <item name="requestTimeoutIcon">@drawable/ic_timeout</item>
         <item name="loggingIcon">@drawable/ic_logging</item>
         <item name="notificationsIcon">@drawable/ic_notifications</item>
+        <item name="themeIcon">@drawable/ic_theme</item>
+
+        <item name="largeIconTheme">@style/Superuser.LargeIcon</item>
     </style>
 
-    <style name="Superuser.PolicyIcon">
+    <style name="Superuser.LargeIcon">
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
-    <style name="SuperuserDark.PolicyIcon">
+    <style name="SuperuserDark.LargeIcon">
         <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
@@ -63,10 +69,6 @@
     </style>
     
     <style name="AppDarkActivityBaseTheme" parent="SuperuserDark">
-    </style>
-
-    <style name="AboutTheme" parent="Superuser">
-        <item name="iconSize">@android:dimen/app_icon_size</item>
     </style>
     
 </resources>
