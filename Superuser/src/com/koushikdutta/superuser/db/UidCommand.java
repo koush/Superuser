@@ -16,6 +16,11 @@
 
 package com.koushikdutta.superuser.db;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+
 
 public class UidCommand {
     public String username;
@@ -34,5 +39,27 @@ public class UidCommand {
         if (username != null && username.length() > 0)
             return username;
         return String.valueOf(uid);
+    }
+    
+    
+    public void getPackageInfo(Context context) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            PackageInfo pi = context.getPackageManager().getPackageInfo(pm.getPackagesForUid(uid)[0], 0);
+            name = pi.applicationInfo.loadLabel(pm).toString();
+            packageName = pi.packageName;
+        }
+        catch (Exception ex) {
+        }
+    }
+
+    public void getUidCommand(Cursor c) {
+        uid = c.getInt(c.getColumnIndex("uid"));
+        command = c.getString(c.getColumnIndex("command"));
+        name = c.getString(c.getColumnIndex("name"));
+        packageName = c.getString(c.getColumnIndex("package_name"));
+        desiredUid = c.getInt(c.getColumnIndex("desired_uid"));
+        desiredName = c.getString(c.getColumnIndex("desired_name"));
+        username = c.getString(c.getColumnIndex("username"));
     }
 }

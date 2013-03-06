@@ -28,6 +28,7 @@ public class UidPolicy extends UidCommand {
     public String policy;
     public int until;
     public boolean logging = true;
+    public boolean notification = true;
     public Date getUntilDate() {
         return new Date((long)until * 1000);
     }
@@ -38,10 +39,5 @@ public class UidPolicy extends UidCommand {
         else if (INTERACTIVE.equals(policy))
             return R.string.interactive;
         return R.string.deny;
-    }
-    
-    public int last;
-    public Date getLastDate() {
-        return new Date((long)last * 1000);
     }
 }
