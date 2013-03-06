@@ -94,7 +94,7 @@ First, in a product makefile (like vendor/cm/config/common.mk), specify the foll
 SUPERUSER_EMBEDDED := true
 ```
 
-To modify packages/apps/Settings, you will need this [patch](http://review.cyanogenmod.org/#/c/32957/).
+To modify packages/apps/Settings, you will need this [patch](http://review.cyanogenmod.org/#/c/32957/2//COMMIT_MSG,unified).
 The patch simply references the sources checked out to external/koush and makes changes
 to XML preference files and the AndroidManifest.xml. It is a very minimal change.
 
