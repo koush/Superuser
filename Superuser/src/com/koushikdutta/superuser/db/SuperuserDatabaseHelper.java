@@ -167,6 +167,8 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase superuser = new SuperuserDatabaseHelper(context).getWritableDatabase();
         try {
+            // delete logs over 2 weeks
+            superuser.delete("log", "date < ?", new String[] { String.valueOf((System.currentTimeMillis() - 14L * 24L * 60L * 60L * 1000L) / 1000L) });
             addLog(superuser, log);
         }
         finally {
