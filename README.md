@@ -4,7 +4,7 @@
 * Superuser should also be AOSP buildable for those that want to embed it in their ROM.
 * Superuser should also be AOSP _embeddable_, meaning a ROM can easily embed it into their Settings app.
 * Maintenance and updates on both the market and source repositories should be timely.
-* I want to be able to point users of my app to a Superuser solution that I wrote, that I know works, and that I can fix if something is wrong. Yes, this is selfish: Carbon does not work with some versions of Chainsdd's Superuser. SuperSU works great, but I am not comfortable pointing a user to a closed source su implementation.
+* I want to be able to point users of my app to a Superuser solution that I wrote, that I know works, and that I can fix if something is wrong.
 * Handle multiuser (4.2+) properly
 * Handle concurrent su requests properly
 
