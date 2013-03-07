@@ -15,7 +15,7 @@
     <style name="PinButton" parent="PinButtonBase">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_weight">@null</item>
-        </style>
+    </style>
     
     <style name="SuperuserDark" parent="@style/AppDarkTheme">
         <item name="bottomButtonBar">@null</item>

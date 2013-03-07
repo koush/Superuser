@@ -28,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -156,42 +155,42 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
         }
 
         final CompoundButton logging = (CompoundButton)view.findViewById(R.id.logging);
-        logging.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (up == null) {
-                    Settings.setLogging(getActivity(), logging.isChecked());
-                }
-                else {
-                    up.logging = logging.isChecked();
-                    SuDatabaseHelper.setPolicy(getActivity(), up);
-                }
-            }
-        });
         if (up == null) {
             logging.setChecked(Settings.getLogging(getActivity()));
         }
         else {
             logging.setChecked(up.logging);
         }
-
-        final CompoundButton notification = (CompoundButton)view.findViewById(R.id.notification);
-        notification.setOnClickListener(new OnClickListener() {
+        logging.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
                 if (up == null) {
+                    Settings.setLogging(getActivity(), isChecked);
                 }
                 else {
-                    up.notification = notification.isChecked();
+                    up.logging = isChecked;
                     SuDatabaseHelper.setPolicy(getActivity(), up);
                 }
             }
         });
+
+        final CompoundButton notification = (CompoundButton)view.findViewById(R.id.notification);
         if (up == null) {
             view.findViewById(R.id.notification_container).setVisibility(View.GONE);
         }
         else {
             notification.setChecked(up.notification);
         }
+        notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (up == null) {
+                }
+                else {
+                    up.notification = isChecked;
+                    SuDatabaseHelper.setPolicy(getActivity(), up);
+                }
+            }
+        });
     }
 }
