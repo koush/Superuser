@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="bottomButtonBar" format="reference|color" />
+    <attr name="bottomButtonBarText" format="reference|color" />
+    
+    <attr name="toggleIcon" format="reference|color" />
+    <attr name="multiuserIcon" format="reference|color" />
+    <attr name="declaredPermissionsIcon" format="reference|color" />
+    <attr name="automaticResponseIcon" format="reference|color" />
+    <attr name="pinProtectionIcon" format="reference|color" />
+    <attr name="requestTimeoutIcon" format="reference|color" />
+    <attr name="loggingIcon" format="reference|color" />
+    <attr name="notificationsIcon" format="reference|color" />
+    <attr name="themeIcon" format="reference|color" />
+    <attr name="largeIconTheme" format="reference" />
+</resources>
