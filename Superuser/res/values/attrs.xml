@@ -12,4 +12,6 @@
     <attr name="requestTimeoutIcon" format="reference|color" />
     <attr name="loggingIcon" format="reference|color" />
     <attr name="notificationsIcon" format="reference|color" />
+    <attr name="themeIcon" format="reference|color" />
+    <attr name="largeIconTheme" format="reference" />
 </resources>

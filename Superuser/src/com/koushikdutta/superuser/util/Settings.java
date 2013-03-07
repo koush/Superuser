@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -354,5 +355,27 @@ public class Settings {
     
     public static final void setCheckSuQuietCounter(Context context, int counter) {
         setInt(context, CHECK_SU_QUIET, counter);
+    }
+    
+    private static final String KEY_THEME = "theme";
+    public static final int THEME_LIGHT = 0;
+    public static final int THEME_DARK = 1;
+    public static void applyDarkThemeSetting(Activity activity, int dark) {
+        if (!"com.koushikdutta.superuser".equals(activity.getPackageName()))
+            return;
+        try {
+            if (getTheme(activity) == THEME_DARK)
+                activity.setTheme(dark);
+        }
+        catch (Exception e) {
+        }
+    }
+    
+    public static final int getTheme(Context context) {
+        return getInt(context, KEY_THEME, THEME_LIGHT);
+    }
+    
+    public static final void setTheme(Context context, int theme) {
+        setInt(context, KEY_THEME, theme);
     }
 }

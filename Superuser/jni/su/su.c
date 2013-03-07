@@ -366,7 +366,7 @@ do {                                        \
 } while (0)
 
     write_token(fd, "version", PROTO_VERSION);
-    write_token(fd, "binary.version", VERSION);
+    write_token(fd, "binary.version", VERSION_CODE);
     write_token(fd, "pid", ctx->from.pid);
     write_string(fd, "from.name", ctx->from.name);
     write_string(fd, "to.name", ctx->to.name);

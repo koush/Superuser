@@ -373,6 +373,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     LocalSocket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();

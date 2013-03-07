@@ -33,7 +33,7 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
     public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_PolicyIcon);
+        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_LargeIcon);
         return mWrapper;
     }
 
