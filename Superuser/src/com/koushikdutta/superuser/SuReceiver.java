@@ -17,6 +17,7 @@
 package com.koushikdutta.superuser;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -77,6 +78,8 @@ public class SuReceiver extends BroadcastReceiver {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setTicker(toast)
+            .setAutoCancel(true)
+            .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0))
             .setContentTitle(context.getString(R.string.superuser))
             .setContentText(toast)
             .setSmallIcon(R.drawable.ic_stat_notification);

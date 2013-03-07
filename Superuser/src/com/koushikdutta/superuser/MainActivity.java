@@ -170,7 +170,7 @@ public class MainActivity extends BetterListActivity {
                             "rm /system/app/SuperUser.*\n" +
                             "rm /system/app/SuperSU.*\n" +
                             String.format("cat %s > /system/xbin/su\n", su.getAbsolutePath()) +
-                            "chmod 6777 /system/xbin/su\n" +
+                            "chmod 6755 /system/xbin/su\n" +
                             "ln -s /system/xbin/su /system/bin/su\n" +
                             "mount -oro,remount /system\n" +
                             "sync\n";
@@ -232,7 +232,7 @@ public class MainActivity extends BetterListActivity {
     }
     
     // this is intentionally not localized as it will change constantly.
-    private static final String WHATS_NEW = "The Superuser binary will show a browser message if Superuser was uninstalled and su is broken.\n\nNotifications can now be configured per app.";
+    private static final String WHATS_NEW = "Notifications can now be configured per app.\n\nThe Superuser theme can be configured in Settings.";
     protected void doWhatsNew() {
         if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
             return;
@@ -255,7 +255,7 @@ public class MainActivity extends BetterListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Settings.applyDarkThemeSetting(this, R.style.SuperuserDark);
+        Settings.applyDarkThemeSetting(this, R.style.SuperuserDarkActivity);
         super.onCreate(savedInstanceState);
         
         if (Settings.getBoolean(this, "first_run", true)) {

@@ -69,7 +69,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 d.dismiss();
             };
         }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
     
@@ -88,7 +87,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 d.dismiss();
             };
         }.getView());
-        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
 
@@ -101,7 +99,9 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     super.onEnter(password);
                     if (Settings.checkPin(getActivity(), password)) {
                         super.onEnter(password);
-                        setPin();
+                        Settings.setPin(getActivity(), null);
+                        pinItem.setSummary(R.string.pin_protection_summary);
+                        Toast.makeText(getActivity(), getString(R.string.pin_disabled), Toast.LENGTH_SHORT).show();
                         d.dismiss();
                         return;
                     }
@@ -113,7 +113,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     d.dismiss();
                 };
             }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-            d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             d.show();
         }
         else {

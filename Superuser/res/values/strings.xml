@@ -86,4 +86,5 @@
     <string name="theme">Theme</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
+    <string name="pin_disabled">Superuser PIN protection disabled</string>
 </resources>
