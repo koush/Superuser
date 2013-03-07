@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Superuser</string>
+    <string name="superuser">Superuser</string>
     <string name="allow">Autoriser</string>
     <string name="deny">Refuser</string>
     <string name="status_incoming">Demande des droits root...</string>
@@ -49,8 +49,10 @@
     <string name="declared_permission">Autorisations Déclarées</string>
     <string name="declared_permission_summary">Autoriser uniquement les demandes des applications qui annoncent utiliser la permission android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Réponse Automatique</string>
-    <string name="automatic_response_summary">Superuser va %s les nouvelles demandes</string>
     <string name="prompt">Prompt</string>
+    <string name="automatic_response_allow_summary">Automatically allow new requests</string>
+    <string name="automatic_response_deny_summary">Automatically deny new requests</string>
+    <string name="automatic_response_prompt_summary">Show confirmation dialog for new requests</string>
     <string name="security">Sécurité</string>
     <string name="multiuser_policy">Politique Multi-utilisateurs</string>
     <string name="multiuser_owner_only_summary">Seul le propriétaire du périphérique peut demander les droits Superuser</string>
@@ -62,4 +64,27 @@
     <string name="multiuser_require_owner">La politique Multi-utilisateurs ne peut-être gérée que par le propriétaire du périphérique.</string>
     <string name="owner_login_info">Merci de basculer sur le compte du propriétaire de ce périphérique afin d'autoriser ou refuser cette demande.</string>
     <string name="all_commands">Toutes les Commandes</string>
+    <string name="about">About</string>
+    <string name="apps">Apps</string>
+    <string name="installing">Installing</string>
+    <string name="installing_superuser">Installing Superuser...</string>
+    <string name="install_superuser">Install Superuser</string>
+    <string name="install_superuser_info">The Superuser binary (su) must be updated.\n\nPlease choose an installation method.\nRecovery mode installation is recommended for HTC devices.</string>
+    <string name="recovery_install">Recovery Install</string>
+    <string name="install">Install</string>
+    <string name="checking_superuser">Checking Superuser...</string>
+    <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
+    <string name="install_success">Installation of Superuser was successful.</string>
+    <string name="su_binary_outdated">The su binary is out of date.</string>
+    <string name="superuser_access">Superuser Access</string>
+    <string name="disabled">Disabled</string>
+    <string name="apps_only">Apps only</string>
+    <string name="adb_only">ADB only</string>
+    <string name="apps_and_adb">Apps and ADB</string>
+    <string name="whats_new">What\'s New</string>
+    <string name="rate">Rate</string>
+    <string name="theme">Theme</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="pin_disabled">Superuser PIN protection disabled</string>
 </resources>
