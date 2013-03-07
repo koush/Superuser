@@ -1,0 +1,76 @@
+<resources>
+
+    <style name="BottomButton">
+        <item name="android:textColor">?attr/bottomButtonBarText</item>
+    </style>
+
+    <color name="background_dark">#1F1F1F</color>
+
+    <style name="PinButtonBase" parent="@android:style/TextAppearance.Large">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <style name="PinButton" parent="PinButtonBase">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_weight">@null</item>
+    </style>
+    
+    <style name="SuperuserDark" parent="@style/AppDarkTheme">
+        <item name="bottomButtonBar">@null</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimary</item>
+
+        <item name="toggleIcon">@drawable/ic_toggle_dark</item>
+        <item name="multiuserIcon">@drawable/ic_users_dark</item>
+        <item name="declaredPermissionsIcon">@drawable/ic_declare_dark</item>
+        <item name="automaticResponseIcon">@drawable/ic_alert_dark</item>
+        <item name="pinProtectionIcon">@drawable/ic_protected_dark</item>
+        <item name="requestTimeoutIcon">@drawable/ic_timeout_dark</item>
+        <item name="loggingIcon">@drawable/ic_logging_dark</item>
+        <item name="notificationsIcon">@drawable/ic_notifications_dark</item>
+        <item name="themeIcon">@drawable/ic_theme_dark</item>
+        
+        <item name="largeIconTheme">@style/SuperuserDark.LargeIcon</item>
+    </style>
+
+    <style name="SuperuserLight" parent="@style/AppTheme">
+        <item name="bottomButtonBar">@color/background_dark</item>
+        <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
+        
+        <item name="toggleIcon">@drawable/ic_toggle</item>
+        <item name="multiuserIcon">@drawable/ic_users</item>
+        <item name="declaredPermissionsIcon">@drawable/ic_declare</item>
+        <item name="automaticResponseIcon">@drawable/ic_alert</item>
+        <item name="pinProtectionIcon">@drawable/ic_protected</item>
+        <item name="requestTimeoutIcon">@drawable/ic_timeout</item>
+        <item name="loggingIcon">@drawable/ic_logging</item>
+        <item name="notificationsIcon">@drawable/ic_notifications</item>
+        <item name="themeIcon">@drawable/ic_theme</item>
+
+        <item name="largeIconTheme">@style/Superuser.LargeIcon</item>
+    </style>
+
+    <style name="Superuser.LargeIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
+    <style name="SuperuserDark.LargeIcon">
+        <item name="iconSize">@android:dimen/app_icon_size</item>
+    </style>
+    
+    <style name="RequestThemeDark" parent="SuperuserDark" />
+    <style name="RequestThemeLight" parent="SuperuserLight" />
+    
+    <style name="SuperuserLightActivity" parent="@style/AppActivityTheme" />
+    <style name="SuperuserDarkActivity" parent="@style/AppDarkActivityTheme" />
+    
+    <!-- Want to switch to the dark theme? Change these three styles to Dark. -->
+    <style name="RequestTheme" parent="RequestThemeLight" />
+    <style name="Superuser" parent="SuperuserLight" />
+    <style name="SuperuserActivity" parent="SuperuserLightActivity" />
+
+    <style name="AppActivityBaseTheme" parent="SuperuserLight" />
+    <style name="AppDarkActivityBaseTheme" parent="SuperuserDark" />
+    
+</resources>
