@@ -83,4 +83,8 @@
     <string name="apps_and_adb">Applicazioni ed ADB</string>
     <string name="whats_new">Novità</string>
     <string name="rate">Valuta</string>
+    <string name="theme">Tema</string>
+    <string name="light">Chiaro</string>
+    <string name="dark">Scuro</string>
+    <string name="pin_disabled">Protezione di Superuser con PIN disabilitata</string>
 </resources>
