@@ -99,7 +99,9 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     super.onEnter(password);
                     if (Settings.checkPin(getActivity(), password)) {
                         super.onEnter(password);
-                        setPin();
+                        Settings.setPin(getActivity(), null);
+                        pinItem.setSummary(R.string.pin_protection_summary);
+                        Toast.makeText(getActivity(), getString(R.string.pin_disabled), Toast.LENGTH_SHORT).show();
                         d.dismiss();
                         return;
                     }
