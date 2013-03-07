@@ -86,4 +86,5 @@
     <string name="theme">主題</string>
     <string name="light">淺色</string>
     <string name="dark">深色</string>
+    <string name="pin_disabled">停用了超級使用者的密碼保護</string>
 </resources>
