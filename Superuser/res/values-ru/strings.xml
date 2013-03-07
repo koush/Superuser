@@ -85,6 +85,6 @@
     <string name="rate">Оценить</string>
     <string name="theme">Тема</string>
     <string name="light">Светлая</string>
-    <string name="dark">Темная</string>
+    <string name="dark">Тёмная</string>
     <string name="pin_disabled">Защита PIN-кодом отключена</string>
 </resources>
