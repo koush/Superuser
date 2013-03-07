@@ -30,6 +30,7 @@
         <item name="loggingIcon">@drawable/ic_logging_dark</item>
         <item name="notificationsIcon">@drawable/ic_notifications_dark</item>
         <item name="themeIcon">@drawable/ic_theme_dark</item>
+        <item name="convertingIcon">@drawable/ic_menu_copy_holo_dark</item>
         
         <item name="largeIconTheme">@style/SuperuserDark.LargeIcon</item>
     </style>
@@ -47,6 +48,7 @@
         <item name="loggingIcon">@drawable/ic_logging</item>
         <item name="notificationsIcon">@drawable/ic_notifications</item>
         <item name="themeIcon">@drawable/ic_theme</item>
+        <item name="convertingIcon">@drawable/ic_menu_copy_holo_light</item>
 
         <item name="largeIconTheme">@style/Superuser.LargeIcon</item>
     </style>

@@ -87,4 +87,11 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="pin_disabled">Superuser PIN protection disabled</string>
+    <string name="convert_to_system">Convert to System App</string>
+    <string name="convert_to_system_summary">Convert Superuser to system application. Requires reboot.</string>
+    <string name="converting">Converting</string>
+    <string name="converting_summary">Converting Superuser to a System app.</string>
+    <string name="converting_failed">Converting failed.</string>
+    <string name="converting_successful">Converting successful. Reboot required to complete.</string>
+    <string name="converting_warning">The device will reboot when converting is successful.</string>
 </resources>
