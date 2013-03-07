@@ -50,9 +50,9 @@
     <string name="declared_permission_summary">Autoriser uniquement les demandes des applications qui annoncent utiliser la permission android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Réponse Automatique</string>
     <string name="prompt">Prompt</string>
-    <string name="automatic_response_allow_summary">Automatically allow new requests</string>
-    <string name="automatic_response_deny_summary">Automatically deny new requests</string>
-    <string name="automatic_response_prompt_summary">Show confirmation dialog for new requests</string>
+    <string name="automatic_response_allow_summary">Autoriser automatiquement les nouvelles demandes</string>
+    <string name="automatic_response_deny_summary">Refuser automatiquement les nouvelles demandes</string>
+    <string name="automatic_response_prompt_summary">Afficher une confirmation pour les nouvelles demandes</string>
     <string name="security">Sécurité</string>
     <string name="multiuser_policy">Politique Multi-utilisateurs</string>
     <string name="multiuser_owner_only_summary">Seul le propriétaire du périphérique peut demander les droits Superuser</string>
