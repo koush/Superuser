@@ -83,4 +83,8 @@
     <string name="apps_and_adb">Приложения и ADB</string>
     <string name="whats_new">Что нового</string>
     <string name="rate">Оценить</string>
+    <string name="theme">Тема</string>
+    <string name="light">Светлая</string>
+    <string name="dark">Темная</string>
+    <string name="pin_disabled">Защита PIN-кодом отключена</string>
 </resources>
