@@ -87,4 +87,8 @@ android.permission.ACCESS_SUPERUSER
     <string name="apps_and_adb">应用程序和 ADB</string>
     <string name="whats_new">更新说明</string>
     <string name="rate">评价</string>
+    <string name="theme">界面主题</string>
+    <string name="light">亮色调</string>
+    <string name="dark">暗色调</string>
+    <string name="pin_disabled">超级用户密码保护已禁用</string>
 </resources>
