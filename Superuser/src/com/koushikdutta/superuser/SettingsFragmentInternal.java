@@ -69,7 +69,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 d.dismiss();
             };
         }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
     
@@ -88,7 +87,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 d.dismiss();
             };
         }.getView());
-        d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
         d.show();
     }
 
@@ -113,7 +111,6 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     d.dismiss();
                 };
             }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
-            d.getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
             d.show();
         }
         else {
