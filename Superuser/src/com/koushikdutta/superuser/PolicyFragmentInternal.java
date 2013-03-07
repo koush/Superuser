@@ -143,6 +143,10 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         return new LogNativeFragment();
     }
     
+    protected SettingsNativeFragment createSettingsNativeFragment() {
+        return new SettingsNativeFragment();
+    }
+
     FragmentInterfaceWrapper setContentNative(final ListItem li, final UidPolicy up) {
         LogNativeFragment l = createLogNativeFragment();
         l.getInternal().setUidPolicy(up);
@@ -170,10 +174,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         
         setContent(mContent, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
-    
-    protected SettingsNativeFragment createSettingsNativeFragment() {
-        return new SettingsNativeFragment();
-    }
+
     
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
