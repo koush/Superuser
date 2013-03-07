@@ -84,7 +84,7 @@
     <string name="whats_new">Quoi de neuf</string>
     <string name="rate">Noter</string>
     <string name="theme">Thème</string>
-    <string name="light">Clair</string>
-    <string name="dark">Foncé</string>
+    <string name="light">Lumineux</string>
+    <string name="dark">Sombre</string>
     <string name="pin_disabled">La protection de Superuser par code est désactivée</string>
 </resources>
