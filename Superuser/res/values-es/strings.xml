@@ -86,4 +86,5 @@
     <string name="theme">Apariencia</string>
     <string name="light">Clara</string>
     <string name="dark">Oscura</string>
+    <string name="pin_disabled">Protección por PIN desactivada</string>
 </resources>

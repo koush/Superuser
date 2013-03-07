@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.koushikdutta.widgets.FragmentInterfaceWrapper;
 import com.koushikdutta.widgets.NativeFragment;
 
 @SuppressLint("NewApi")
@@ -37,19 +38,38 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
         return mWrapper;
     }
 
+    protected class FragmentInternal extends PolicyFragmentInternal {
+        public FragmentInternal(FragmentInterfaceWrapper fragment) {
+            super(fragment);
+        }
+
+        @Override
+        public Context getContext() {
+            return PolicyNativeFragment.this.getContext();
+        }
+        
+        @Override
+        protected int getListFragmentResource() {
+            return R.layout.policy_list_content;
+        }
+        
+        @Override
+        protected LogNativeFragment createLogNativeFragment() {
+            // factory hook.
+            return super.createLogNativeFragment();
+        }
+        
+        @Override
+        protected SettingsNativeFragment createSettingsNativeFragment() {
+            // factory hook.
+            return super.createSettingsNativeFragment();
+        }
+    };
+    
     @Override
     public PolicyFragmentInternal createFragmentInterface() {
-        return new PolicyFragmentInternal(this) {
-            @Override
-            public Context getContext() {
-                return PolicyNativeFragment.this.getContext();
-            }
-            
-            @Override
-            protected int getListFragmentResource() {
-                return R.layout.policy_list_content;
-            }
-        };
+        // factory hook.
+        return new FragmentInternal(this);
     }
     
     @Override
