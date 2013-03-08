@@ -19,11 +19,13 @@ package com.koushikdutta.superuser;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,6 +120,69 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
         else {
             setPin();
         }
+    }
+    
+    boolean isSystemApp() {
+    	String appPath = getActivity().getPackageCodePath();
+    	return appPath.contains("/system/");
+    }
+    
+    void doSystemAppConvert() {
+    	final ProgressDialog dlg = new ProgressDialog(getActivity());
+        dlg.setTitle(R.string.converting);
+        dlg.setMessage(getString(R.string.converting_summary));
+        dlg.setIndeterminate(true);
+        dlg.show();
+		new Thread() {
+			public void run() {
+				boolean _error = false;
+				try {
+					String appPath = getActivity().getPackageCodePath(); 
+	        
+					String command = 
+        			"mount -orw,remount /system\n" +
+                    "rm /system/app/Superuser.*\n" +
+        			String.format("cat %s > /system/app/Superuser.apk\n", appPath) +
+                    "chmod 0644 /system/app/Superuser.apk\n" +
+                    "mount -oro,remount /system\n" +
+                    "sync\n" + 
+                    "reboot\n";
+			        
+			        if (TextUtils.isEmpty(command))
+			        	throw new Exception("command not created");
+			        
+			        Process p = Runtime.getRuntime().exec("su");
+                    p.getOutputStream().write(command.getBytes());
+                    p.getOutputStream().close();
+                    if (p.waitFor() != 0)
+                        throw new Exception("non zero result");
+
+				} catch (Exception e) {
+					_error = true;
+                    e.printStackTrace();
+				}
+		        
+		        dlg.dismiss();
+                final boolean error = _error;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(R.string.converting);
+                        
+                        if (error) {
+                            builder.setMessage(R.string.converting_failed);
+                            builder.setPositiveButton(android.R.string.ok, null);
+                        }
+                        else {
+                            builder.setMessage(R.string.converting_successful);
+                            // Should not get here phone would have reboot
+                        }
+                        builder.create().show();
+                    }
+                });
+			}
+		}.start();
     }
     
     @Override
@@ -332,6 +397,27 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
             }
         })
         .setAttrDrawable(R.attr.requestTimeoutIcon);
+        
+        if (!isSystemApp())
+        addItem(R.string.security, new ListItem(this, R.string.convert_to_system, R.string.convert_to_system_summary) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.converting);
+                builder.setMessage(R.string.converting_warning);
+                builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						doSystemAppConvert();
+					}
+				});
+                builder.setNegativeButton(android.R.string.cancel, null);
+                builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.convertingIcon)
+        .setCheckboxVisible(false);
 
         addItem(R.string.settings, new ListItem(this, R.string.logging, R.string.logging_summary) {
             @Override
