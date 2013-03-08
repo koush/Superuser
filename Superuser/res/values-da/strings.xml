@@ -81,4 +81,10 @@
     <string name="apps_only">Kun apps</string>
     <string name="adb_only">Kun ADB</string>
     <string name="apps_and_adb">Apps og ADB</string>
+    <string name="whats_new">Hvad er nyt</string>
+    <string name="rate">Bedøm</string>
+    <string name="theme">Tema</string>
+    <string name="light">Lyst</string>
+    <string name="dark">Mørkt</string>
+    <string name="pin_disabled">Superuser PIN-beskyttelse slået fra</string>
 </resources>
