@@ -75,4 +75,16 @@
     <string name="checking_superuser">Đang kiểm tra Superuser...</string>
     <string name="install_error">Có lỗi trong khi cài Superuser. Vui lòng gửi nhật trình lỗi cho lập trình viên.</string>
     <string name="install_success">Cài đặt Superuser thành công.</string>
+    <string name="su_binary_outdated">Chương trình su đã cũ.</string>
+    <string name="superuser_access">Quyền truy cập Superuser</string>
+    <string name="disabled">Tắt</string>
+    <string name="apps_only">Chỉ cho ứng dụng</string>
+    <string name="adb_only">Chỉ cho ADB</string>
+    <string name="apps_and_adb">Cả ứng dụng và ADB</string>
+    <string name="whats_new">Có gì mới</string>
+    <string name="rate">Xếp hạng</string>
+    <string name="theme">Tông màu</string>
+    <string name="light">Sáng</string>
+    <string name="dark">Tối</string>
+    <string name="pin_disabled">Bảo vệ Superuser bằng mã khóa đã tắt</string>
 </resources>
