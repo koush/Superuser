@@ -40,7 +40,7 @@
     <string name="number_seconds">%s secondes</string>
     <string name="superuser_granted">Droits Superuser accordés à %s</string>
     <string name="superuser_denied">Droits Superuser refusés à %s</string>
-    <string name="toast">Toast (surimpression écran)</string>
+    <string name="toast">Toast (sur impression écran)</string>
     <string name="notification">Notification</string>
     <string name="no_notification">Aucune notification ne sera affichée</string>
     <string name="developer_warning">Mise en garde Développeur :\nandroid.permission.ACCESS_SUPERUSER\nnon déclaré dans le manifest.</string>
