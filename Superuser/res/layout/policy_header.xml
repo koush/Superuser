@@ -6,8 +6,8 @@
     android:padding="@dimen/section_padding" >
 
     <LinearLayout
-        android:id="@+id/title_container"
-        android:layout_width="fill_parent"
+        android:id="@+id/policy_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
@@ -54,57 +54,42 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/notification_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                style="@android:style/TextAppearance.Medium"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingBottom="@dimen/section_padding"
-                android:paddingLeft="@dimen/section_padding"
-                android:text="@string/logs" />
-
-            <include
-                android:layout_weight="@dimen/golden_ratio"
-                layout="@layout/log_toggle" />
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingLeft="@dimen/section_padding"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:scrollbars="none" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/empty"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:textAppearance="@android:style/TextAppearance.Medium"
-            android:visibility="gone" />
+            android:paddingBottom="@dimen/section_padding"
+            android:paddingLeft="@dimen/section_padding"
+            android:text="@string/notifications" />
+
+        <include
+            android:layout_weight="@dimen/golden_ratio"
+            layout="@layout/notification_toggle" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/footer_container"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="horizontal" >
+
+        <TextView
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/section_padding"
+            android:paddingLeft="@dimen/section_padding"
+            android:text="@string/logs" />
+
+        <include
+            android:layout_weight="@dimen/golden_ratio"
+            layout="@layout/log_toggle" />
+    </LinearLayout>
 
 </LinearLayout>

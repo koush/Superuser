@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
+import com.koushikdutta.superuser.util.SuHelper;
 
 @SuppressLint("ValidFragment")
 public class MultitaskSuRequestActivity extends FragmentActivity {
@@ -342,7 +343,11 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                             requestReady();
                         }
                     });                    
-                    
+
+                    if ("com.koushikdutta.superuser".equals(getPackageName())) {
+                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version")))
+                            SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
+                    }
                 }
                 catch (Exception ex) {
                     Log.i(LOGTAG, ex.getMessage(), ex);
@@ -368,6 +373,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     LocalSocket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();

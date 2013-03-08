@@ -49,8 +49,8 @@ static int database_callback(void *v, int argc, char **argv, char **azColName){
             }
         }
         else if (strcmp(azColName[i], "command") == 0) {
-            // null command means to match all commands (whitelist all from uid)
-            command_match = argv[i] == NULL || strcmp(argv[i], get_command(&(data->ctx->to))) == 0;
+            // null or empty command means to match all commands (whitelist all from uid)
+            command_match = argv[i] == NULL || strlen(argv[i]) == 0 || strcmp(argv[i], get_command(&(data->ctx->to))) == 0;
         }
         else if (strcmp(azColName[i], "until") == 0) {
             if (argv[i] != NULL) {

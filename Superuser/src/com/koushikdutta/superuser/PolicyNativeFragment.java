@@ -24,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.koushikdutta.widgets.FragmentInterfaceWrapper;
 import com.koushikdutta.widgets.NativeFragment;
 
 @SuppressLint("NewApi")
@@ -33,29 +34,42 @@ public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal>
     public Context getContext() {
         if (mWrapper != null)
             return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_PolicyIcon);
+        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_LargeIcon);
         return mWrapper;
     }
 
+    protected class FragmentInternal extends PolicyFragmentInternal {
+        public FragmentInternal(FragmentInterfaceWrapper fragment) {
+            super(fragment);
+        }
+
+        @Override
+        public Context getContext() {
+            return PolicyNativeFragment.this.getContext();
+        }
+        
+        @Override
+        protected int getListFragmentResource() {
+            return R.layout.policy_list_content;
+        }
+        
+        @Override
+        protected LogNativeFragment createLogNativeFragment() {
+            // factory hook.
+            return super.createLogNativeFragment();
+        }
+        
+        @Override
+        protected SettingsNativeFragment createSettingsNativeFragment() {
+            // factory hook.
+            return super.createSettingsNativeFragment();
+        }
+    };
+    
     @Override
     public PolicyFragmentInternal createFragmentInterface() {
-        return new PolicyFragmentInternal(this) {
-            @Override
-            public Context getContext() {
-                return PolicyNativeFragment.this.getContext();
-            }
-            
-            @Override
-            protected int getListFragmentResource() {
-                return R.layout.policy_list_content;
-            }
-            
-            @Override
-            protected void setPadding() {
-                getListView().setPadding(0, 0, 0, 0);
-                getContainer().setPadding(0, 0, 0, 0);
-            }
-        };
+        // factory hook.
+        return new FragmentInternal(this);
     }
     
     @Override

@@ -16,21 +16,23 @@
 
 package com.koushikdutta.superuser;
 
-import com.koushikdutta.superuser.db.LogEntry;
-import com.koushikdutta.superuser.db.SuDatabaseHelper;
-import com.koushikdutta.superuser.db.UidPolicy;
-import com.koushikdutta.superuser.util.Settings;
-
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.koushikdutta.superuser.db.LogEntry;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
+import com.koushikdutta.superuser.db.UidPolicy;
+import com.koushikdutta.superuser.util.Settings;
+
 public class SuReceiver extends BroadcastReceiver {
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, Intent intent) {
         if (intent == null)
             return;
         
@@ -49,18 +51,17 @@ public class SuReceiver extends BroadcastReceiver {
         String fromName = intent.getStringExtra("from_name");
         String desiredName = intent.getStringExtra("desired_name");
 
-        LogEntry le = new LogEntry();
+        final LogEntry le = new LogEntry();
         le.uid = uid;
         le.command = command;
         le.action = action;
         le.desiredUid = desiredUid;
         le.desiredName = desiredName;
         le.username = fromName;
-        try {
-            SuDatabaseHelper.addLog(context, le);
-        }
-        catch (Exception e) {
-        }
+        le.date = (int)(System.currentTimeMillis() / 1000);
+        le.getPackageInfo(context);
+
+        UidPolicy u = SuperuserDatabaseHelper.addLog(context, le);
 
         String toast;
         if (UidPolicy.ALLOW.equals(action)) {
@@ -70,10 +71,15 @@ public class SuReceiver extends BroadcastReceiver {
             toast = context.getString(R.string.superuser_denied, le.getName());
         }
 
+        if (u != null && !u.notification)
+            return;
+
         switch (Settings.getNotificationType(context)) {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setTicker(toast)
+            .setAutoCancel(true)
+            .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0))
             .setContentTitle(context.getString(R.string.superuser))
             .setContentText(toast)
             .setSmallIcon(R.drawable.ic_stat_notification);

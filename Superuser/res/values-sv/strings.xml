@@ -81,4 +81,10 @@
     <string name="apps_only">Endast Appar</string>
     <string name="adb_only">Endast ADB</string>
     <string name="apps_and_adb">Appar och ADB</string>
+    <string name="whats_new">Nyheter</string>
+    <string name="rate">Recensera</string>
+    <string name="theme">Tema</string>
+    <string name="light">Ljust</string>
+    <string name="dark">Mörkt</string>
+    <string name="pin_disabled">Superuser PIN-skydd inaktiverat</string>
 </resources>

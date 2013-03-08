@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koushikdutta.superuser"
-    android:versionCode="1007"
-    android:versionName="1.0.0.7" >
+    android:versionCode="1013"
+    android:versionName="1.0.1.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -42,8 +42,8 @@
         android:label="@string/superuser"
         android:theme="@style/Superuser" >
         <activity
+            android:theme="@style/SuperuserActivity"
             android:name=".MainActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/superuser" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,6 +60,7 @@
             android:label="@string/superuser"
             android:launchMode="singleTask"
             android:permission="android.permission.REQUEST_SUPERUSER"
+            android:process=":superuser"
             android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
         <!-- Only system/su can open this activity -->
@@ -72,6 +73,7 @@
             android:label="@string/superuser"
             android:launchMode="singleTask"
             android:permission="android.permission.REQUEST_SUPERUSER"
+            android:process=":superuser"
             android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
 
@@ -82,13 +84,13 @@
             android:excludeFromRecents="true"
             android:exported="false"
             android:label="@string/request"
+            android:process=":superuser"
             android:taskAffinity="internal.superuser"
             android:theme="@style/RequestTheme" />
 
         <receiver
             android:name=".SuReceiver"
             android:permission="android.permission.REPORT_SUPERUSER" />
-
         <receiver android:name=".SuCheckerReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

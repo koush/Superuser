@@ -18,20 +18,23 @@ package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.koushikdutta.superuser.db.LogEntry;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
+import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.widgets.BetterListFragmentInternal;
@@ -72,7 +75,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 if (up != null)
                     SuDatabaseHelper.delete(getActivity(), up);
                 else
-                    SuDatabaseHelper.deleteLogs(getActivity());
+                    SuperuserDatabaseHelper.deleteLogs(getActivity());
                 onDelete();
                 return true;
             }
@@ -83,15 +86,13 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
     protected int getListItemResource() {
         return R.layout.log_item;
     }
-    
-    @Override
-    protected int getListFragmentResource() {
-        return R.layout.policy_fragment;
-    }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
+        
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        getListView().addHeaderView(inflater.inflate(R.layout.policy_header, null));
         
         getFragment().setHasOptionsMenu(true);
         
@@ -117,7 +118,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             name.setText(up.name);
             
             ((TextView)view.findViewById(R.id.uid_header)).setText(Integer.toString(up.desiredUid));
-            ((TextView)view.findViewById(R.id.command_header)).setText(up.command == null ? getString(R.string.all_commands) : up.command);
+            ((TextView)view.findViewById(R.id.command_header)).setText(TextUtils.isEmpty(up.command) ? getString(R.string.all_commands) : up.command);
             String app = up.username;
             if (app == null || app.length() == 0)
                 app = String.valueOf(up.uid);
@@ -126,14 +127,13 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
 
             getListView().setSelector(android.R.color.transparent);
 
-            logs = SuDatabaseHelper.getLogs(getActivity(), up, -1);
+            logs = SuperuserDatabaseHelper.getLogs(getActivity(), up, -1);
         }
         else {
-            view.findViewById(R.id.title_container).setVisibility(View.GONE);
-            logs = SuDatabaseHelper.getLogs(getActivity());
+            setEmpty(R.string.no_logs);
+            view.findViewById(R.id.policy_header).setVisibility(View.GONE);
+            logs = SuperuserDatabaseHelper.getLogs(getActivity());
         }
-        
-        setEmpty(R.string.no_logs);
         
         for (LogEntry log: logs) {
             final String date = time.format(log.getDate());
@@ -154,24 +154,43 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             });
         }
 
-        final CompoundButton cb = (CompoundButton)view.findViewById(R.id.logging);
-        cb.setOnClickListener(new OnClickListener() {
+        final CompoundButton logging = (CompoundButton)view.findViewById(R.id.logging);
+        if (up == null) {
+            logging.setChecked(Settings.getLogging(getActivity()));
+        }
+        else {
+            logging.setChecked(up.logging);
+        }
+        logging.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
                 if (up == null) {
-                    Settings.setLogging(getActivity(), cb.isChecked());
+                    Settings.setLogging(getActivity(), isChecked);
                 }
                 else {
-                    up.logging = cb.isChecked();
+                    up.logging = isChecked;
                     SuDatabaseHelper.setPolicy(getActivity(), up);
                 }
             }
         });
+
+        final CompoundButton notification = (CompoundButton)view.findViewById(R.id.notification);
         if (up == null) {
-            cb.setChecked(Settings.getLogging(getActivity()));
+            view.findViewById(R.id.notification_container).setVisibility(View.GONE);
         }
         else {
-            cb.setChecked(up.logging);
+            notification.setChecked(up.notification);
         }
+        notification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (up == null) {
+                }
+                else {
+                    up.notification = isChecked;
+                    SuDatabaseHelper.setPolicy(getActivity(), up);
+                }
+            }
+        });
     }
 }
