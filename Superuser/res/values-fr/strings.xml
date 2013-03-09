@@ -23,7 +23,7 @@
     <string name="no_logs">Pas de Journaux</string>
     <string name="no_apps">Actuellement aucune appli n\'a de règle Superuser.</string>
     <string name="logging">Journalisation</string>
-    <string name="logging_summary">Activer ou désactiver la journalisation de toutes les demandes Superuser</string>
+    <string name="logging_summary">Activer ou désactiver la journalisation des demandes Superuser</string>
     <string name="pin_protection">Protection par code</string>
     <string name="pin_protection_summary">Requiert un code pour valider les demandes Superuser</string>
     <string name="request_timeout">Délai de réponse</string>
@@ -40,7 +40,7 @@
     <string name="number_seconds">%s secondes</string>
     <string name="superuser_granted">Droits Superuser accordés à %s</string>
     <string name="superuser_denied">Droits Superuser refusés à %s</string>
-    <string name="toast">Toast (surimpression écran)</string>
+    <string name="toast">Toast</string>
     <string name="notification">Notification</string>
     <string name="no_notification">Aucune notification ne sera affichée</string>
     <string name="developer_warning">Mise en garde Développeur :\nandroid.permission.ACCESS_SUPERUSER\nnon déclaré dans le manifest.</string>
@@ -49,7 +49,7 @@
     <string name="declared_permission">Autorisations Déclarées</string>
     <string name="declared_permission_summary">Autoriser uniquement les demandes des applications qui annoncent utiliser la permission android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Réponse Automatique</string>
-    <string name="prompt">Prompt</string>
+    <string name="prompt">Demander</string>
     <string name="automatic_response_allow_summary">Autoriser automatiquement les nouvelles demandes</string>
     <string name="automatic_response_deny_summary">Refuser automatiquement les nouvelles demandes</string>
     <string name="automatic_response_prompt_summary">Afficher une confirmation pour les nouvelles demandes</string>
@@ -69,9 +69,9 @@
     <string name="installing">Installation</string>
     <string name="installing_superuser">Installation de Superuser...</string>
     <string name="install_superuser">Installer Superuser</string>
-    <string name="install_superuser_info">Le binaire Superuser (su) doit être mis à jour.\n\nMerci de choisir une méthode d\'installation.\nL\'installation par Recovery est recommandée pour les périphériques HTC.</string>
+    <string name="install_superuser_info">Le binaire Superuser (su) doit être mis à jour.\n\nVeuillez choisir une méthode d\'installation.\nL\'installation par Recovery est recommandée pour les périphériques HTC.</string>
     <string name="recovery_install">Installation par Recovery</string>
-    <string name="install">Installation</string>
+    <string name="install">Installer</string>
     <string name="checking_superuser">Vérification de Superuser...</string>
     <string name="install_error">Une erreur est survenue pendant l\'installation de Superuser. Merci d\'envoyer le rapport d\'erreur au développeur.</string>
     <string name="install_success">Superuser installé avec succès.</string>
@@ -86,5 +86,5 @@
     <string name="theme">Thème</string>
     <string name="light">Lumineux</string>
     <string name="dark">Sombre</string>
-    <string name="pin_disabled">La protection de Superuser par code est désactivée</string>
+    <string name="pin_disabled">La protection par code est désactivée</string>
 </resources>
