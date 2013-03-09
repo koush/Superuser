@@ -29,7 +29,7 @@
     <string name="request_timeout">Délai de réponse</string>
     <string name="request_timeout_summary">Les demandes Superuser expireront et seront refusées après %s secondes</string>
     <string name="notifications">Notifications</string>
-    <string name="none">Aucun(e)</string>
+    <string name="none">Aucune</string>
     <string name="notifications_summary">Une %s sera affichée lorsque les droits Superuser seront Accordés ou Refusés à une Application</string>
     <string name="enter_pin">Entrer le code</string>
     <string name="enter_new_pin">Entrer le nouveau code</string>
@@ -40,7 +40,7 @@
     <string name="number_seconds">%s secondes</string>
     <string name="superuser_granted">Droits Superuser accordés à %s</string>
     <string name="superuser_denied">Droits Superuser refusés à %s</string>
-    <string name="toast">Toast</string>
+    <string name="toast">Notification pop-up</string>
     <string name="notification">Notification</string>
     <string name="no_notification">Aucune notification ne sera affichée</string>
     <string name="developer_warning">Mise en garde Développeur :\nandroid.permission.ACCESS_SUPERUSER\nnon déclaré dans le manifest.</string>
