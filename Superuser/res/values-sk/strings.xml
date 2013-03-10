@@ -69,7 +69,7 @@
 	<string name="installing">Inštalujem</string>
     <string name="installing_superuser">Inštalujem Superusera...</string>
     <string name="install_superuser">Inštalovať Superusera</string>
-    <string name="install_superuser_info">Binárne súbory Superusera (su) musia byť aktualizované.\n\nProsím vyberte metódu inštalovania.\n\Inštalácia cez recovery je odporúčaná pre HTC zariadenia.</string>
+    <string name="install_superuser_info">Binárne súbory Superusera (su) musia byť aktualizované.\n\nVyberte prosím metódu inštalácie.\n\Inštalácia cez recovery je odporúčaná pre HTC zariadenia.</string>
     <string name="recovery_install">Inštalovať cez recovery</string>
     <string name="install">Inštalovať</string>
     <string name="checking_superuser">Kontrolujem Superusera...</string>
