@@ -45,6 +45,24 @@ unsigned get_shell_uid() {
   return ppwd->pw_uid;
 }
 
+unsigned get_system_uid() {
+  struct passwd* ppwd = getpwnam("system");
+  if (NULL == ppwd) {
+    return 1000;
+  }
+  
+  return ppwd->pw_uid;
+}
+
+unsigned get_radio_uid() {
+  struct passwd* ppwd = getpwnam("radio");
+  if (NULL == ppwd) {
+    return 1001;
+  }
+  
+  return ppwd->pw_uid;
+}
+
 void exec_log(char *priority, char* logline) {
   int pid;
   if ((pid = fork()) == 0) {
@@ -703,10 +721,10 @@ int main(int argc, char *argv[]) {
         
     read_options(&ctx);
     user_init(&ctx);
-    
-    // TODO: customizable behavior for shell? It can currently be toggled via settings.
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
-        LOGD("Allowing root/shell.");
+
+    // the latter two are necessary for stock ROMs like note 2 which do dumb things with su, or crash otherwise
+    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SYSTEM || ctx.from.uid == AID_RADIO) {
+        LOGD("Allowing root/system/radio.");
         allow(&ctx);
     }
 
@@ -725,7 +743,7 @@ int main(int argc, char *argv[]) {
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);
     }
-    
+
     // always allow if this is the superuser uid
     // superuser needs to be able to reenable itself when disabled...
     if (ctx.from.uid == st.st_uid) {
@@ -736,6 +754,12 @@ int main(int argc, char *argv[]) {
     if (access_disabled(&ctx.from)) {
         LOGD("access_disabled");
         deny(&ctx);
+    }
+
+    // autogrant shell at this point
+    if (ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing shell.");
+        allow(&ctx);
     }
 
     // deny if this is a non owner request and owner mode only

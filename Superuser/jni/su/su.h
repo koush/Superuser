@@ -31,6 +31,14 @@
 #define AID_ROOT  0
 #endif
 
+#ifndef AID_SYSTEM
+#define AID_SYSTEM (get_system_uid())
+#endif
+
+#ifndef AID_RADIO
+#define AID_RADIO (get_radio_uid())
+#endif
+
 // CyanogenMod-specific behavior
 #define CM_ROOT_ACCESS_DISABLED      0
 #define CM_ROOT_ACCESS_APPS_ONLY     1
