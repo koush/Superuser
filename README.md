@@ -10,7 +10,7 @@
 
 ## Translations
 
-Translations are very much appreciated, but please do not submit translations on Github! Instead, use the revie submission process on [CyanogenMod's gerrit instance](http://review.cyanogenmod.org/#/q/status:open,n,z).
+Translations are very much appreciated, but please do not submit translations on Github! Instead, use the review submission process on [CyanogenMod's gerrit instance](http://review.cyanogenmod.org/#/q/status:open,n,z).
 
 
 
