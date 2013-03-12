@@ -232,7 +232,10 @@ static void populate_environment(const struct su_context *ctx) {
     pw = getpwuid(ctx->to.uid);
     if (pw) {
         setenv("HOME", pw->pw_dir, 1);
-        setenv("SHELL", ctx->to.shell, 1);
+        if (ctx->to.shell)
+            setenv("SHELL", ctx->to.shell, 1);
+        else
+            setenv("SHELL", DEFAULT_SHELL, 1);
         if (ctx->to.login || ctx->to.uid) {
             setenv("USER", pw->pw_name, 1);
             setenv("LOGNAME", pw->pw_name, 1);
@@ -358,6 +361,7 @@ static int socket_send_request(int fd, const struct su_context *ctx) {
 do {                                                \
     size_t __len = htonl(data_len);                 \
     __len = write((fd), &__len, sizeof(__len));     \
+    LOGE("%d", __len);\
     if (__len != sizeof(__len)) {                   \
         PLOGE("write(" #data ")");                  \
         return -1;                                  \
@@ -391,6 +395,7 @@ do {                                        \
     write_token(fd, "from.uid", ctx->from.uid);
     write_token(fd, "to.uid", ctx->to.uid);
     write_string(fd, "from.bin", ctx->from.bin);
+    // TODO: Fix issue where not using -c does not result a in a command
     write_string(fd, "command", get_command(&ctx->to));
     write_token(fd, "eof", PROTO_VERSION);
     return 0;
@@ -432,10 +437,19 @@ static void usage(int status) {
 static __attribute__ ((noreturn)) void deny(struct su_context *ctx) {
     char *cmd = get_command(&ctx->to);
 
-    // No send to UI denied requests for shell and root users (they are in the log)
-    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
+    int send_to_app = 1;
+
+    // no need to log if called by root
+    if (ctx->from.uid == AID_ROOT)
+        send_to_app = 0;
+
+    // dumpstate (which logs to logcat/shell) will spam the crap out of the system with su calls
+    if (strcmp("/system/bin/dumpstate", ctx->from.bin) == 0)
+        send_to_app = 0;
+
+    if (send_to_app)
         send_result(ctx, DENY);
-    // }
+
     LOGW("request rejected (%u->%u %s)", ctx->from.uid, ctx->to.uid, cmd);
     fprintf(stderr, "%s\n", strerror(EACCES));
     exit(EXIT_FAILURE);
@@ -446,13 +460,40 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     int argc, err;
 
     umask(ctx->umask);
-    // No send to UI accepted requests for shell and root users (they are in the log)
-    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
-        send_result(ctx, ALLOW);
-    // }
+    int send_to_app = 1;
 
-    arg0 = strrchr (ctx->to.shell, '/');
-    arg0 = (arg0) ? arg0 + 1 : ctx->to.shell;
+    // no need to log if called by root
+    if (ctx->from.uid == AID_ROOT)
+        send_to_app = 0;
+
+    // dumpstate (which logs to logcat/shell) will spam the crap out of the system with su calls
+    if (strcmp("/system/bin/dumpstate", ctx->from.bin) == 0)
+        send_to_app = 0;
+
+    if (send_to_app)
+        send_result(ctx, ALLOW);
+
+    char *binary;
+    argc = ctx->to.optind;
+    if (ctx->to.command) {
+        binary = ctx->to.shell;
+        ctx->to.argv[--argc] = ctx->to.command;
+        ctx->to.argv[--argc] = "-c";
+    }
+    else if (ctx->to.shell) {
+        binary = ctx->to.shell;
+    }
+    else {
+        if (ctx->to.argv[argc]) {
+            binary = ctx->to.argv[argc++];
+        }
+        else {
+            binary = DEFAULT_SHELL;
+        }
+    }
+
+    arg0 = strrchr (binary, '/');
+    arg0 = (arg0) ? arg0 + 1 : binary;
     if (ctx->to.login) {
         int s = strlen(arg0) + 2;
         char *p = malloc(s);
@@ -469,25 +510,20 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     set_identity(ctx->to.uid);
 
 #define PARG(arg)                                    \
-    (ctx->to.optind + (arg) < ctx->to.argc) ? " " : "",                    \
-    (ctx->to.optind + (arg) < ctx->to.argc) ? ctx->to.argv[ctx->to.optind + (arg)] : ""
+    (argc + (arg) < ctx->to.argc) ? " " : "",                    \
+    (argc + (arg) < ctx->to.argc) ? ctx->to.argv[argc + (arg)] : ""
 
-    LOGD("%u %s executing %u %s using shell %s : %s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+    LOGD("%u %s executing %u %s using binary %s : %s%s%s%s%s%s%s%s%s%s%s%s%s%s",
             ctx->from.uid, ctx->from.bin,
-            ctx->to.uid, get_command(&ctx->to), ctx->to.shell,
+            ctx->to.uid, get_command(&ctx->to), binary,
             arg0, PARG(0), PARG(1), PARG(2), PARG(3), PARG(4), PARG(5),
             (ctx->to.optind + 6 < ctx->to.argc) ? " ..." : "");
 
-    argc = ctx->to.optind;
-    if (ctx->to.command) {
-        ctx->to.argv[--argc] = ctx->to.command;
-        ctx->to.argv[--argc] = "-c";
-    }
     ctx->to.argv[--argc] = arg0;
-    execv(ctx->to.shell, ctx->to.argv + argc);
+    execvp(binary, ctx->to.argv + argc);
     err = errno;
     PLOGE("exec");
-    fprintf(stderr, "Cannot execute %s: %s\n", ctx->to.shell, strerror(err));
+    fprintf(stderr, "Cannot execute %s: %s\n", binary, strerror(err));
     exit(EXIT_FAILURE);
 }
 
@@ -609,7 +645,7 @@ int main(int argc, char *argv[]) {
             .uid = AID_ROOT,
             .login = 0,
             .keepenv = 0,
-            .shell = DEFAULT_SHELL,
+            .shell = NULL,
             .command = NULL,
             .argv = argv,
             .argc = argc,
@@ -640,6 +676,7 @@ int main(int argc, char *argv[]) {
     while ((c = getopt_long(argc, argv, "+c:hlmps:Vvu", long_opts, NULL)) != -1) {
         switch(c) {
         case 'c':
+            ctx.to.shell = DEFAULT_SHELL;
             ctx.to.command = optarg;
             break;
         case 'h':
@@ -723,7 +760,7 @@ int main(int argc, char *argv[]) {
     user_init(&ctx);
 
     // the latter two are necessary for stock ROMs like note 2 which do dumb things with su, or crash otherwise
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SYSTEM || ctx.from.uid == AID_RADIO) {
+    if (ctx.from.uid == AID_ROOT) {
         LOGD("Allowing root/system/radio.");
         allow(&ctx);
     }

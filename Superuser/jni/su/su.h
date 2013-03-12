@@ -80,7 +80,7 @@
 #define xstr(a) str(a)
 #define str(a) #a
 
-#define VERSION_CODE 8
+#define VERSION_CODE 9
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
 #define PROTO_VERSION 1
@@ -161,7 +161,14 @@ extern int silent_run(char* command);
 
 static inline char *get_command(const struct su_request *to)
 {
-	return (to->command) ? to->command : to->shell;
+  if (to->command)
+    return to->command;
+  if (to->shell)
+    return to->shell;
+  char* ret = to->argv[to->optind];
+  if (ret)
+    return ret;
+  return DEFAULT_SHELL;
 }
 
 void exec_loge(const char* fmt, ...);
