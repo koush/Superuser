@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="superuser">Superuser</string>
     <string name="allow">Consenti</string>
     <string name="deny">Nega</string>
-    <string name="status_incoming">Richiesta di Superuser in arrivo...</string>
+    <string name="status_incoming">Richiesta di Superuser in arrivo\u2026</string>
     <string name="unknown_uid">UID sconosciuto: %s</string>
     <string name="application_request">%s richiede l\'accesso a Superuser.</string>
     <string name="info">Attenzione: se non comprendi cosa significhi dovresti negare l\'accesso.</string>
-    <string name="request">Superuser Request</string>
+    <string name="request">Richiesta Superuser</string>
     <string name="package_header">Pacchetto:</string>
     <string name="app_header">Applicazione:</string>
     <string name="uid_header">UID Richiesto:</string>
@@ -67,13 +66,13 @@
     <string name="about">Informazioni</string>
     <string name="apps">Applicazioni</string>
     <string name="installing">Installazione</string>
-    <string name="installing_superuser">Sto installando Superuser...</string>
+    <string name="installing_superuser">Sto installando Superuser\u2026</string>
     <string name="install_superuser">Installa Superuser</string>
-    <string name="install_superuser_info">Il file binario di Superuser (su) deve essere aggiornato.\n\nPerfavore scegli un metodo per installarlo.\nL\'installazione tramite Recovery è raccomandata per i dispositivi HTC.</string>
+    <string name="install_superuser_info">Il file binario di Superuser (su) deve essere aggiornato.\n\nPer favore scegli un metodo per installarlo.\nL\'installazione tramite Recovery è raccomandata per i dispositivi HTC.</string>
     <string name="recovery_install">Installa da Recovery</string>
     <string name="install">Installa</string>
-    <string name="checking_superuser">Sto controllando Superuser...</string>
-    <string name="install_error">Si è verificato un errore durante l\'installazione di Superuser. Perfavore invia un log dell\'errore allo sviluppatore.</string>
+    <string name="checking_superuser">Sto controllando Superuser\u2026</string>
+    <string name="install_error">Si è verificato un errore durante l\'installazione di Superuser. Per favore invia un log dell\'errore allo sviluppatore.</string>
     <string name="install_success">L\'installazione di Superuser è avvenuta con successo.</string>
     <string name="su_binary_outdated">Il file binario su è obsoleto.</string>
     <string name="superuser_access">Accesso a Superuser</string>
