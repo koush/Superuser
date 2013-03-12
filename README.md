@@ -8,6 +8,12 @@
 * Handle multiuser (4.2+) properly
 * Handle concurrent su requests properly
 
+## Translations
+
+Translations are very much appreciated, but please do not submit translations on Github! Instead, use the review submission process on [CyanogenMod's gerrit instance](http://review.cyanogenmod.org/#/q/status:open,n,z).
+
+
+
 ## Checking out the source
 
 You'll need the "Widgets" dependency.

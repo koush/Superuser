@@ -31,6 +31,14 @@
 #define AID_ROOT  0
 #endif
 
+#ifndef AID_SYSTEM
+#define AID_SYSTEM (get_system_uid())
+#endif
+
+#ifndef AID_RADIO
+#define AID_RADIO (get_radio_uid())
+#endif
+
 // CyanogenMod-specific behavior
 #define CM_ROOT_ACCESS_DISABLED      0
 #define CM_ROOT_ACCESS_APPS_ONLY     1
@@ -72,7 +80,7 @@
 #define xstr(a) str(a)
 #define str(a) #a
 
-#define VERSION_CODE 7
+#define VERSION_CODE 9
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
 #define PROTO_VERSION 1
@@ -153,7 +161,14 @@ extern int silent_run(char* command);
 
 static inline char *get_command(const struct su_request *to)
 {
-	return (to->command) ? to->command : to->shell;
+  if (to->command)
+    return to->command;
+  if (to->shell)
+    return to->shell;
+  char* ret = to->argv[to->optind];
+  if (ret)
+    return ret;
+  return DEFAULT_SHELL;
 }
 
 void exec_loge(const char* fmt, ...);

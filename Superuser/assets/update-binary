@@ -7,7 +7,9 @@ echo -n -e 'ui_print Installing Superuser...\n' > /proc/self/fd/$2
 echo -n -e 'ui_print\n' > /proc/self/fd/$2
 
 X86=$(uname -a | grep x86)
-if [ ! -z "$X86" ]
+I686=$(uname -a | grep i686)
+I386=$(uname -a | grep i386)
+if [ ! -z "$X86" -o ! -z "$I686"  -o ! -z "$I386" ]
 then
   PLATFORM=x86
 else
