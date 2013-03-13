@@ -18,7 +18,7 @@
     <string name="remember_forever">Recordar indefinidamente</string>
     <string name="interactive">Interactivo</string>
     <string name="logs">Registro</string>
-    <string name="settings">Preferencias</string>
+    <string name="settings">Ajustes</string>
     <string name="delete">Eliminar</string>
     <string name="no_logs">No hay información de registro</string>
     <string name="no_apps">No hay aplicaciones en lista</string>
@@ -35,7 +35,7 @@
     <string name="enter_new_pin">Introducir nuevo PIN</string>
     <string name="incorrect_pin">PIN incorrecto</string>
     <string name="confirm_pin">Confirmar PIN</string>
-    <string name="pin_mismatch">Los PINs no coinciden</string>
+    <string name="pin_mismatch">Los números PIN no coinciden</string>
     <string name="pin_set">Protección por PIN activada</string>
     <string name="number_seconds">%s segundos</string>
     <string name="superuser_granted">Acceso administrativo permitido a %s</string>
@@ -64,18 +64,18 @@
     <string name="multiuser_require_owner">La política multiusuario sólo puede ser administrada por el propietario del dispositivo.</string>
     <string name="owner_login_info">Por favor, cambie a la cuenta del propietario para permitir o rechazar esta petición.</string>
     <string name="all_commands">Todos los comandos</string>
-    <string name="about">Acerca de\u2026</string>
+    <string name="about">Acerca de</string>
     <string name="apps">Aplicaciones</string>
     <string name="installing">Instalando</string>
     <string name="installing_superuser">Instalando Superusuario\u2026</string>
     <string name="install_superuser">Instalar Superusuario</string>
-    <string name="install_superuser_info">El binario de Superusuario (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
+    <string name="install_superuser_info">El binario de Superusuario \u00ABsu\u00BB se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
     <string name="checking_superuser">Probando Superusuario\u2026</string>
     <string name="install_error">Ha ocurrido un error mientras se instalaba Superusuario. Por favor, envíe un registro del error al desarrollador</string>
     <string name="install_success">La instalación de Superusuario se ha realizado con éxito.</string>
-    <string name="su_binary_outdated">El binario \'su\' está desactualizado.</string>
+    <string name="su_binary_outdated">El binario \u00ABsu\u00BB está desactualizado.</string>
     <string name="superuser_access">Acceso administrativo</string>
     <string name="disabled">Deshabilitado</string>
     <string name="apps_only">Sólo aplicaciones</string>
@@ -83,8 +83,8 @@
     <string name="apps_and_adb">Aplicaciones y ADB</string>
     <string name="whats_new">Novedades</string>
     <string name="rate">Valorar</string>
-    <string name="theme">Apariencia</string>
-    <string name="light">Clara</string>
-    <string name="dark">Oscura</string>
+    <string name="theme">Temas</string>
+    <string name="light">Claro</string>
+    <string name="dark">Oscuro</string>
     <string name="pin_disabled">Protección por PIN desactivada</string>
 </resources>
