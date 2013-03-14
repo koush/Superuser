@@ -64,4 +64,27 @@
     <string name="multiuser_require_owner">Nur der Eigentümer kann die Mehrbenutzer-Verhalten ändern.</string>
     <string name="owner_login_info">Bitte zum Eigentümer-Konto wechseln, um die Anfrage zu erlauben oder zu verweigern.</string>
     <string name="all_commands">Alle Befehle</string>
+    <string name="about">Über</string>
+    <string name="apps">Apps</string>
+    <string name="installing">Installation</string>
+    <string name="installing_superuser">Superuser wird installiert\u2026</string>
+    <string name="install_superuser">Superuser installieren</string>
+    <string name="install_superuser_info">Die Superuser-Binärdatei (su) muss aktualisiert werden.\n\nBitte eine Installationsmethode auswählen.\nBei HTC-Geräten wird die Installation via \"Recovery\" empfohlen.</string>
+    <string name="recovery_install">Recovery</string>
+    <string name="install">Installieren</string>
+    <string name="checking_superuser">Superuser wird überprüft\u2026</string>
+    <string name="install_error">Bei der Installation von Superuser ist ein Fehler aufgetreten. Bitte ein Fehlerprotokoll an den Entwickler senden.</string>
+    <string name="install_success">Superuser wurde erfolgreich installiert.</string>
+    <string name="su_binary_outdated">Die su-Binärdatei ist veraltet.</string>
+    <string name="superuser_access">Superuser-Zugriff</string>
+    <string name="disabled">Deaktiviert</string>
+    <string name="apps_only">Nur Apps</string>
+    <string name="adb_only">Nur ADB</string>
+    <string name="apps_and_adb">Apps und ADB</string>
+    <string name="whats_new">Was ist neu?</string>
+    <string name="rate">Bewerten</string>
+    <string name="theme">Design</string>
+    <string name="light">Hell</string>
+    <string name="dark">Dunkel</string>
+    <string name="pin_disabled">Superuser-PIN-Schutz deaktiviert</string>
 </resources>
