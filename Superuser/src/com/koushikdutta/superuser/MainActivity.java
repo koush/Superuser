@@ -67,13 +67,8 @@ public class MainActivity extends BetterListActivity {
     }
     
     File extractSu() throws IOException, InterruptedException {
-        Process p = Runtime.getRuntime().exec("cat /proc/cpuinfo");
-        String contents = StreamUtility.readToEnd(p.getInputStream());
-        p.getInputStream().close();
-        p.waitFor();
-        contents = contents.toLowerCase();
         String arch = "armeabi";
-        if (contents.contains("x86"))
+        if (System.getProperty("os.arch").contains("x86") || System.getProperty("os.arch").contains("i686") || System.getProperty("os.arch").contains("i386"))
             arch = "x86";
         ZipFile zf = new ZipFile(getPackageCodePath());
         ZipEntry su = zf.getEntry("assets/" + arch + "/su");
