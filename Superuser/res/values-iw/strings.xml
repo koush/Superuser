@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="superuser">Superuser</string>
@@ -38,8 +38,8 @@
     <string name="pin_mismatch">PIN לא מתאים</string>
     <string name="pin_set">הגנת PIN מופעלת</string>
     <string name="number_seconds">%s שניות</string>
-    <string name="superuser_granted">Superuser אושר למשך %s</string>
-    <string name="superuser_denied">Superuser נדחה למשך %s</string>
+    <string name="superuser_granted">Superuser אושר לטובת %s</string>
+    <string name="superuser_denied">Superuser נדחה לטובת %s</string>
     <string name="toast">דיווח</string>
     <string name="notification">התראות</string>
     <string name="no_notification">התראות לא יוצגו</string>
@@ -81,4 +81,7 @@
 	<string name="apps_and_adb">יישומים ו-ADB</string>
 	<string name="whats_new">מה חדש?</string>
 	<string name="rate">דרג</string>
+	<string name="light">בהיר</string>
+	<string name="dark">כהה</string>
+	<string name="pin_disabled">הגנת PIN ל-Superuser מבוטלת</string>
 </resources>
