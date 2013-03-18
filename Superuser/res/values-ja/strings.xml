@@ -16,7 +16,7 @@
     <string name="this_time_only">1回だけ</string>
     <string name="remember_for">%s 分間継続して</string>
     <string name="remember_forever">ずっと</string>
-    <string name="interactive">Interactive</string>
+    <string name="interactive">インタラクティブ</string>
     <string name="logs">ログ</string>
     <string name="settings">設定</string>
     <string name="delete">削除</string>
@@ -43,11 +43,11 @@
     <string name="toast">トースト</string>
     <string name="notification">通知</string>
     <string name="no_notification">通知を表示しない</string>
-    <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
-    <string name="superuser_description">full permissions to all device features and storage</string>
-    <string name="superuser_description_more">Superuser grants full access to all device features and storage, including the secure and sensitive hardware elements of your device. This permission is potentially dangerous.</string>
-    <string name="declared_permission">Declared Permission</string>
-    <string name="declared_permission_summary">Only allow requests from apps that declare android.permission.ACCESS_SUPERUSER</string>
+    <string name="developer_warning">開発者への警告:\nマニフェストで\nandroid.permission.ACCESS_SUPERUSER\nが宣言されていません。</string>
+    <string name="superuser_description">すべてのデバイスの機能とストレージへの完全なアクセス許可</string>
+    <string name="superuser_description_more">Superuserはセキュリティや繊細なハードウェア要素を含めたデバイスのすべての機能とストレージへの完全なアクセスを許可します。このパーミッションは潜在的に危険です。</string>
+    <string name="declared_permission">パーミッション宣言</string>
+    <string name="declared_permission_summary">android.permission.ACCESS_SUPERUSERを宣言しているアプリの要求だけ許可する</string>
     <string name="automatic_response">自動応答</string>
     <string name="prompt">プロンプト</string>
     <string name="automatic_response_allow_summary">新しい権限要求があった場合、自動的に許可する</string>
@@ -61,11 +61,10 @@
     <string name="multiuser_owner_only">所有者のみ</string>
     <string name="multiuser_owner_managed">Owner Managed</string>
     <string name="multiuser_user">全てのユーザ</string>
-    <string name="multiuser_require_owner">The Multiuser Policy can only be managed by the device owner.</string>
-    <string name="owner_login_info">Please switch to the owner account to approve or deny this request.</string>
-
+    <string name="multiuser_require_owner">マルチユーザポリシーはデバイスの所有者だけが管理できます</string>
+    <string name="owner_login_info">このリクエストを処理するために所有者アカウントに切り替えてください。</string>
     <string name="all_commands">全てのコマンド</string>
-    <string name="about">About</string>
+    <string name="about">情報</string>
     <string name="apps">アプリ</string>
     <string name="installing">インストール中</string>
     <string name="installing_superuser">Superuserのインストール...</string>
@@ -84,4 +83,9 @@
     <string name="apps_and_adb">アプリとADB経由の両方</string>
     <string name="whats_new">What\'s New</string>
     <string name="rate">評価する</string>
+    <string name="theme">テーマ</string>
+    <string name="light">ライト</string>
+    <string name="dark">ダーク</string>
+    <string name="pin_disabled">SuperuserのPIN保護は無効です</string>
 </resources>
+
