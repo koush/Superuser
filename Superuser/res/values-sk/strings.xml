@@ -31,7 +31,7 @@
     <string name="notifications">Oznámenia</string>
     <string name="none">Žiadne</string>
     <string name="notifications_summary">%s bude zobraz., keď aplikácií budú povolené ale odmietnuté Superuser práva</string>
-    <string name="enter_pin">Zadať PIN</string>
+    <string name="enter_pin">Zadajte PIN</string>
     <string name="enter_new_pin">Zadajte nový PIN</string>
     <string name="incorrect_pin">Nesprávny PIN</string>
     <string name="confirm_pin">Potvrďte PIN</string>
