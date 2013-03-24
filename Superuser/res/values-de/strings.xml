@@ -6,7 +6,7 @@
     <string name="deny">Verweigern</string>
     <string name="status_incoming">Eingehende Superuser-Anfrage\u2026</string>
     <string name="unknown_uid">Unbekannte UID: %s</string>
-    <string name="application_request">%s fordert Superuser-Zugriff.</string>
+    <string name="application_request">%s erbittet Superuser-Zugriff.</string>
     <string name="info">Warnung: Wenn Sie das nicht verstehen, sollten Sie die Anfrage ablehnen.</string>
     <string name="request">Superuser-Anfrage</string>
     <string name="package_header">Paket:</string>
