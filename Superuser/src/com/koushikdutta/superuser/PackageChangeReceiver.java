@@ -36,6 +36,8 @@ public class PackageChangeReceiver extends BroadcastReceiver {
                     try {
                         boolean found = false;
                         String[] names = pm.getPackagesForUid(policy.uid);
+                        if (names == null)
+                            throw new Exception("no packages for uid");
                         for (String name: names) {
                             if (name.equals(policy.packageName))
                                 found = true;
