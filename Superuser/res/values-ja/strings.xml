@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="superuser">Superuser</string>
@@ -43,11 +43,11 @@
     <string name="toast">トースト</string>
     <string name="notification">通知</string>
     <string name="no_notification">通知を表示しない</string>
-    <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
-    <string name="superuser_description">full permissions to all device features and storage</string>
-    <string name="superuser_description_more">Superuser grants full access to all device features and storage, including the secure and sensitive hardware elements of your device. This permission is potentially dangerous.</string>
-    <string name="declared_permission">Declared Permission</string>
-    <string name="declared_permission_summary">Only allow requests from apps that declare android.permission.ACCESS_SUPERUSER</string>
+    <string name="developer_warning">開発者の警告:\nandroid.permission.ACCESS_SUPERUSER\nマニフェストで宣言されていません.</string>
+    <string name="superuser_description">すべてのデバイスの機能とストレージへのフルアクセス権限</string>
+    <string name="superuser_description_more">スーパーユーザは、デバイスの安全性と機密ハードウェア要素を含むすべてのデバイスの機能とストレージへのフルアクセスを許可します。この許可は、潜在的に危険である。</string>
+    <string name="declared_permission">宣言された権限</string>
+    <string name="declared_permission_summary">だけを宣言アプリからのリクエストを許可する android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">自動応答</string>
     <string name="prompt">プロンプト</string>
     <string name="automatic_response_allow_summary">新しい権限要求があった場合、自動的に許可する</string>
@@ -61,11 +61,11 @@
     <string name="multiuser_owner_only">所有者のみ</string>
     <string name="multiuser_owner_managed">Owner Managed</string>
     <string name="multiuser_user">全てのユーザ</string>
-    <string name="multiuser_require_owner">The Multiuser Policy can only be managed by the device owner.</string>
-    <string name="owner_login_info">Please switch to the owner account to approve or deny this request.</string>
+    <string name="multiuser_require_owner">マルチユーザポリシーは、デバイスの所有者が管理することができます。</string>
+    <string name="owner_login_info">このリクエストを承認または拒否するために所有者のアカウントに切り替えてください。</string>
 
     <string name="all_commands">全てのコマンド</string>
-    <string name="about">About</string>
+    <string name="about">約</string>
     <string name="apps">アプリ</string>
     <string name="installing">インストール中</string>
     <string name="installing_superuser">Superuserのインストール...</string>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="superuser">슈퍼유저</string>
@@ -27,10 +27,10 @@
     <string name="pin_protection">PIN 보호</string>
     <string name="pin_protection_summary">PIN의 항목을 슈퍼유저가 요청을 승인하도록 요구.</string>
     <string name="request_timeout">요청 시간 초과</string>
-    <string name="request_timeout_summary">Superuser requests will time out and be denied after %s seconds</string>
+    <string name="request_timeout_summary">수퍼 유저 요청 시간이 초과되고 이후 거부 %s 초</string>
     <string name="notifications">알림</string>
     <string name="none">없음</string>
-    <string name="notifications_summary">A %s will be shown when an app is granted or denied Superuser permissions</string>
+    <string name="notifications_summary">A %s 앱이 슈퍼 유저 권한을 부여하거나 거부 할 때 표시됩니다</string>
     <string name="enter_pin">PIN 입력</string>
     <string name="enter_new_pin">새로운 PIN 입력</string>
     <string name="incorrect_pin">잘못된 PIN</string>
@@ -43,26 +43,26 @@
     <string name="toast">팝업</string>
     <string name="notification">알림</string>
     <string name="no_notification">알림이 표시되지 않습니다.</string>
-    <string name="developer_warning">개발자 경고:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
+    <string name="developer_warning">개발자 경고:\nandroid.permission.ACCESS_SUPERUSER\n매니페스트에 선언되지.</string>
     <string name="superuser_description">장치 기능 및 저장소에 대한 모든 권한</string>
     <string name="superuser_description_more">슈퍼유저는 장치의 하드웨어 구성 요소를 포함하여 모든 장치 기능과 스토리지에 대한 전체 액세스 권한을 부여합니다. 이 권한은 위험합니다.</string>
     <string name="declared_permission">선언 허가</string>
-    <string name="declared_permission_summary">Only allow requests from apps that declare android.permission.ACCESS_SUPERUSER</string>
+    <string name="declared_permission_summary">만 선언 애플리케이션의 요청을 허용 android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">자동 응답</string>
-    <string name="prompt">Prompt</string>
+    <string name="prompt">자극하다</string>
     <string name="automatic_response_allow_summary">자동으로 새 요청을 허용</string>
     <string name="automatic_response_deny_summary">자동으로 새 요청을 거부</string>
     <string name="automatic_response_prompt_summary">새 요청에 대한 확인 대화 상자를 표시</string>
     <string name="security">보안</string>
     <string name="multiuser_policy">멀티유저 정책</string>
-    <string name="multiuser_owner_only_summary">Only the device owner can request Superuser</string>
-    <string name="multiuser_owner_managed_summary">The device owner will be prompted when another user requests Superuser</string>
+    <string name="multiuser_owner_only_summary">만 장치 소유자는 수퍼 유저 요청할 수 있습니다</string>
+    <string name="multiuser_owner_managed_summary">장치 소유자가하라는 메시지가 표시됩니다 때 다른 사용자가 요청 수퍼 유저를</string>
     <string name="multiuser_user_summary">모든 사용자가 슈퍼유저를 요청할수 있습니다.</string>
     <string name="multiuser_owner_only">소유자만</string>
     <string name="multiuser_owner_managed">소유자가 관리</string>
     <string name="multiuser_user">모든 유저</string>
     <string name="multiuser_require_owner">다중 정책은 장치 소유자가 관리 할 수 ​​있습니다.</string>
-    <string name="owner_login_info">Please switch to the owner account to approve or deny this request.</string>
+    <string name="owner_login_info">해당 요청을 승인하거나 거부 할 소유자 계정으로 전환하시기 바랍니다.</string>
     <string name="all_commands">모든 명령</string>
     <string name="about">대하여</string>
     <string name="apps">애플리케이션</string>
