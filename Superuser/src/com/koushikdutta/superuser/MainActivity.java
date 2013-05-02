@@ -240,7 +240,7 @@ public class MainActivity extends BetterListActivity {
     }
     
     // this is intentionally not localized as it will change constantly.
-    private static final String WHATS_NEW = "This update includes a security fix. See Google Play release notes for more information.";
+    private static final String WHATS_NEW = "Recovery installation fixes for some devices.";
     protected void doWhatsNew() {
         if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
             return;
