@@ -7,7 +7,7 @@
     <string name="status_incoming">Solicitud de Superusuario\u2026</string>
     <string name="unknown_uid">UID desconocido: %s</string>
     <string name="application_request">%s esta solicitando acceso administrativo.</string>
-    <string name="info">Atención: Si no ha iniciado esta acción, o si no entiende esta petición, es mejor rechazarla.</string>
+    <string name="info">Atención: Si no has iniciado esta acción, o si no entiendes esta petición, es mejor que no la permitas.</string>
     <string name="request">Petición Superusuario</string>
     <string name="package_header">Paquete:</string>
     <string name="app_header">Aplicación:</string>
@@ -27,7 +27,7 @@
     <string name="pin_protection">Protección por PIN</string>
     <string name="pin_protection_summary">Se requiere introducir un PIN para aprobar la petición</string>
     <string name="request_timeout">Tiempo de espera</string>
-    <string name="request_timeout_summary">Las peticiones tienen un tiempo de espera y se rechazarán después de %s segundos</string>
+    <string name="request_timeout_summary">Las peticiones tienen un tiempo de espera y se denegarán después de %s segundos</string>
     <string name="notifications">Notificaciones</string>
     <string name="none">Ninguna</string>
     <string name="notifications_summary">Notificación que se mostrará cuando a una aplicación se la concede acceso administrativo: %s</string>
@@ -62,7 +62,7 @@
     <string name="multiuser_owner_managed">Administrado por el propietario</string>
     <string name="multiuser_user">Todos los usuarios</string>
     <string name="multiuser_require_owner">La política multiusuario sólo puede ser administrada por el propietario del dispositivo.</string>
-    <string name="owner_login_info">Por favor, cambie a la cuenta del propietario para permitir o rechazar esta petición.</string>
+    <string name="owner_login_info">Por favor, cambia a la cuenta del propietario para permitir o denegar esta petición.</string>
     <string name="all_commands">Todos los comandos</string>
     <string name="about">Acerca de</string>
     <string name="apps">Aplicaciones</string>
@@ -73,7 +73,7 @@
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
     <string name="checking_superuser">Probando Superusuario\u2026</string>
-    <string name="install_error">Ha ocurrido un error mientras se instalaba Superusuario. Por favor, envíe un registro del error al desarrollador</string>
+    <string name="install_error">Ha ocurrido un error mientras se instalaba Superusuario. Por favor, envía un registro del error al desarrollador</string>
     <string name="install_success">La instalación de Superusuario se ha realizado con éxito.</string>
     <string name="su_binary_outdated">El binario \u00ABsu\u00BB está desactualizado.</string>
     <string name="superuser_access">Acceso administrativo</string>
