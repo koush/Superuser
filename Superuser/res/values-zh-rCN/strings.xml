@@ -3,9 +3,9 @@
     <string name="superuser">超级用户</string>
     <string name="allow">允许</string>
     <string name="deny">拒绝</string>
-    <string name="status_incoming">收到超级用户请求…</string>
+    <string name="status_incoming">收到超级用户请求\u2026</string>
     <string name="unknown_uid">未知 UID：%s</string>
-    <string name="application_request">%s 正在请求超级用户访问权限。</string>
+    <string name="application_request">“%s”正在请求超级用户访问权限。</string>
     <string name="info">警告：如果你对此不了解，你应该选拒绝。</string>
     <string name="request">超级用户请求</string>
     <string name="package_header">软件包：</string>
@@ -20,7 +20,7 @@
     <string name="settings">设置</string>
     <string name="delete">删除</string>
     <string name="no_logs">无日志</string>
-    <string name="no_apps">当前没有超级用户应用程序策略</string>
+    <string name="no_apps">当前没有超级用户应用程序策略。</string>
     <string name="logging">日志</string>
     <string name="logging_summary">启用/禁用超级用户请求日志</string>
     <string name="pin_protection">密码保护</string>
@@ -31,22 +31,21 @@
     <string name="none">无</string>
     <string name="notifications_summary">当应用程序被允许或拒绝时将显示一个%s</string>
     <string name="enter_pin">输入密码</string>
-    <string name="enter_new_pin">输入新密码</string>
+    <string name="enter_new_pin">输入新的密码</string>
     <string name="incorrect_pin">密码不正确</string>
     <string name="confirm_pin">确认密码</string>
     <string name="pin_mismatch">密码不一致</string>
     <string name="pin_set">超级用户密码保护已启用</string>
     <string name="number_seconds">%s 秒</string>
-    <string name="superuser_granted">已授予 %s 超级用户权限</string>
-    <string name="superuser_denied">已拒绝 %s 获取超级用户权限</string>
+    <string name="superuser_granted">已授予“%s”超级用户权限</string>
+    <string name="superuser_denied">已拒绝“%s”获取超级用户权限</string>
     <string name="toast">提示</string>
     <string name="notification">通知</string>
     <string name="no_notification">不显示通知</string>
-    <string name="developer_warning">"开发人员警告：
-android.permission.ACCESS_SUPERUSER
-在 manifest 中未定义。"</string>
+    <string name="developer_warning">"开发人员警告：\nandroid.permission.ACCESS_SUPERUSER
+在 manifest 中未定义。</string>
     <string name="superuser_description">对所有设备功能和存储的完整权限</string>
-    <string name="superuser_description_more">超级用户授予访问你的设备的所有功能和存储设备的完整权限，包括加密和敏感硬件设备。此许可有潜在的风险。</string>
+    <string name="superuser_description_more">超级用户授予访问你的设备的所有功能和存储设备的完整权限，包括加密和敏感硬件设备。此权限有潜在的风险。</string>
     <string name="declared_permission">权限申明</string>
     <string name="declared_permission_summary">仅允许来自申明了 android.permission.ACCESS_SUPERUSER 权限的应用程序的请求</string>
     <string name="automatic_response">自动响应</string>
@@ -68,22 +67,19 @@ android.permission.ACCESS_SUPERUSER
     <string name="about">关于</string>
     <string name="apps">应用程序</string>
     <string name="installing">正在安装</string>
-    <string name="installing_superuser">正在安装超级用户…</string>
+    <string name="installing_superuser">正在安装超级用户\u2026</string>
     <string name="install_superuser">安装超级用户</string>
-    <string name="install_superuser_info">"超级用户二进制可执行文件 (su) 需要更新。
-
-请选择安装方式。
-对 HTC 设备建议选择 recovery 模式安装。"</string>
-    <string name="recovery_install">recovery 模式安装</string>
+    <string name="install_superuser_info">超级用户二进制可执行文件 (su) 需要更新。\n\n请选择安装方式。\n对 HTC 设备建议选择恢复模式安装。</string>
+    <string name="recovery_install">恢复模式安装</string>
     <string name="install">常规安装</string>
-    <string name="checking_superuser">正在检查超级用户…</string>
+    <string name="checking_superuser">正在检查超级用户\u2026</string>
     <string name="install_error">安装超级用户时出错。请将错误日志发送给开发人员。</string>
     <string name="install_success">超级用户安装成功。</string>
-    <string name="su_binary_outdated">su 二进制可执行文件已过期。</string>
+    <string name="su_binary_outdated">su 二进制可执行文件已过旧。</string>
     <string name="superuser_access">超级用户访问权限</string>
     <string name="disabled">禁用</string>
-    <string name="apps_only">仅应用程序</string>
-    <string name="adb_only">仅 ADB</string>
+    <string name="apps_only">仅限于应用程序</string>
+    <string name="adb_only">仅限于 ADB</string>
     <string name="apps_and_adb">应用程序和 ADB</string>
     <string name="whats_new">更新说明</string>
     <string name="rate">评价</string>
