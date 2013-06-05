@@ -90,7 +90,7 @@
     <string name="install_success">Instalace Superusera byla úspěšná.</string>
     <string name="su_binary_outdated">Příkaz \"su\" je neaktuální.</string>
     <string name="superuser_access">Superuser přístup</string>
-    <string name="disabled">Vypnuto</string>
+    <string name="access_disabled">Vypnuto</string>
     <string name="apps_only">Pouze aplikace</string>
     <string name="adb_only">Pouze ADB</string>
     <string name="apps_and_adb">Aplikace a ADB</string>

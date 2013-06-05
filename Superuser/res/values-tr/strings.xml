@@ -90,7 +90,7 @@
     <string name="install_success">Superuser kurulumu başarılı.</string>
     <string name="su_binary_outdated">su ikili dosyası eski.</string>
     <string name="superuser_access">Yetkili kullanıcı erişimi</string>
-    <string name="disabled">Devre dışı</string>
+    <string name="access_disabled">Devre dışı</string>
     <string name="apps_only">Sadece uygulamalar</string>
     <string name="adb_only">Sadece ADB</string>
     <string name="apps_and_adb">Uygulamalar ve ADB</string>
