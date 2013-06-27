@@ -77,7 +77,7 @@
     <string name="install_success">Installasjonen av Superuser var suksessfull.</string>
     <string name="su_binary_outdated">Binærfilen SU er utgått på dato.</string>
     <string name="superuser_access">Superuser Tilgang</string>
-    <string name="disabled">Deaktivert</string>
+    <string name="access_disabled">Deaktivert</string>
     <string name="apps_only">Kun apps</string>
     <string name="adb_only">Kun ADB</string>
     <string name="apps_and_adb">Apps og ADB</string>

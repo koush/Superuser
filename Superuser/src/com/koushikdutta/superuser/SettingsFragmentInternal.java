@@ -140,7 +140,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     setSummary(R.string.apps_and_adb);
                     break;
                 case Settings.SUPERUSER_ACCESS_DISABLED:
-                    setSummary(R.string.disabled);
+                    setSummary(R.string.access_disabled);
                     break;
                 default:
                     setSummary(R.string.apps_and_adb);
@@ -157,7 +157,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.superuser_access);
-                String[] items = new String[] { getString(R.string.disabled), getString(R.string.apps_only), getString(R.string.adb_only), getString(R.string.apps_and_adb) };
+                String[] items = new String[] { getString(R.string.access_disabled), getString(R.string.apps_only), getString(R.string.adb_only), getString(R.string.apps_and_adb) };
                 builder.setItems(items, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

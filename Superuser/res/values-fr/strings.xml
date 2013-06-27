@@ -77,7 +77,7 @@
     <string name="install_success">Super-utilisateur installé avec succès.</string>
     <string name="su_binary_outdated">Le binaire su n\'est pas à jour.</string>
     <string name="superuser_access">Accès Super-utilisateur</string>
-    <string name="disabled">Désactivé</string>
+    <string name="access_disabled">Désactivé</string>
     <string name="apps_only">Application seulement</string>
     <string name="adb_only">ADB seulement</string>
     <string name="apps_and_adb">Application et ADB</string>

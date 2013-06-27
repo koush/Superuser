@@ -77,7 +77,7 @@
     <string name="install_success">Cài đặt Superuser thành công.</string>
     <string name="su_binary_outdated">Chương trình su đã cũ.</string>
     <string name="superuser_access">Quyền truy cập Superuser</string>
-    <string name="disabled">Tắt</string>
+    <string name="access_disabled">Tắt</string>
     <string name="apps_only">Chỉ cho ứng dụng</string>
     <string name="adb_only">Chỉ cho ADB</string>
     <string name="apps_and_adb">Cả ứng dụng và ADB</string>

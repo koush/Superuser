@@ -77,7 +77,7 @@
     <string name="install_success">Superuser installerades korrekt.</string>
     <string name="su_binary_outdated">Superuserbinären (su) är inaktuell.</string>
     <string name="superuser_access">Superuseråtkomst</string>
-    <string name="disabled">Inaktiverad</string>
+    <string name="access_disabled">Inaktiverad</string>
     <string name="apps_only">Endast Appar</string>
     <string name="adb_only">Endast ADB</string>
     <string name="apps_and_adb">Appar och ADB</string>

@@ -77,7 +77,7 @@
     <string name="install_success">Superuser was suksesvol geïnstalleer.</string>
     <string name="su_binary_outdated">Die su lêer is oud.</string>
     <string name="superuser_access">Superuser toegang</string>
-    <string name="disabled">Af</string>
+    <string name="access_disabled">Af</string>
     <string name="apps_only">Slegs Programme</string>
     <string name="adb_only">Slegs ADB</string>
     <string name="apps_and_adb">Programme en ADB</string>

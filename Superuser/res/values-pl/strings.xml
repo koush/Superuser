@@ -77,7 +77,7 @@
     <string name="install_success">Instalacja Superuser zakończona sukcesem.</string>
     <string name="su_binary_outdated">Pliki binarne su są nieaktualne.</string>
     <string name="superuser_access">Dostęp Superuser</string>
-    <string name="disabled">Wyłączony</string>
+    <string name="access_disabled">Wyłączony</string>
     <string name="apps_only">Tylko aplikacje</string>
     <string name="adb_only">Tylko ADB</string>
     <string name="apps_and_adb">Aplikacje i ADB</string>
