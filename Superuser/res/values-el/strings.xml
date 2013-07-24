@@ -77,7 +77,7 @@
     <string name="install_success">Η εγκατάσταση του Superuser ήταν επιτυχής.</string>
     <string name="su_binary_outdated">Το su binary δεν είναι ενημερωμένο.</string>
     <string name="superuser_access">Πρόσβαση Superuser</string>
-    <string name="disabled">Απενεργοποιημένη</string>
+    <string name="access_disabled">Απενεργοποιημένη</string>
     <string name="apps_only">Μόνο εφαρμογές</string>
     <string name="adb_only">Μόνο ADB</string>
     <string name="apps_and_adb">Εφαρμογές και ADB</string>

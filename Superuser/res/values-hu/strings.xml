@@ -77,7 +77,7 @@
     <string name="install_success">A Superuser telepítése sikeres volt.</string>
     <string name="su_binary_outdated">A su bináris elavult.</string>
     <string name="superuser_access">Rendszergazdai jog</string>
-    <string name="disabled">Letiltva</string>
+    <string name="access_disabled">Letiltva</string>
     <string name="apps_only">Csak alkalmazások</string>
     <string name="adb_only">Csak ADB</string>
     <string name="apps_and_adb">Alkalmazások és ADB</string>
