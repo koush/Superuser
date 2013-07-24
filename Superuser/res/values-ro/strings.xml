@@ -77,7 +77,7 @@
     <string name="install_success">Instalarea cu succes Superuser.</string>
     <string name="su_binary_outdated">Fişierul binar su este expirat.</string>
     <string name="superuser_access">Acces Superuser</string>
-    <string name="disabled">Dezactivat</string>
+    <string name="access_disabled">Dezactivat</string>
     <string name="apps_only">Numai pentru aplicaţii</string>
     <string name="adb_only">Numai pentru ADB</string>
     <string name="apps_and_adb">Pentru aplicaţii şi ADB</string>

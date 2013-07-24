@@ -77,7 +77,7 @@
     <string name="install_success">Встановлення Суперкористувача успішно завершене!</string>
     <string name="su_binary_outdated">Файл su застарів</string>
     <string name="superuser_access">Доступ Суперкористувача</string>
-    <string name="disabled">Вимкнено</string>
+    <string name="access_disabled">Вимкнено</string>
     <string name="apps_only">Тільки програми</string>
     <string name="adb_only">Тільки ADB</string>
     <string name="apps_and_adb">Програми та ADB</string>

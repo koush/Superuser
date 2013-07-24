@@ -76,7 +76,7 @@
     <string name="install_success">L\'installazione di Superuser è avvenuta con successo.</string>
     <string name="su_binary_outdated">Il file binario su è obsoleto.</string>
     <string name="superuser_access">Accesso a Superuser</string>
-    <string name="disabled">Disabilitato</string>
+    <string name="access_disabled">Disabilitato</string>
     <string name="apps_only">Solo Applicazioni</string>
     <string name="adb_only">Solo ADB</string>
     <string name="apps_and_adb">Applicazioni ed ADB</string>

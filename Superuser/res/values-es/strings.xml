@@ -77,7 +77,7 @@
     <string name="install_success">La instalación de Superusuario se ha realizado con éxito.</string>
     <string name="su_binary_outdated">El binario \u00ABsu\u00BB está desactualizado.</string>
     <string name="superuser_access">Acceso administrativo</string>
-    <string name="disabled">Deshabilitado</string>
+    <string name="access_disabled">Deshabilitado</string>
     <string name="apps_only">Sólo aplicaciones</string>
     <string name="adb_only">Sólo ADB</string>
     <string name="apps_and_adb">Aplicaciones y ADB</string>
