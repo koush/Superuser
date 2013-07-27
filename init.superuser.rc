@@ -1,0 +1,17 @@
+# su daemon
+service su_daemon /system/xbin/su --daemon
+    class main
+    oneshot
+    disabled
+
+on property:persist.sys.root_access=0
+    stop su_daemon
+
+on property:persist.sys.root_access=2
+    stop su_daemon
+
+on property:persist.sys.root_access=1
+    start su_daemon
+
+on property:persist.sys.root_access=3
+    start su_daemon
