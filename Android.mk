@@ -6,35 +6,17 @@ LOCAL_PATH := $(my_path)
 
 ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
-
-# make sure init.superuser.rc is imported from
-# init.rc or similar
-
-include $(CLEAR_VARS)
-LOCAL_MODULE := init.superuser.rc
-LOCAL_MODULE_TAGS := optional
-LOCAL_MODULE_CLASS := ROOT
-LOCAL_MODULE_PATH := $(TARGET_ROOT_OUT)/
-LOCAL_SRC_FILES := $(LOCAL_MODULE)
-include $(BUILD_PREBUILT)
-
 else
-
 ifeq ($(SUPERUSER_PACKAGE),)
 SUPERUSER_PACKAGE := com.thirdparty.superuser
 endif
 include $(my_path)/Superuser/Android.mk
-
 endif
 
 
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
-ifdef SUPERUSER_EMBEDDED
-$(LOCAL_MODULE): $(TARGET_ROOT_OUT)/init.superuser.rc
-endif
-
 LOCAL_MODULE_TAGS := eng debug
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc
@@ -64,3 +46,19 @@ ALL_DEFAULT_INSTALLED_MODULES += $(SYMLINKS)
 # local module name
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
     $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(SYMLINKS)
+
+ifdef SUPERUSER_EMBEDDED
+
+# make sure init.superuser.rc is imported from
+# init.rc or similar
+
+SUPERUSER_RC := $(TARGET_ROOT_OUT)/init.superuser.rc
+$(SUPERUSER_RC): $(LOCAL_MODULE)
+$(SUPERUSER_RC): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) cp external/koush/Superuser/init.superuser.rc $@
+
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
+    $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(TARGET_ROOT_OUT)/init.superuser.rc
+endif
