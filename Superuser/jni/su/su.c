@@ -75,7 +75,7 @@ void exec_log(char *priority, char* logline) {
       dup2(null, 0);
       dup2(null, 1);
       dup2(null, 2);
-      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline);
+      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline, NULL);
       _exit(0);
   }
 }
