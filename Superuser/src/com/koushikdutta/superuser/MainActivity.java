@@ -107,6 +107,10 @@ public class MainActivity extends BetterListActivity {
                     doEntry(zout, "assets/update-binary", "META-INF/com/google/android/update-binary");
                     zout.close();
 
+                    zout = new ZipOutputStream(new FileOutputStream(zip));
+                    doEntry(zout, "assets/install-recovery.sh", "install-recovery.sh");
+                    zout.close();
+
                     ZipFile zf = new ZipFile(getPackageCodePath());
                     ZipEntry ze = zf.getEntry("assets/reboot");
                     InputStream in;
