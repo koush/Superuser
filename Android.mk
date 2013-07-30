@@ -59,6 +59,14 @@ $(SUPERUSER_RC): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
 	@rm -rf $@
 	$(hide) cp external/koush/Superuser/init.superuser.rc $@
 
+
+SUPERUSER_MARKER := $(TARGET_OUT_ETC)/.has_su_daemon
+$(SUPERUSER_MARKER): $(LOCAL_MODULE)
+$(SUPERUSER_MARKER): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
+	@mkdir -p $(dir $@)
+	@rm -rf $@
+	$(hide) touch $@
+
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED := \
-    $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(TARGET_ROOT_OUT)/init.superuser.rc
+    $(ALL_MODULES.$(LOCAL_MODULE).INSTALLED) $(TARGET_ROOT_OUT)/init.superuser.rc $(TARGET_OUT_ETC)/.has_su_daemon
 endif

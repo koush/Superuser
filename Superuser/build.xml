@@ -86,6 +86,7 @@
     <target name="-post-build">
         <mkdir dir="bin/recoveryzip/META-INF/com/google/android" />
         <copy file="assets/update-binary" tofile="bin/recoveryzip/META-INF/com/google/android/update-binary"/>
+        <copy file="assets/install-recovery.sh" tofile="bin/recoveryzip/install-recovery.sh"/>
         <copy file="bin/Superuser-release.apk" tofile="bin/recoveryzip/Superuser.apk"/>
 
         <exec executable="zip" failonerror="true" dir="bin/recoveryzip">

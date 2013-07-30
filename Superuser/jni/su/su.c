@@ -370,7 +370,6 @@ static int socket_send_request(int fd, const struct su_context *ctx) {
 do {                                                \
     size_t __len = htonl(data_len);                 \
     __len = write((fd), &__len, sizeof(__len));     \
-    LOGE("%d", __len);\
     if (__len != sizeof(__len)) {                   \
         PLOGE("write(" #data ")");                  \
         return -1;                                  \
