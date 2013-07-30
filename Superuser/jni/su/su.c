@@ -68,13 +68,13 @@ unsigned get_radio_uid() {
 }
 
 void exec_log(char *priority, char* logline) {
-  int pid;
-  if ((pid = fork()) == 0) {
-      int zero = open("/dev/zero", O_RDONLY | O_CLOEXEC);
-      int null = open("/dev/null", O_WRONLY | O_CLOEXEC);
-      dup2(null, 0);
-      dup2(null, 1);
-      dup2(null, 2);
+  if (fork() == 0) {
+      int null = open("/dev/null", O_WRONLY);
+      int nullread = open("/dev/null", O_RDONLY);
+      dup2(nullread, STDIN_FILENO);
+      dup2(null, STDOUT_FILENO);
+      dup2(null, STDERR_FILENO);
+      signal(SIGHUP, SIG_IGN);
       execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline, NULL);
       _exit(0);
   }
