@@ -82,15 +82,17 @@ int fork_zero_fucks() {
 }
 
 void exec_log(char *priority, char* logline) {
-  if (fork_zero_fucks() == 0) {
-      int zero = open("/dev/zero", O_RDONLY);
-      int null = open("/dev/null", O_WRONLY);
-      dup2(zero, STDIN_FILENO);
+  int pid;
+  if ((pid = fork()) == 0) {
+      int null = open("/dev/null", O_WRONLY | O_CLOEXEC);
+      dup2(null, STDIN_FILENO);
       dup2(null, STDOUT_FILENO);
       dup2(null, STDERR_FILENO);
       execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline, NULL);
       _exit(0);
   }
+  int status;
+  waitpid(pid, &status, 0);
 }
 
 void exec_loge(const char* fmt, ...) {

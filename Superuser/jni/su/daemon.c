@@ -227,7 +227,6 @@ static int daemon_accept(int fd) {
     // and dup2 them with stdin/stdout, and run main, which execs
     // the target.
     if (child == 0) {
-        setsid();
         close(fd);
 
         if (devname != NULL) {
@@ -289,7 +288,7 @@ done:
     write(fd, &code, sizeof(int));
     close(fd);
     LOGD("child exited");
-    exit(code);
+    return code;
 }
 
 int run_daemon() {
@@ -338,7 +337,6 @@ int run_daemon() {
 
     int client;
     while ((client = accept(fd, NULL, NULL)) > 0) {
-        // dup/close?
         if (fork_zero_fucks() == 0) {
             close(fd);
             return daemon_accept(client);
