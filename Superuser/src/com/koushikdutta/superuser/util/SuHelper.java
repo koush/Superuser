@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 public class SuHelper {
-    public static String CURRENT_VERSION = "9";
+    public static String CURRENT_VERSION = "10";
     public static void checkSu(Context context) throws Exception {
         Process p = Runtime.getRuntime().exec("su -v");
         String result = Settings.readToEnd(p.getInputStream());
@@ -20,5 +20,4 @@ public class SuHelper {
         if (!CURRENT_VERSION.equals(parts[0]))
             throw new Exception("binary is old");
     }
-
 }
