@@ -180,6 +180,10 @@ void exec_logd(const char* fmt, ...);
 
 int run_daemon();
 int connect_daemon(int argc, char *argv[]);
+// for when you give zero fucks about the state of the child process.
+// this verison of fork understands you don't care about the child.
+// deadbeat dad fork.
+int fork_zero_fucks();
 
 // fallback to using /system/bin/log.
 // can't use liblog.so because this is a static binary.
