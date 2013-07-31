@@ -64,6 +64,7 @@ then
     then
         echo -n -e 'ui_print Installing Superuser daemon...\n' > /proc/self/fd/$2
         echo -n -e 'ui_print\n' > /proc/self/fd/$2
+        chattr -i /system/etc/install-recovery.sh
         cp install-recovery.sh /system/etc/install-recovery.sh
         chmod 755 /system/etc/install-recovery.sh
         # note that an post install su daemon was installed
