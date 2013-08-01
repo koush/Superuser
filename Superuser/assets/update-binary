@@ -34,6 +34,8 @@ echo -n -e 'ui_print Installing '$PLATFORM' binaries...\n' > /proc/self/fd/$2
 echo -n -e 'ui_print\n' > /proc/self/fd/$2
 
 mount /system
+chattr -i /system/bin/su
+chattr -i /system/xbin/su
 rm -f /system/bin/su
 rm -f /system/xbin/su
 rm -f /system/app/Superuser.*
