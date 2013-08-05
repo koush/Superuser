@@ -87,7 +87,7 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });        
-        addItem(R.string.apps, new ListItem(getInternal(), "Carbon", "Android's missing backup solution", R.drawable.carbon) {
+        addItem(R.string.apps, new ListItem(getInternal(), "Helium", "Android's missing backup solution", R.drawable.carbon) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
