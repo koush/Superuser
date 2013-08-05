@@ -610,13 +610,24 @@ int access_disabled(const struct su_initiator *from) {
     return 0;
 }
 
+static int is_api_18() {
+  char sdk_ver[PROPERTY_VALUE_MAX];
+  char *data = read_file("/system/build.prop");
+  get_property(data, sdk_ver, "ro.build.version.sdk", "0");
+  int ver = atoi(sdk_ver);
+  free(data);
+  return ver >= 18;
+}
+
 int main(int argc, char *argv[]) {
     // start up in daemon mode if prompted
     if (argc == 2 && strcmp(argv[1], "--daemon") == 0) {
         return run_daemon();
     }
 
-    if (geteuid() != AID_ROOT && getuid() != AID_ROOT) {
+    // attempt to use the daemon client if not root,
+    // or this is api 18 and adb shell (/data is not readable even as root)
+    if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) || (is_api_18() && getuid() == AID_SHELL)) {
         // attempt to connect to daemon...
         LOGD("starting daemon client %d %d", getuid(), geteuid());
         return connect_daemon(argc, argv);

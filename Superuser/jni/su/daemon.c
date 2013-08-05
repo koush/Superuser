@@ -178,6 +178,9 @@ static int daemon_accept(int fd) {
     chown(outfile, daemon_from_uid, 0);
     chown(infile, daemon_from_uid, 0);
     chown(errfile, daemon_from_uid, 0);
+    chmod(outfile, 0660);
+    chmod(infile, 0660);
+    chmod(errfile, 0660);
 
     // ack
     write_int(fd, 1);
@@ -200,17 +203,17 @@ static int daemon_accept(int fd) {
 
     int outfd = open(outfile, O_WRONLY);
     if (outfd <= 0) {
-        PLOGE("outfd");
+        PLOGE("outfd daemon %s", outfile);
         goto done;
     }
     int errfd = open(errfile, O_WRONLY);
     if (errfd <= 0) {
-        PLOGE("errfd");
+        PLOGE("errfd daemon %s", errfile);
         goto done;
     }
     int infd = open(infile, O_RDONLY);
     if (infd <= 0) {
-        PLOGE("infd");
+        PLOGE("infd daemon %s", infile);
         goto done;
     }
 
@@ -402,17 +405,17 @@ int connect_daemon(int argc, char *argv[]) {
 
     int outfd = open(outfile, O_RDONLY);
     if (outfd <= 0) {
-        PLOGE("outfd");
+        PLOGE("outfd %s ", outfile);
         exit(-1);
     }
     int errfd = open(errfile, O_RDONLY);
     if (errfd <= 0) {
-        PLOGE("errfd");
+        PLOGE("errfd %s", errfile);
         exit(-1);
     }
     int infd = open(infile, O_WRONLY);
     if (infd <= 0) {
-        PLOGE("infd");
+        PLOGE("infd %s", infile);
         exit(-1);
     }
 

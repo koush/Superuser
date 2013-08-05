@@ -107,9 +107,6 @@ public class MainActivity extends BetterListActivity {
                     File zip = getFileStreamPath("superuser.zip");
                     ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zip));
                     doEntry(zout, "assets/update-binary", "META-INF/com/google/android/update-binary");
-                    zout.close();
-
-                    zout = new ZipOutputStream(new FileOutputStream(zip));
                     doEntry(zout, "assets/install-recovery.sh", "install-recovery.sh");
                     zout.close();
 
