@@ -2,7 +2,6 @@
 # su is built here, and 
 
 my_path := $(call my-dir)
-LOCAL_PATH := $(my_path)
 
 ifdef SUPERUSER_EMBEDDED
 SUPERUSER_PACKAGE := com.android.settings
@@ -14,6 +13,7 @@ include $(my_path)/Superuser/Android.mk
 endif
 
 
+LOCAL_PATH := $(my_path)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
