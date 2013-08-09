@@ -45,7 +45,7 @@
     <string name="developer_warning">Kehittäjävaroitus:\nandroid.permission.ACCESS_SUPERUSER\npuuttuu manifestista.</string>
     <string name="superuser_description">täydet oikeudet kaikkiin laitteen ominaisuuksiin ja muistiin</string>
     <string name="superuser_description_more">Superuser antaa täydet oikeudet kaikkiin laitteen ominaisuuksiin ja muistiin, mukaanlukien suojatut ja arkaluonteiset laitteiston osat. Tämä käyttöoikeus saattaa olla vaarallinen.</string>
-    <string name="declared_permission">Määritetyt käyttöoikeudet Declared Permission</string>
+    <string name="declared_permission">Määritetyt käyttöoikeudet</string>
     <string name="declared_permission_summary">Salli pääkäyttäjän oikeudet vain, jos sovelluksessa on määritelty käyttöoikeus android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Automaattinen vastaus</string>
     <string name="prompt">Kehote</string>
