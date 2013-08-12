@@ -82,7 +82,7 @@
 #define str(a) #a
 
 #ifndef VERSION_CODE
-#define VERSION_CODE 12
+#define VERSION_CODE 13
 #endif
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 

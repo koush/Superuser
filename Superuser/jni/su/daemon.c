@@ -163,7 +163,7 @@ static int daemon_accept(int fd) {
         exit(-1);
     }
     // if the credentials on the other side of the wire are NOT root,
-    // we can't trust what anything being sent.
+    // we can't trust anything being sent.
     if (credentials.uid != 0) {
         daemon_from_uid = credentials.uid;
         pid = credentials.pid;
