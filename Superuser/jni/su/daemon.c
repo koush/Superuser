@@ -154,6 +154,22 @@ static int daemon_accept(int fd) {
     LOGD("remote uid: %d", daemon_from_uid);
     daemon_from_pid = read_int(fd);
     LOGD("remote req pid: %d", daemon_from_pid);
+
+    struct ucred credentials;
+    int ucred_length = sizeof(struct ucred);
+    /* fill in the user data structure */
+    if(getsockopt(fd, SOL_SOCKET, SO_PEERCRED, &credentials, &ucred_length)) {
+        LOGE("could obtain credentials from unix domain socket");
+        exit(-1);
+    }
+    // if the credentials on the other side of the wire are NOT root,
+    // we can't trust what anything being sent.
+    if (credentials.uid != 0) {
+        daemon_from_uid = credentials.uid;
+        pid = credentials.pid;
+        daemon_from_pid = credentials.pid;
+    }
+
     int argc = read_int(fd);
     if (argc < 0 || argc > 512) {
         LOGE("unable to allocate args: %d", argc);
