@@ -45,7 +45,7 @@ int daemon_from_pid = 0;
 static int read_int(int fd) {
     int val;
     int len = read(fd, &val, sizeof(int));
-    if (len < sizeof(int)) {
+    if (len != sizeof(int)) {
         LOGE("unable to read int");
         exit(-1);
     }
@@ -62,11 +62,15 @@ static void write_int(int fd, int val) {
 
 static char* read_string(int fd) {
     int len = read_int(fd);
-    if (len > PATH_MAX) {
-        LOGE("string too long");
+    if (len > PATH_MAX || len < 0) {
+        LOGE("invalid string length %d", len);
         exit(-1);
     }
     char* val = malloc(sizeof(char) * (len + 1));
+    if (val == NULL) {
+        LOGE("unable to malloc string");
+        exit(-1);
+    }
     val[len] = '\0';
     int amount = read(fd, val, len);
     if (amount != len) {
@@ -131,6 +135,10 @@ static void* pump_thread(void* data) {
 static void pump_async(int input, int output) {
     pthread_t writer;
     int* files = (int*)malloc(sizeof(int) * 2);
+    if (files == NULL) {
+        LOGE("unable to pump_async");
+        exit(-1);
+    }
     files[0] = input;
     files[1] = output;
     pthread_create(&writer, NULL, pump_thread, files);
@@ -147,6 +155,10 @@ static int daemon_accept(int fd) {
     daemon_from_pid = read_int(fd);
     LOGD("remote req pid: %d", daemon_from_pid);
     int argc = read_int(fd);
+    if (argc < 0 || argc > 512) {
+        LOGE("unable to allocate args: %d", argc);
+        exit(-1);
+    }
     LOGD("remote args: %d", argc);
     char** argv = (char**)malloc(sizeof(char*) * (argc + 1));
     argv[argc] = NULL;
