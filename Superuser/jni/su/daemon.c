@@ -106,21 +106,31 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
         exit(-1);
     }
 
-    close(infd);
-    close(outfd);
-    close(errfd);
-
     return main(argc, argv);
+}
+
+// Ensures all the data is written out
+static int write_blocking(int fd, char *buf, size_t bufsz) {
+    ssize_t ret, written;
+
+    written = 0;
+    do {
+        ret = write(fd, buf + written, bufsz - written);
+        if (ret == -1) return -1;
+        written += ret;
+    } while (written < bufsz);
+
+    return 0;
 }
 
 static void pump(int input, int output) {
     char buf[4096];
     int len;
     while ((len = read(input, buf, 4096)) > 0) {
-        write(output, buf, len);
+        if (write_blocking(output, buf, len) == -1) break;
     }
     close(input);
-    close(output);
+    if (output != STDOUT_FILENO) close(output);
 }
 
 static void* pump_thread(void* data) {
@@ -186,140 +196,126 @@ static int daemon_accept(int fd) {
     char errfile[PATH_MAX];
     char outfile[PATH_MAX];
     char infile[PATH_MAX];
-    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
-    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, pid);
-    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, pid);
+    int infd, outfd, errfd;
+    char *pts_slave = NULL;
 
-    if (mkfifo(outfile, 0660) != 0) {
-        PLOGE("mkfifo %s", outfile);
-        exit(-1);
-    }
-    if (mkfifo(errfile, 0660) != 0) {
-        PLOGE("mkfifo %s", errfile);
-        exit(-1);
-    }
-    if (mkfifo(infile, 0660) != 0) {
-        PLOGE("mkfifo %s", infile);
-        exit(-1);
-    }
+    if (atty) {
+        // Get the PTS slave device name
+        pts_slave = read_string(fd);
+    } else {
+        // Using the pipes method
+        // Create the FIFOs for the I/O streams
+        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
+        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, pid);
+        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, pid);
 
-    chown(outfile, daemon_from_uid, 0);
-    chown(infile, daemon_from_uid, 0);
-    chown(errfile, daemon_from_uid, 0);
-    chmod(outfile, 0660);
-    chmod(infile, 0660);
-    chmod(errfile, 0660);
+        if (mkfifo(outfile, 0660) != 0) {
+            PLOGE("mkfifo %s", outfile);
+            exit(-1);
+        }
+        if (mkfifo(errfile, 0660) != 0) {
+            PLOGE("mkfifo %s", errfile);
+            exit(-1);
+        }
+        if (mkfifo(infile, 0660) != 0) {
+            PLOGE("mkfifo %s", infile);
+            exit(-1);
+        }
+
+        chown(outfile, daemon_from_uid, 0);
+        chown(infile, daemon_from_uid, 0);
+        chown(errfile, daemon_from_uid, 0);
+        chmod(outfile, 0660);
+        chmod(infile, 0660);
+        chmod(errfile, 0660);
+    }
 
     // ack
     write_int(fd, 1);
 
-    int ptm = -1;
-    char* devname = NULL;
-    if (atty) {
-        ptm = open("/dev/ptmx", O_RDWR);
-        if (ptm <= 0) {
-            PLOGE("ptm");
-            exit(-1);
-        }
-        if(grantpt(ptm) || unlockpt(ptm) || ((devname = (char*) ptsname(ptm)) == 0)) {
-            PLOGE("ptm setup");
-            close(ptm);
-            exit(-1);
-        }
-        LOGD("devname: %s", devname);
-    }
-
-    int outfd = open(outfile, O_WRONLY);
-    if (outfd <= 0) {
-        PLOGE("outfd daemon %s", outfile);
-        goto done;
-    }
-    int errfd = open(errfile, O_WRONLY);
-    if (errfd <= 0) {
-        PLOGE("errfd daemon %s", errfile);
-        goto done;
-    }
-    int infd = open(infile, O_RDONLY);
-    if (infd <= 0) {
-        PLOGE("infd daemon %s", infile);
-        goto done;
-    }
-
-    int code;
-    // now fork and run main, watch for the child pid exit, and send that
-    // across the control channel as the response.
+    // Fork the child process. The fork has to happen before calling
+    // setsid() and opening the pseudo-terminal so that the parent
+    // is not affected
     int child = fork();
     if (child < 0) {
-        code = child;
-        goto done;
+        // fork failed, send a return code and bail out
+        PLOGE("unable to fork");
+        write(fd, &child, sizeof(int));
+        close(fd);
+        return child;
     }
 
-    // if this is the child, open the fifo streams
-    // and dup2 them with stdin/stdout, and run main, which execs
-    // the target.
-    if (child == 0) {
-        close(fd);
+    if (child != 0) {
+        // In parent, wait for the child to exit, and send the exit code
+        // across the wire.
+        int status, code;
 
-        if (devname != NULL) {
-            int pts = open(devname, O_RDWR);
-            if(pts < 0) {
-                PLOGE("pts");
-                exit(-1);
-            }
-
-            struct termios slave_orig_term_settings; // Saved terminal settings 
-            tcgetattr(pts, &slave_orig_term_settings);
-
-            struct termios new_term_settings;
-            new_term_settings = slave_orig_term_settings; 
-            cfmakeraw(&new_term_settings);
-            // WHY DOESN'T THIS WORK, FUUUUU
-            new_term_settings.c_lflag &= ~(ECHO);
-            tcsetattr(pts, TCSANOW, &new_term_settings);
-
-            setsid();
-            ioctl(pts, TIOCSCTTY, 1);
-
+        if (!atty) {
+            // Close the child FDs if using pipes
             close(infd);
             close(outfd);
             close(errfd);
-            close(ptm);
-
-            errfd = pts;
-            infd = pts;
-            outfd = pts;
         }
 
-        return run_daemon_child(infd, outfd, errfd, argc, argv);
+        LOGD("waiting for child exit");
+        if (waitpid(child, &status, 0) > 0) {
+            code = WEXITSTATUS(status);
+        }
+        else {
+            code = -1;
+        }
+
+        // Pass the return code back to the client
+        if (write(fd, &code, sizeof(int)) != sizeof(int)) {
+            PLOGE("unable to write exit code");
+        }
+
+        close(fd);
+        LOGD("child exited");
+        return code;
     }
 
-    if (devname != NULL) {
-        // pump ptm across the socket
-        pump_async(infd, ptm);
-        pump(ptm, outfd);
-    }
-    else {
-        close(infd);
-        close(outfd);
-        close(errfd);
+    // We are in the child now
+    // Close the unix socket file descriptor
+    close (fd);
+
+    if (atty) {
+        // Become session leader
+        if (setsid() == (pid_t) -1) {
+            PLOGE("setsid");
+        }
+
+        // Opening the TTY has to occur after the
+        // fork() and setsid() so that it becomes
+        // our controlling TTY and not the daemon's
+        infd = open(pts_slave, O_RDWR);
+        if (infd == -1) {
+            PLOGE("open(pts_slave) daemon");
+            exit(-1);
+        }
+
+        // Use the tty for all I/O
+        outfd = errfd = infd;
+    } else {
+        // Open the FIFOs
+        outfd = open(outfile, O_WRONLY);
+        if (outfd < 0) {
+            PLOGE("outfd daemon %s", outfile);
+            exit(-1);
+        }
+        errfd = open(errfile, O_WRONLY);
+        if (errfd < 0) {
+            PLOGE("errfd daemon %s", errfile);
+            exit(-1);
+        }
+        infd = open(infile, O_RDONLY);
+        if (infd < 0) {
+            PLOGE("infd daemon %s", infile);
+            exit(-1);
+        }
     }
 
-    // wait for the child to exit, and send the exit code
-    // across the wire.
-    int status;
-    LOGD("waiting for child exit");
-    if (waitpid(child, &status, 0) > 0) {
-        code = WEXITSTATUS(status);
-    }
-    else {
-        code = -1;
-    }
-
-done:
-    write(fd, &code, sizeof(int));
-    close(fd);
-    LOGD("child exited");
-    return code;
+    return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
 
 int run_daemon() {
@@ -383,17 +379,118 @@ err:
     return -1;
 }
 
+/**
+ * pts_open
+ *
+ * open a pts device and returns the name of the slave tty device.
+ *
+ * arguments
+ * slave_name       the name of the slave device
+ * slave_name_size  the size of the buffer passed via slave_name
+ *
+ * return values
+ * on failure either -2 or -1 (errno set) is returned.
+ * on success, the file descriptor of the master device is returned.
+ */
+static int pts_open(char *slave_name, size_t slave_name_size) {
+    int fdm;
+    char *sn_tmp;
+
+    // Open master ptmx device
+    fdm = open("/dev/ptmx", O_RDWR);
+    if (fdm == -1) return -1;
+
+    // Get the slave name
+    sn_tmp = ptsname(fdm);
+    if (!sn_tmp) {
+        close(fdm);
+        return -2;
+    }
+
+    strncpy(slave_name, sn_tmp, slave_name_size);
+    slave_name[slave_name_size - 1] = '\0';
+
+    // Grant, then unlock
+    if (grantpt(fdm) == -1) {
+        close(fdm);
+        return -1;
+    }
+    if (unlockpt(fdm) == -1) {
+        close(fdm);
+        return -1;
+    }
+
+    return fdm;
+}
+
+static struct termios old_termios;
+static int stdin_is_raw = 0;
+
+/**
+ * Set stdin to raw mode
+ */
+static void set_stdin_raw(void) {
+    struct termios new_termios;
+
+    // Save the current stdin termios
+    if (tcgetattr(STDIN_FILENO, &old_termios) < 0) {
+        PLOGE("set_stdin_raw: tcgetattr");
+        // Don't terminate - the connectoin could still be useful
+        return;
+    }
+
+    // Start from the current settings
+    new_termios = old_termios;
+
+    // Make the terminal like an SSH or telnet client
+    new_termios.c_iflag |= IGNPAR;
+    new_termios.c_iflag &= ~(ISTRIP | INLCR | IGNCR | ICRNL | IXON | IXANY | IXOFF);
+    new_termios.c_lflag &= ~(ISIG | ICANON | ECHO | ECHOE | ECHOK | ECHONL);
+    new_termios.c_oflag &= ~OPOST;
+    new_termios.c_cc[VMIN] = 1;
+    new_termios.c_cc[VTIME] = 0;
+
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &new_termios) < 0) {
+        PLOGE("set_stdin_raw: tcsetattr");
+        return;
+    }
+
+    stdin_is_raw = 1;
+}
+
+/**
+ * Restore termios on stdin to the state it was before
+ * set_stdin_raw() was called. Does nothing if set_stdin_raw()
+ * was never called
+ */
+static void restore_stdin(void) {
+    if (!stdin_is_raw) return;
+
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_termios) < 0) {
+        PLOGE("restore_stdin");
+        return;
+    }
+}
+
 int connect_daemon(int argc, char *argv[]) {
     char errfile[PATH_MAX];
     char outfile[PATH_MAX];
     char infile[PATH_MAX];
     int uid = getuid();
-    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
-    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
-    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
-    unlink(errfile);
-    unlink(infile);
-    unlink(outfile);
+    int ptmx;
+    char pts_slave[PATH_MAX];
+
+    int atty = isatty(STDOUT_FILENO);
+
+    if (!atty) {
+        // If we're not an interactive terminal, use pipes
+        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
+        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
+        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
+        unlink(errfile);
+        unlink(infile);
+        unlink(outfile);
+    }
 
     struct sockaddr_un sun;
 
@@ -418,7 +515,7 @@ int connect_daemon(int argc, char *argv[]) {
 
     LOGD("connecting client %d", getpid());
     write_int(socketfd, getpid());
-    write_int(socketfd, isatty(STDIN_FILENO));
+    write_int(socketfd, atty);
     write_int(socketfd, uid);
     write_int(socketfd, getppid());
     write_int(socketfd, argc);
@@ -428,30 +525,64 @@ int connect_daemon(int argc, char *argv[]) {
         write_string(socketfd, argv[i]);
     }
 
+    // Open a PTS device and send the slave path to the daemon
+    if (atty) {
+        ptmx = pts_open(pts_slave, sizeof(pts_slave));
+        if (ptmx < 0) {
+            PLOGE("pts_open");
+            exit(-1);
+        }
+        write_string(socketfd, pts_slave);
+    }
+
     // ack
     read_int(socketfd);
 
-    int outfd = open(outfile, O_RDONLY);
-    if (outfd <= 0) {
-        PLOGE("outfd %s ", outfile);
-        exit(-1);
+    int outfd, errfd, infd;
+
+    if (atty) {
+        // Redirect our I/O streams to the PTS master
+        outfd = errfd = infd = ptmx;
+    } else {
+        outfd = open(outfile, O_RDONLY);
+        if (outfd <= 0) {
+            PLOGE("outfd %s ", outfile);
+            exit(-1);
+        }
+        errfd = open(errfile, O_RDONLY);
+        if (errfd <= 0) {
+            PLOGE("errfd %s", errfile);
+            exit(-1);
+        }
+        infd = open(infile, O_WRONLY);
+        if (infd <= 0) {
+            PLOGE("infd %s", infile);
+            exit(-1);
+        }
     }
-    int errfd = open(errfile, O_RDONLY);
-    if (errfd <= 0) {
-        PLOGE("errfd %s", errfile);
-        exit(-1);
+
+    // If stdin is a tty, we should put it into raw mode
+    // otherwise ncurses apps are going to misbehave
+    if (isatty(STDIN_FILENO)) {
+        set_stdin_raw();
     }
-    int infd = open(infile, O_WRONLY);
-    if (infd <= 0) {
-        PLOGE("infd %s", infile);
-        exit(-1);
-    }
+
+    signal(SIGPIPE, SIG_IGN);
 
     pump_async(STDIN_FILENO, infd);
-    pump_async(errfd, STDERR_FILENO);
+    if (!atty) {
+        // Ignore our own stderr if dealing with a terminal device
+        pump_async(errfd, STDERR_FILENO);
+    }
     pump(outfd, STDOUT_FILENO);
 
-    int code = read_int(socketfd);
+    // Get the exit code
+    int code;
+    if (read(socketfd, &code, sizeof(int)) != sizeof(int)) {
+        LOGE("unable to read exit code");
+    }
+
+    restore_stdin();
     LOGD("client exited %d", code);
     return code;
 }
