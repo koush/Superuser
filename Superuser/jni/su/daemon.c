@@ -217,10 +217,10 @@ static int daemon_accept(int fd) {
     int infd, outfd, errfd;
     char *pts_slave = NULL;
 
-    if (atty) {
-        // Get the PTS slave device name
-        pts_slave = read_string(fd);
-    } else {
+    // Get the PTS slave device name
+    pts_slave = read_string(fd);
+
+    if (!atty) {
         // Using the pipes method
         // Create the FIFOs for the I/O streams
         sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
@@ -458,18 +458,6 @@ int connect_daemon(int argc, char *argv[]) {
     int ptmx;
     char pts_slave[PATH_MAX];
 
-    int atty = isatty(STDOUT_FILENO);
-
-    if (!atty) {
-        // If we're not an interactive terminal, use pipes
-        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
-        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
-        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
-        unlink(errfile);
-        unlink(infile);
-        unlink(outfile);
-    }
-
     struct sockaddr_un sun;
 
     int socketfd = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -493,7 +481,28 @@ int connect_daemon(int argc, char *argv[]) {
 
     LOGD("connecting client %d", getpid());
     write_int(socketfd, getpid());
-    write_int(socketfd, atty);
+    if (isatty(STDOUT_FILENO)) {
+        write_int(socketfd, 1);
+
+        ptmx = pts_open(pts_slave, sizeof(pts_slave));
+        if (ptmx < 0) {
+            PLOGE("pts_open");
+            exit(-1);
+        }
+    } else {
+        write_int(socketfd, 0);
+
+        // If we're not an interactive terminal, use pipes
+        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
+        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
+        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
+        unlink(errfile);
+        unlink(infile);
+        unlink(outfile);
+
+        // Zero length string for the slave path
+        pts_slave[0] = '\0';
+    }
     write_int(socketfd, uid);
     write_int(socketfd, getppid());
     write_int(socketfd, argc);
@@ -503,25 +512,21 @@ int connect_daemon(int argc, char *argv[]) {
         write_string(socketfd, argv[i]);
     }
 
-    // Open a PTS device and send the slave path to the daemon
-    if (atty) {
-        ptmx = pts_open(pts_slave, sizeof(pts_slave));
-        if (ptmx < 0) {
-            PLOGE("pts_open");
-            exit(-1);
-        }
-        write_string(socketfd, pts_slave);
-    }
+    // Send the slave path to the daemon
+    // (This is "" if we're using FIFOs)
+    write_string(socketfd, pts_slave);
 
     // ack
     read_int(socketfd);
 
     int outfd, errfd, infd;
 
-    if (atty) {
+    if (pts_slave[0]) {
+        // Using pseudo-terminals
         // Redirect our I/O streams to the PTS master
         outfd = errfd = infd = ptmx;
     } else {
+        // Using FIFOs
         outfd = open(outfile, O_RDONLY);
         if (outfd <= 0) {
             PLOGE("outfd %s ", outfile);
@@ -547,13 +552,13 @@ int connect_daemon(int argc, char *argv[]) {
     }
 
     // Forward SIGWINCH
-    if (atty) {
+    if (pts_slave[0]) {
         watch_sigwinch_async(STDIN_FILENO, infd);
     }
 
     // Pump I/O to and from the daemon
     pump_async(STDIN_FILENO, infd);
-    if (!atty) {
+    if (!pts_slave[0]) {
         // Ignore our own stderr if dealing with a terminal device
         pump_async(errfd, STDERR_FILENO);
     }
@@ -561,9 +566,7 @@ int connect_daemon(int argc, char *argv[]) {
 
     // Cleanup
     restore_stdin();
-    if (atty) {
-        watch_sigwinch_cleanup();
-    }
+    watch_sigwinch_cleanup();
 
     // Get the exit code
     int code = read_int(socketfd);
