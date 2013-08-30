@@ -108,6 +108,10 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
         exit(-1);
     }
 
+    close(infd);
+    close(outfd);
+    close(errfd);
+
     return main(argc, argv);
 }
 
