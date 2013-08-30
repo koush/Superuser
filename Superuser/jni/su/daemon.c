@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -34,6 +35,8 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include <termios.h>
+#include <signal.h>
+#include <string.h>
 
 #include "su.h"
 #include "utils.h"
@@ -425,6 +428,50 @@ static int pts_open(char *slave_name, size_t slave_name_size) {
 
 static struct termios old_termios;
 static int stdin_is_raw = 0;
+// List of signals which cause process termination
+static int quit_signals[] = { SIGALRM, SIGHUP, SIGPIPE, SIGQUIT, SIGTERM, SIGINT, 0 };
+
+/**
+ * Restore termios on stdin to the state it was before
+ * set_stdin_raw() was called. Does nothing if set_stdin_raw()
+ * was never called
+ */
+static void restore_stdin(void) {
+    if (!stdin_is_raw) return;
+
+    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_termios) < 0) {
+        PLOGE("restore_stdin");
+    }
+
+    stdin_is_raw = 0;
+}
+
+static void restore_stdin_handler(int sig) {
+    restore_stdin();
+
+    // Assume we'll only be called before death
+    // See note before sigaction() in set_stdin_raw()
+    //
+    // Now, close all standard I/O to cause the pumps
+    // to exit so we can continue and retrieve the exit
+    // code
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
+
+    // Put back all the default handlers
+    struct sigaction act;
+    int i;
+
+    memset(&act, '\0', sizeof(act));
+    act.sa_handler = SIG_DFL;
+    for (i = 0; quit_signals[i]; i++) {
+        if (sigaction(quit_signals[i], &act, NULL) < 0) {
+            PLOGE("Error removing signal handler");
+            continue;
+        }
+    }
+}
 
 /**
  * Set stdin to raw mode
@@ -456,20 +503,92 @@ static void set_stdin_raw(void) {
     }
 
     stdin_is_raw = 1;
+
+    // Make sure we restore the terminal in the event of sudden termination
+    struct sigaction act;
+    int i;
+
+    // Install the termination handlers
+    // Note: we're assuming that none of these signal handlers are already trapped.
+    // If they are, we'll need to modify this code to save the previous handler and
+    // call it after we restore stdin to its previous state.
+    memset(&act, '\0', sizeof(act));
+    act.sa_handler = &restore_stdin_handler;
+    for (i = 0; quit_signals[i]; i++) {
+        if (sigaction(quit_signals[i], &act, NULL) < 0) {
+            PLOGE("Error installing signal handler");
+            continue;
+        }
+    }
 }
 
-/**
- * Restore termios on stdin to the state it was before
- * set_stdin_raw() was called. Does nothing if set_stdin_raw()
- * was never called
- */
-static void restore_stdin(void) {
-    if (!stdin_is_raw) return;
+volatile static int closing_time = 0;
 
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_termios) < 0) {
-        PLOGE("restore_stdin");
+/**
+ * Wait for a SIGWINCH to be receive, then update the terminal size when it is
+ */
+static void *watch_sigwinch(void *data) {
+    sigset_t winch;
+    int sig;
+    int input = ((int *)data)[0];
+    int output = ((int *)data)[1];
+
+    sigemptyset(&winch);
+    sigaddset(&winch, SIGWINCH);
+
+    do {
+        // Wait for a SIGWINCH
+        sigwait(&winch, &sig);
+
+        if (closing_time) break;
+
+        // Get the new terminal size
+        struct winsize w;
+        if (ioctl(input, TIOCGWINSZ, &w) == -1) {
+            PLOGE("watch_sigwinch: unable to get terminal size");
+            continue;
+        }
+
+        // Set the new terminal size
+        if (ioctl(output, TIOCSWINSZ, &w) == -1) {
+            PLOGE("watch_sigwinch: unable to set terminal size");
+        }
+
+    } while (1);
+
+    free(data);
+    return NULL;
+}
+
+static void watch_sigwinch_async(int input, int output) {
+    pthread_t watcher;
+    int *files = (int *) malloc(sizeof(int) * 2);
+    if (files == NULL) {
+        LOGE("unable to watch_sigwinch_async");
+        // Not fatal, just that the screen won't resize
         return;
     }
+
+    // Block SIGWINCH so sigwait can later receive it
+    sigset_t winch;
+    sigemptyset(&winch);
+    sigaddset(&winch, SIGWINCH);
+    sigprocmask(SIG_BLOCK, &winch, NULL);
+
+    // Initialize some variables, then start the thread
+    closing_time = 0;
+    files[0] = input;
+    files[1] = output;
+    pthread_create(&watcher, NULL, &watch_sigwinch, files);
+
+    // Set the initial terminal size
+    raise(SIGWINCH);
+}
+
+static void watch_sigwinch_cleanup(void) {
+    // Make sure the thread terminates
+    closing_time = 1;
+    raise(SIGWINCH);
 }
 
 int connect_daemon(int argc, char *argv[]) {
@@ -567,8 +686,12 @@ int connect_daemon(int argc, char *argv[]) {
         set_stdin_raw();
     }
 
-    signal(SIGPIPE, SIG_IGN);
+    // Forward SIGWINCH
+    if (atty) {
+        watch_sigwinch_async(STDIN_FILENO, infd);
+    }
 
+    // Pump I/O to and from the daemon
     pump_async(STDIN_FILENO, infd);
     if (!atty) {
         // Ignore our own stderr if dealing with a terminal device
@@ -576,13 +699,15 @@ int connect_daemon(int argc, char *argv[]) {
     }
     pump(outfd, STDOUT_FILENO);
 
-    // Get the exit code
-    int code;
-    if (read(socketfd, &code, sizeof(int)) != sizeof(int)) {
-        LOGE("unable to read exit code");
+    // Cleanup
+    restore_stdin();
+    if (atty) {
+        watch_sigwinch_cleanup();
     }
 
-    restore_stdin();
+    // Get the exit code
+    int code = read_int(socketfd);
     LOGD("client exited %d", code);
+
     return code;
 }
