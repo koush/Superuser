@@ -129,14 +129,26 @@ static int write_blocking(int fd, char *buf, size_t bufsz) {
     return 0;
 }
 
-static void pump(int input, int output) {
+/**
+ * Pump data from input FD to output FD. If close_output is
+ * true, then close the output FD when we're done.
+ */
+static void pump_ex(int input, int output, int close_output) {
     char buf[4096];
     int len;
     while ((len = read(input, buf, 4096)) > 0) {
         if (write_blocking(output, buf, len) == -1) break;
     }
     close(input);
-    if (output != STDOUT_FILENO) close(output);
+    if (close_output) close(output);
+}
+
+/**
+ * Pump data from input FD to output FD. Will close the
+ * output FD when done.
+ */
+static void pump(int input, int output) {
+    pump_ex(input, output, 1);
 }
 
 static void* pump_thread(void* data) {
@@ -545,7 +557,7 @@ int connect_daemon(int argc, char *argv[]) {
         // Ignore our own stderr if dealing with a terminal device
         pump_async(errfd, STDERR_FILENO);
     }
-    pump(outfd, STDOUT_FILENO);
+    pump_ex(outfd, STDOUT_FILENO, 0 /* Don't close output when done */);
 
     // Cleanup
     restore_stdin();
