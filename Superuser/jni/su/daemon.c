@@ -21,7 +21,6 @@
 #include <sys/wait.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#include <sys/ioctl.h>
 #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
@@ -34,12 +33,12 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <pthread.h>
-#include <termios.h>
 #include <signal.h>
 #include <string.h>
 
 #include "su.h"
 #include "utils.h"
+#include "pts.h"
 
 int is_daemon = 0;
 int daemon_from_uid = 0;
@@ -382,71 +381,10 @@ err:
     return -1;
 }
 
-/**
- * pts_open
- *
- * open a pts device and returns the name of the slave tty device.
- *
- * arguments
- * slave_name       the name of the slave device
- * slave_name_size  the size of the buffer passed via slave_name
- *
- * return values
- * on failure either -2 or -1 (errno set) is returned.
- * on success, the file descriptor of the master device is returned.
- */
-static int pts_open(char *slave_name, size_t slave_name_size) {
-    int fdm;
-    char *sn_tmp;
-
-    // Open master ptmx device
-    fdm = open("/dev/ptmx", O_RDWR);
-    if (fdm == -1) return -1;
-
-    // Get the slave name
-    sn_tmp = ptsname(fdm);
-    if (!sn_tmp) {
-        close(fdm);
-        return -2;
-    }
-
-    strncpy(slave_name, sn_tmp, slave_name_size);
-    slave_name[slave_name_size - 1] = '\0';
-
-    // Grant, then unlock
-    if (grantpt(fdm) == -1) {
-        close(fdm);
-        return -1;
-    }
-    if (unlockpt(fdm) == -1) {
-        close(fdm);
-        return -1;
-    }
-
-    return fdm;
-}
-
-static struct termios old_termios;
-static int stdin_is_raw = 0;
 // List of signals which cause process termination
 static int quit_signals[] = { SIGALRM, SIGHUP, SIGPIPE, SIGQUIT, SIGTERM, SIGINT, 0 };
 
-/**
- * Restore termios on stdin to the state it was before
- * set_stdin_raw() was called. Does nothing if set_stdin_raw()
- * was never called
- */
-static void restore_stdin(void) {
-    if (!stdin_is_raw) return;
-
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &old_termios) < 0) {
-        PLOGE("restore_stdin");
-    }
-
-    stdin_is_raw = 0;
-}
-
-static void restore_stdin_handler(int sig) {
+static void sighandler(int sig) {
     restore_stdin();
 
     // Assume we'll only be called before death
@@ -474,37 +412,11 @@ static void restore_stdin_handler(int sig) {
 }
 
 /**
- * Set stdin to raw mode
+ * Setup signal handlers trap signals which should result in program termination
+ * so that we can restore the terminal to its normal state and retrieve the 
+ * return code.
  */
-static void set_stdin_raw(void) {
-    struct termios new_termios;
-
-    // Save the current stdin termios
-    if (tcgetattr(STDIN_FILENO, &old_termios) < 0) {
-        PLOGE("set_stdin_raw: tcgetattr");
-        // Don't terminate - the connectoin could still be useful
-        return;
-    }
-
-    // Start from the current settings
-    new_termios = old_termios;
-
-    // Make the terminal like an SSH or telnet client
-    new_termios.c_iflag |= IGNPAR;
-    new_termios.c_iflag &= ~(ISTRIP | INLCR | IGNCR | ICRNL | IXON | IXANY | IXOFF);
-    new_termios.c_lflag &= ~(ISIG | ICANON | ECHO | ECHOE | ECHOK | ECHONL);
-    new_termios.c_oflag &= ~OPOST;
-    new_termios.c_cc[VMIN] = 1;
-    new_termios.c_cc[VTIME] = 0;
-
-    if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &new_termios) < 0) {
-        PLOGE("set_stdin_raw: tcsetattr");
-        return;
-    }
-
-    stdin_is_raw = 1;
-
-    // Make sure we restore the terminal in the event of sudden termination
+static void setup_sighandlers(void) {
     struct sigaction act;
     int i;
 
@@ -513,82 +425,13 @@ static void set_stdin_raw(void) {
     // If they are, we'll need to modify this code to save the previous handler and
     // call it after we restore stdin to its previous state.
     memset(&act, '\0', sizeof(act));
-    act.sa_handler = &restore_stdin_handler;
+    act.sa_handler = &sighandler;
     for (i = 0; quit_signals[i]; i++) {
         if (sigaction(quit_signals[i], &act, NULL) < 0) {
             PLOGE("Error installing signal handler");
             continue;
         }
     }
-}
-
-volatile static int closing_time = 0;
-
-/**
- * Wait for a SIGWINCH to be receive, then update the terminal size when it is
- */
-static void *watch_sigwinch(void *data) {
-    sigset_t winch;
-    int sig;
-    int input = ((int *)data)[0];
-    int output = ((int *)data)[1];
-
-    sigemptyset(&winch);
-    sigaddset(&winch, SIGWINCH);
-
-    do {
-        // Wait for a SIGWINCH
-        sigwait(&winch, &sig);
-
-        if (closing_time) break;
-
-        // Get the new terminal size
-        struct winsize w;
-        if (ioctl(input, TIOCGWINSZ, &w) == -1) {
-            PLOGE("watch_sigwinch: unable to get terminal size");
-            continue;
-        }
-
-        // Set the new terminal size
-        if (ioctl(output, TIOCSWINSZ, &w) == -1) {
-            PLOGE("watch_sigwinch: unable to set terminal size");
-        }
-
-    } while (1);
-
-    free(data);
-    return NULL;
-}
-
-static void watch_sigwinch_async(int input, int output) {
-    pthread_t watcher;
-    int *files = (int *) malloc(sizeof(int) * 2);
-    if (files == NULL) {
-        LOGE("unable to watch_sigwinch_async");
-        // Not fatal, just that the screen won't resize
-        return;
-    }
-
-    // Block SIGWINCH so sigwait can later receive it
-    sigset_t winch;
-    sigemptyset(&winch);
-    sigaddset(&winch, SIGWINCH);
-    sigprocmask(SIG_BLOCK, &winch, NULL);
-
-    // Initialize some variables, then start the thread
-    closing_time = 0;
-    files[0] = input;
-    files[1] = output;
-    pthread_create(&watcher, NULL, &watch_sigwinch, files);
-
-    // Set the initial terminal size
-    raise(SIGWINCH);
-}
-
-static void watch_sigwinch_cleanup(void) {
-    // Make sure the thread terminates
-    closing_time = 1;
-    raise(SIGWINCH);
 }
 
 int connect_daemon(int argc, char *argv[]) {
@@ -684,6 +527,7 @@ int connect_daemon(int argc, char *argv[]) {
     // otherwise ncurses apps are going to misbehave
     if (isatty(STDIN_FILENO)) {
         set_stdin_raw();
+        setup_sighandlers();
     }
 
     // Forward SIGWINCH
