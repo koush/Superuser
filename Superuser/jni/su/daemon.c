@@ -178,6 +178,8 @@ static int daemon_accept(int fd) {
     LOGD("remote pid: %d", pid);
     int atty = read_int(fd);
     LOGD("remote atty: %d", atty);
+    char *pts_slave = read_string(fd);
+    LOGD("remote pts_slave: %s", pts_slave);
     daemon_from_uid = read_int(fd);
     LOGD("remote uid: %d", daemon_from_uid);
     daemon_from_pid = read_int(fd);
@@ -215,10 +217,6 @@ static int daemon_accept(int fd) {
     char outfile[PATH_MAX];
     char infile[PATH_MAX];
     int infd, outfd, errfd;
-    char *pts_slave = NULL;
-
-    // Get the PTS slave device name
-    pts_slave = read_string(fd);
 
     if (!atty) {
         // Using the pipes method
@@ -267,6 +265,8 @@ static int daemon_accept(int fd) {
         // In parent, wait for the child to exit, and send the exit code
         // across the wire.
         int status, code;
+
+        free(pts_slave);
 
         if (!atty) {
             // Close the child FDs if using pipes
@@ -333,6 +333,7 @@ static int daemon_accept(int fd) {
         }
     }
 
+    free(pts_slave);
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
 
@@ -478,9 +479,11 @@ int connect_daemon(int argc, char *argv[]) {
         PLOGE("connect");
         exit(-1);
     }
-
     LOGD("connecting client %d", getpid());
+
+    // Send some info to the daemon, starting with out PID
     write_int(socketfd, getpid());
+    // Boolean value indicating whether we're going to use a PTY
     if (isatty(STDOUT_FILENO)) {
         write_int(socketfd, 1);
 
@@ -503,20 +506,24 @@ int connect_daemon(int argc, char *argv[]) {
         // Zero length string for the slave path
         pts_slave[0] = '\0';
     }
+    // Send the slave path to the daemon
+    // (This is "" if we're using FIFOs)
+    write_string(socketfd, pts_slave);
+    // User ID
     write_int(socketfd, uid);
+    // Parent PID
     write_int(socketfd, getppid());
+
+    // Number of command line arguments
     write_int(socketfd, argc);
 
+    // Command line arguments
     int i;
     for (i = 0; i < argc; i++) {
         write_string(socketfd, argv[i]);
     }
 
-    // Send the slave path to the daemon
-    // (This is "" if we're using FIFOs)
-    write_string(socketfd, pts_slave);
-
-    // ack
+    // Wait for acknowledgement from daemon
     read_int(socketfd);
 
     int outfd, errfd, infd;
