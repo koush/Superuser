@@ -44,6 +44,11 @@ int is_daemon = 0;
 int daemon_from_uid = 0;
 int daemon_from_pid = 0;
 
+// Constants for the atty bitfield
+#define ATTY_IN     1
+#define ATTY_OUT    2
+#define ATTY_ERR    4
+
 static int read_int(int fd) {
     int val;
     int len = read(fd, &val, sizeof(int));
@@ -172,6 +177,18 @@ static void pump_async(int input, int output) {
     pthread_create(&writer, NULL, pump_thread, files);
 }
 
+// Open a FIFO and set the right permissions on it
+// Terminates the app if it fails
+static void create_fifo(const char *path, pid_t pidd, int uid) {
+    unlink(path);
+    if (mkfifo(path, 0660) != 0) {
+        PLOGE("create_fifo %s", path);
+        exit (-1);
+    }
+    chown(path, uid, 0);
+    chmod(path, 0660);
+}
+
 static int daemon_accept(int fd) {
     is_daemon = 1;
     int pid = read_int(fd);
@@ -217,33 +234,19 @@ static int daemon_accept(int fd) {
     char outfile[PATH_MAX];
     char infile[PATH_MAX];
     int infd, outfd, errfd;
+    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
+    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, pid);
+    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, pid);
 
-    if (!atty) {
-        // Using the pipes method
-        // Create the FIFOs for the I/O streams
-        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
-        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, pid);
-        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, pid);
-
-        if (mkfifo(outfile, 0660) != 0) {
-            PLOGE("mkfifo %s", outfile);
-            exit(-1);
-        }
-        if (mkfifo(errfile, 0660) != 0) {
-            PLOGE("mkfifo %s", errfile);
-            exit(-1);
-        }
-        if (mkfifo(infile, 0660) != 0) {
-            PLOGE("mkfifo %s", infile);
-            exit(-1);
-        }
-
-        chown(outfile, daemon_from_uid, 0);
-        chown(infile, daemon_from_uid, 0);
-        chown(errfile, daemon_from_uid, 0);
-        chmod(outfile, 0660);
-        chmod(infile, 0660);
-        chmod(errfile, 0660);
+    // Create the FIFOs if necessary
+    if (!(atty & ATTY_IN)) {
+        create_fifo(infile, pid, daemon_from_uid);
+    }
+    if (!(atty & ATTY_OUT)) {
+        create_fifo(outfile, pid, daemon_from_uid);
+    }
+    if (!(atty & ATTY_ERR)) {
+        create_fifo(errfile, pid, daemon_from_uid);
     }
 
     // ack
@@ -268,13 +271,6 @@ static int daemon_accept(int fd) {
 
         free(pts_slave);
 
-        if (!atty) {
-            // Close the child FDs if using pipes
-            close(infd);
-            close(outfd);
-            close(errfd);
-        }
-
         LOGD("waiting for child exit");
         if (waitpid(child, &status, 0) > 0) {
             code = WEXITSTATUS(status);
@@ -297,35 +293,50 @@ static int daemon_accept(int fd) {
     // Close the unix socket file descriptor
     close (fd);
 
-    if (atty) {
-        // Become session leader
-        if (setsid() == (pid_t) -1) {
-            PLOGE("setsid");
-        }
+    // Become session leader
+    if (setsid() == (pid_t) -1) {
+        PLOGE("setsid");
+    }
 
+    int ptsfd;
+    if (atty) {
         // Opening the TTY has to occur after the
         // fork() and setsid() so that it becomes
         // our controlling TTY and not the daemon's
-        infd = open(pts_slave, O_RDWR);
+        ptsfd = open(pts_slave, O_RDWR);
         if (infd == -1) {
             PLOGE("open(pts_slave) daemon");
             exit(-1);
         }
+    }
+    free(pts_slave);
 
-        // Use the tty for all I/O
-        outfd = errfd = infd;
+    // Get the FD for stdout
+    if (atty & ATTY_OUT) {
+        outfd = ptsfd;
     } else {
-        // Open the FIFOs
         outfd = open(outfile, O_WRONLY);
         if (outfd < 0) {
             PLOGE("outfd daemon %s", outfile);
             exit(-1);
         }
+    }
+
+    // ...and now stderr
+    if (atty & ATTY_ERR) {
+        errfd = ptsfd;
+    } else {
         errfd = open(errfile, O_WRONLY);
         if (errfd < 0) {
             PLOGE("errfd daemon %s", errfile);
             exit(-1);
         }
+    }
+
+    // ...and finally stdin
+    if (atty & ATTY_IN) {
+        infd = ptsfd;
+    } else {
         infd = open(infile, O_RDONLY);
         if (infd < 0) {
             PLOGE("infd daemon %s", infile);
@@ -333,7 +344,6 @@ static int daemon_accept(int fd) {
         }
     }
 
-    free(pts_slave);
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
 
@@ -461,6 +471,12 @@ int connect_daemon(int argc, char *argv[]) {
 
     struct sockaddr_un sun;
 
+    // FIFO names for apps not attached to a PTY
+    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
+    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
+    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
+
+    // Open a socket to the daemon
     int socketfd = socket(AF_LOCAL, SOCK_STREAM, 0);
     if (socketfd < 0) {
         PLOGE("socket");
@@ -481,31 +497,30 @@ int connect_daemon(int argc, char *argv[]) {
     }
     LOGD("connecting client %d", getpid());
 
-    // Send some info to the daemon, starting with out PID
+    // Send some info to the daemon, starting with our PID
     write_int(socketfd, getpid());
-    // Boolean value indicating whether we're going to use a PTY
-    if (isatty(STDOUT_FILENO)) {
-        write_int(socketfd, 1);
 
+    // Determine which one of our streams are attached to a TTY
+    int atty = 0;
+
+    if (isatty(STDIN_FILENO))  atty |= ATTY_IN;
+    if (isatty(STDOUT_FILENO)) atty |= ATTY_OUT;
+    if (isatty(STDERR_FILENO)) atty |= ATTY_ERR;
+
+    if (atty) {
+        // We need a PTY. Get one.
         ptmx = pts_open(pts_slave, sizeof(pts_slave));
         if (ptmx < 0) {
             PLOGE("pts_open");
             exit(-1);
         }
     } else {
-        write_int(socketfd, 0);
-
-        // If we're not an interactive terminal, use pipes
-        sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
-        sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
-        sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
-        unlink(errfile);
-        unlink(infile);
-        unlink(outfile);
-
-        // Zero length string for the slave path
         pts_slave[0] = '\0';
     }
+    // Send atty to daemon - bitfield indicating which streams 
+    // are attached to a PTY
+    write_int(socketfd, atty);
+
     // Send the slave path to the daemon
     // (This is "" if we're using FIFOs)
     write_string(socketfd, pts_slave);
@@ -528,45 +543,44 @@ int connect_daemon(int argc, char *argv[]) {
 
     int outfd, errfd, infd;
 
-    if (pts_slave[0]) {
-        // Using pseudo-terminals
-        // Redirect our I/O streams to the PTS master
-        outfd = errfd = infd = ptmx;
+    // Open or assign the I/O streams
+    if (atty & ATTY_IN) {
+        infd = ptmx;
+        // Put stdin into raw mode
+        set_stdin_raw();
+        setup_sighandlers();
     } else {
-        // Using FIFOs
-        outfd = open(outfile, O_RDONLY);
-        if (outfd <= 0) {
-            PLOGE("outfd %s ", outfile);
-            exit(-1);
-        }
-        errfd = open(errfile, O_RDONLY);
-        if (errfd <= 0) {
-            PLOGE("errfd %s", errfile);
-            exit(-1);
-        }
         infd = open(infile, O_WRONLY);
         if (infd <= 0) {
             PLOGE("infd %s", infile);
             exit(-1);
         }
     }
-
-    // If stdin is a tty, we should put it into raw mode
-    // otherwise ncurses apps are going to misbehave
-    if (isatty(STDIN_FILENO)) {
-        set_stdin_raw();
-        setup_sighandlers();
+    if (atty & ATTY_OUT) {
+        outfd = ptmx;
+        // Forward SIGWINCH
+        watch_sigwinch_async(STDOUT_FILENO, outfd);
+    } else {
+        outfd = open(outfile, O_RDONLY);
+        if (outfd <= 0) {
+            PLOGE("outfd %s ", outfile);
+            exit(-1);
+        }
     }
-
-    // Forward SIGWINCH
-    if (pts_slave[0]) {
-        watch_sigwinch_async(STDIN_FILENO, infd);
+    if (atty & ATTY_ERR) {
+        // Do not pump PTY to stderr
+        errfd = -1;
+    } else {
+        errfd = open(errfile, O_RDONLY);
+        if (errfd <= 0) {
+            PLOGE("errfd %s", errfile);
+            exit(-1);
+        }
     }
 
     // Pump I/O to and from the daemon
     pump_async(STDIN_FILENO, infd);
-    if (!pts_slave[0]) {
-        // Ignore our own stderr if dealing with a terminal device
+    if (errfd >= 0) {
         pump_async(errfd, STDERR_FILENO);
     }
     pump_ex(outfd, STDOUT_FILENO, 0 /* Don't close output when done */);
