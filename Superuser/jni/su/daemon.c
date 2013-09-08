@@ -32,7 +32,6 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <sys/types.h>
-#include <pthread.h>
 #include <signal.h>
 #include <string.h>
 
@@ -48,6 +47,115 @@ int daemon_from_pid = 0;
 #define ATTY_IN     1
 #define ATTY_OUT    2
 #define ATTY_ERR    4
+
+/*
+ * Receive a file descriptor from a Unix socket.
+ * Contributed by @mkasick
+ *
+ * Returns the file descriptor on success, or -1 if a file
+ * descriptor was not actually included in the message
+ *
+ * On error the function terminates by calling exit(-1)
+ */
+static int recv_fd(int sockfd) {
+    // Need to receive data from the message, otherwise don't care about it.
+    char iovbuf;
+
+    struct iovec iov = {
+        .iov_base = &iovbuf,
+        .iov_len  = 1,
+    };
+
+    char cmsgbuf[CMSG_SPACE(sizeof(int))];
+
+    struct msghdr msg = {
+        .msg_iov        = &iov,
+        .msg_iovlen     = 1,
+        .msg_control    = cmsgbuf,
+        .msg_controllen = sizeof(cmsgbuf),
+    };
+
+    if (recvmsg(sockfd, &msg, MSG_WAITALL) != 1) {
+        goto error;
+    }
+
+    // Was a control message actually sent?
+    switch (msg.msg_controllen) {
+    case 0:
+        // No, so the file descriptor was closed and won't be used.
+        return -1;
+    case sizeof(cmsgbuf):
+        // Yes, grab the file descriptor from it.
+        break;
+    default:
+        goto error;
+    }
+
+    struct cmsghdr *cmsg = CMSG_FIRSTHDR(&msg);
+
+    if (cmsg             == NULL                  ||
+        cmsg->cmsg_len   != CMSG_LEN(sizeof(int)) ||
+        cmsg->cmsg_level != SOL_SOCKET            ||
+        cmsg->cmsg_type  != SCM_RIGHTS) {
+error:
+        LOGE("unable to read fd");
+        exit(-1);
+    }
+
+    return *(int *)CMSG_DATA(cmsg);
+}
+
+/*
+ * Send a file descriptor through a Unix socket.
+ * Contributed by @mkasick
+ *
+ * On error the function terminates by calling exit(-1)
+ *
+ * fd may be -1, in which case the dummy data is sent,
+ * but no control message with the FD is sent.
+ */
+static void send_fd(int sockfd, int fd) {
+    // Need to send some data in the message, this will do.
+    struct iovec iov = {
+        .iov_base = "",
+        .iov_len  = 1,
+    };
+
+    struct msghdr msg = {
+        .msg_iov        = &iov,
+        .msg_iovlen     = 1,
+    };
+
+    char cmsgbuf[CMSG_SPACE(sizeof(int))];
+
+    if (fd != -1) {
+        // Is the file descriptor actually open?
+        if (fcntl(fd, F_GETFD) == -1) {
+            if (errno != EBADF) {
+                goto error;
+            }
+            // It's closed, don't send a control message or sendmsg will EBADF.
+        } else {
+            // It's open, send the file descriptor in a control message.
+            msg.msg_control    = cmsgbuf;
+            msg.msg_controllen = sizeof(cmsgbuf);
+
+            struct cmsghdr *cmsg = CMSG_FIRSTHDR(&msg);
+
+            cmsg->cmsg_len   = CMSG_LEN(sizeof(int));
+            cmsg->cmsg_level = SOL_SOCKET;
+            cmsg->cmsg_type  = SCM_RIGHTS;
+
+            *(int *)CMSG_DATA(cmsg) = fd;
+        }
+    }
+
+    if (sendmsg(sockfd, &msg, 0) != 1) {
+error:
+        PLOGE("unable to send fd");
+        exit(-1);
+    }
+}
 
 static int read_int(int fd) {
     int val;
@@ -120,81 +228,10 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
     return main(argc, argv);
 }
 
-// Ensures all the data is written out
-static int write_blocking(int fd, char *buf, size_t bufsz) {
-    ssize_t ret, written;
-
-    written = 0;
-    do {
-        ret = write(fd, buf + written, bufsz - written);
-        if (ret == -1) return -1;
-        written += ret;
-    } while (written < bufsz);
-
-    return 0;
-}
-
-/**
- * Pump data from input FD to output FD. If close_output is
- * true, then close the output FD when we're done.
- */
-static void pump_ex(int input, int output, int close_output) {
-    char buf[4096];
-    int len;
-    while ((len = read(input, buf, 4096)) > 0) {
-        if (write_blocking(output, buf, len) == -1) break;
-    }
-    close(input);
-    if (close_output) close(output);
-}
-
-/**
- * Pump data from input FD to output FD. Will close the
- * output FD when done.
- */
-static void pump(int input, int output) {
-    pump_ex(input, output, 1);
-}
-
-static void* pump_thread(void* data) {
-    int* files = (int*)data;
-    int input = files[0];
-    int output = files[1];
-    pump(input, output);
-    free(data);
-    return NULL;
-}
-
-static void pump_async(int input, int output) {
-    pthread_t writer;
-    int* files = (int*)malloc(sizeof(int) * 2);
-    if (files == NULL) {
-        LOGE("unable to pump_async");
-        exit(-1);
-    }
-    files[0] = input;
-    files[1] = output;
-    pthread_create(&writer, NULL, pump_thread, files);
-}
-
-// Open a FIFO and set the right permissions on it
-// Terminates the app if it fails
-static void create_fifo(const char *path, pid_t pidd, int uid) {
-    unlink(path);
-    if (mkfifo(path, 0660) != 0) {
-        PLOGE("create_fifo %s", path);
-        exit (-1);
-    }
-    chown(path, uid, 0);
-    chmod(path, 0660);
-}
-
 static int daemon_accept(int fd) {
     is_daemon = 1;
     int pid = read_int(fd);
     LOGD("remote pid: %d", pid);
-    int atty = read_int(fd);
-    LOGD("remote atty: %d", atty);
     char *pts_slave = read_string(fd);
     LOGD("remote pts_slave: %s", pts_slave);
     daemon_from_uid = read_int(fd);
@@ -217,6 +254,11 @@ static int daemon_accept(int fd) {
         daemon_from_pid = credentials.pid;
     }
 
+    // The the FDs for each of the streams
+    int infd  = recv_fd(fd);
+    int outfd = recv_fd(fd);
+    int errfd = recv_fd(fd);
+
     int argc = read_int(fd);
     if (argc < 0 || argc > 512) {
         LOGE("unable to allocate args: %d", argc);
@@ -228,25 +270,6 @@ static int daemon_accept(int fd) {
     int i;
     for (i = 0; i < argc; i++) {
         argv[i] = read_string(fd);
-    }
-
-    char errfile[PATH_MAX];
-    char outfile[PATH_MAX];
-    char infile[PATH_MAX];
-    int infd, outfd, errfd;
-    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, pid);
-    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, pid);
-    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, pid);
-
-    // Create the FIFOs if necessary
-    if (!(atty & ATTY_IN)) {
-        create_fifo(infile, pid, daemon_from_uid);
-    }
-    if (!(atty & ATTY_OUT)) {
-        create_fifo(outfile, pid, daemon_from_uid);
-    }
-    if (!(atty & ATTY_ERR)) {
-        create_fifo(errfile, pid, daemon_from_uid);
     }
 
     // ack
@@ -280,6 +303,7 @@ static int daemon_accept(int fd) {
         }
 
         // Pass the return code back to the client
+        LOGD("sending code");
         if (write(fd, &code, sizeof(int)) != sizeof(int)) {
             PLOGE("unable to write exit code");
         }
@@ -298,51 +322,36 @@ static int daemon_accept(int fd) {
         PLOGE("setsid");
     }
 
+
     int ptsfd;
-    if (atty) {
+    if (pts_slave[0]) {
         // Opening the TTY has to occur after the
         // fork() and setsid() so that it becomes
         // our controlling TTY and not the daemon's
         ptsfd = open(pts_slave, O_RDWR);
-        if (infd == -1) {
+        if (ptsfd == -1) {
             PLOGE("open(pts_slave) daemon");
             exit(-1);
         }
+
+        if (infd < 0)  {
+            LOGD("daemon: stdin using PTY");
+            infd  = ptsfd;
+        }
+        if (outfd < 0) {
+            LOGD("daemon: stdout using PTY");
+            outfd = ptsfd;
+        }
+        if (errfd < 0) {
+            LOGD("daemon: stderr using PTY");
+            errfd = ptsfd;
+        }
+    } else {
+        // TODO: Check system property, if PTYs are disabled,
+        // made infd the CTTY using:
+        // ioctl(infd, TIOCSCTTY, 1);
     }
     free(pts_slave);
-
-    // Get the FD for stdout
-    if (atty & ATTY_OUT) {
-        outfd = ptsfd;
-    } else {
-        outfd = open(outfile, O_WRONLY);
-        if (outfd < 0) {
-            PLOGE("outfd daemon %s", outfile);
-            exit(-1);
-        }
-    }
-
-    // ...and now stderr
-    if (atty & ATTY_ERR) {
-        errfd = ptsfd;
-    } else {
-        errfd = open(errfile, O_WRONLY);
-        if (errfd < 0) {
-            PLOGE("errfd daemon %s", errfile);
-            exit(-1);
-        }
-    }
-
-    // ...and finally stdin
-    if (atty & ATTY_IN) {
-        infd = ptsfd;
-    } else {
-        infd = open(infile, O_RDONLY);
-        if (infd < 0) {
-            PLOGE("infd daemon %s", infile);
-            exit(-1);
-        }
-    }
 
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
@@ -462,19 +471,11 @@ static void setup_sighandlers(void) {
 }
 
 int connect_daemon(int argc, char *argv[]) {
-    char errfile[PATH_MAX];
-    char outfile[PATH_MAX];
-    char infile[PATH_MAX];
     int uid = getuid();
     int ptmx;
     char pts_slave[PATH_MAX];
 
     struct sockaddr_un sun;
-
-    // FIFO names for apps not attached to a PTY
-    sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
-    sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
-    sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
 
     // Open a socket to the daemon
     int socketfd = socket(AF_LOCAL, SOCK_STREAM, 0);
@@ -503,6 +504,8 @@ int connect_daemon(int argc, char *argv[]) {
     // Determine which one of our streams are attached to a TTY
     int atty = 0;
 
+    // TODO: Check a system property and never use PTYs if
+    // the property is set.
     if (isatty(STDIN_FILENO))  atty |= ATTY_IN;
     if (isatty(STDOUT_FILENO)) atty |= ATTY_OUT;
     if (isatty(STDERR_FILENO)) atty |= ATTY_ERR;
@@ -517,17 +520,41 @@ int connect_daemon(int argc, char *argv[]) {
     } else {
         pts_slave[0] = '\0';
     }
-    // Send atty to daemon - bitfield indicating which streams 
-    // are attached to a PTY
-    write_int(socketfd, atty);
 
     // Send the slave path to the daemon
-    // (This is "" if we're using FIFOs)
+    // (This is "" if we're not using PTYs)
     write_string(socketfd, pts_slave);
     // User ID
     write_int(socketfd, uid);
     // Parent PID
     write_int(socketfd, getppid());
+
+    // Send stdin
+    if (atty & ATTY_IN) {
+        // Using PTY
+        send_fd(socketfd, -1);
+    } else {
+        send_fd(socketfd, STDIN_FILENO);
+    }
+
+    // Send stdout
+    if (atty & ATTY_OUT) {
+        // Forward SIGWINCH
+        watch_sigwinch_async(STDOUT_FILENO, ptmx);
+
+        // Using PTY
+        send_fd(socketfd, -1);
+    } else {
+        send_fd(socketfd, STDOUT_FILENO);
+    }
+
+    // Send stderr
+    if (atty & ATTY_ERR) {
+        // Using PTY
+        send_fd(socketfd, -1);
+    } else {
+        send_fd(socketfd, STDERR_FILENO);
+    }
 
     // Number of command line arguments
     write_int(socketfd, argc);
@@ -541,53 +568,13 @@ int connect_daemon(int argc, char *argv[]) {
     // Wait for acknowledgement from daemon
     read_int(socketfd);
 
-    int outfd, errfd, infd;
-
-    // Open or assign the I/O streams
     if (atty & ATTY_IN) {
-        infd = ptmx;
-        // Put stdin into raw mode
-        set_stdin_raw();
         setup_sighandlers();
-    } else {
-        infd = open(infile, O_WRONLY);
-        if (infd <= 0) {
-            PLOGE("infd %s", infile);
-            exit(-1);
-        }
+        pump_stdin_async(ptmx);
     }
     if (atty & ATTY_OUT) {
-        outfd = ptmx;
-        // Forward SIGWINCH
-        watch_sigwinch_async(STDOUT_FILENO, outfd);
-    } else {
-        outfd = open(outfile, O_RDONLY);
-        if (outfd <= 0) {
-            PLOGE("outfd %s ", outfile);
-            exit(-1);
-        }
+        pump_stdout_blocking(ptmx);
     }
-    if (atty & ATTY_ERR) {
-        // Do not pump PTY to stderr
-        errfd = -1;
-    } else {
-        errfd = open(errfile, O_RDONLY);
-        if (errfd <= 0) {
-            PLOGE("errfd %s", errfile);
-            exit(-1);
-        }
-    }
-
-    // Pump I/O to and from the daemon
-    pump_async(STDIN_FILENO, infd);
-    if (errfd >= 0) {
-        pump_async(errfd, STDERR_FILENO);
-    }
-    pump_ex(outfd, STDOUT_FILENO, 0 /* Don't close output when done */);
-
-    // Cleanup
-    restore_stdin();
-    watch_sigwinch_cleanup();
 
     // Get the exit code
     int code = read_int(socketfd);

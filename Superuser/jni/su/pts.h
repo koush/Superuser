@@ -94,4 +94,23 @@ int watch_sigwinch_async(int master, int slave);
  * Cause the SIGWINCH watcher thread to terminate
  */
 void watch_sigwinch_cleanup(void);
+
+/**
+ * pump_stdin_async
+ *
+ * Forward data from STDIN to the given FD
+ * in a seperate thread
+ */
+void pump_stdin_async(int outfd);
+
+/**
+ * pump_stdout_blocking
+ *
+ * Forward data from the FD to STDOUT.
+ * Returns when the remote end of the FD closes.
+ *
+ * Before returning, restores stdin settings.
+ */
+void pump_stdout_blocking(int infd);
+
 #endif

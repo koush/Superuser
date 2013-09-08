@@ -32,6 +32,66 @@
 #include "pts.h"
 
 /**
+ * Helper functions
+ */
+// Ensures all the data is written out
+static int write_blocking(int fd, char *buf, size_t bufsz) {
+    ssize_t ret, written;
+
+    written = 0;
+    do {
+        ret = write(fd, buf + written, bufsz - written);
+        if (ret == -1) return -1;
+        written += ret;
+    } while (written < bufsz);
+
+    return 0;
+}
+
+/**
+ * Pump data from input FD to output FD. If close_output is
+ * true, then close the output FD when we're done.
+ */
+static void pump_ex(int input, int output, int close_output) {
+    char buf[4096];
+    int len;
+    while ((len = read(input, buf, 4096)) > 0) {
+        if (write_blocking(output, buf, len) == -1) break;
+    }
+    close(input);
+    if (close_output) close(output);
+}
+
+/**
+ * Pump data from input FD to output FD. Will close the
+ * output FD when done.
+ */
+static void pump(int input, int output) {
+    pump_ex(input, output, 1);
+}
+
+static void* pump_thread(void* data) {
+    int* files = (int*)data;
+    int input = files[0];
+    int output = files[1];
+    pump(input, output);
+    free(data);
+    return NULL;
+}
+
+static void pump_async(int input, int output) {
+    pthread_t writer;
+    int* files = (int*)malloc(sizeof(int) * 2);
+    if (files == NULL) {
+        exit(-1);
+    }
+    files[0] = input;
+    files[1] = output;
+    pthread_create(&writer, NULL, pump_thread, files);
+}
+
+
+/**
  * pts_open
  *
  * Opens a pts device and returns the name of the slave tty device.
@@ -187,6 +247,8 @@ static void *watch_sigwinch(void *data) {
  * "input" and set on "output".
  *
  * NOTE: This function blocks SIGWINCH and spawns a thread.
+ * NOTE 2: This function must be called before any of the
+ *         pump functions.
  *
  * Arguments
  * master   A file descriptor of the TTY window size to follow
@@ -238,4 +300,35 @@ int watch_sigwinch_async(int master, int slave) {
 void watch_sigwinch_cleanup(void) {
     closing_time = 1;
     raise(SIGWINCH);
+}
+
+/**
+ * pump_stdin_async
+ *
+ * Forward data from STDIN to the given FD
+ * in a seperate thread
+ */
+void pump_stdin_async(int outfd) {
+    // Put stdin into raw mode
+    set_stdin_raw();
+
+    // Pump data from stdin to the PTY
+    pump_async(STDIN_FILENO, outfd);
+}
+
+/**
+ * pump_stdout_blocking
+ *
+ * Forward data from the FD to STDOUT.
+ * Returns when the remote end of the FD closes.
+ *
+ * Before returning, restores stdin settings.
+ */
+void pump_stdout_blocking(int infd) {
+    // Pump data from stdout to PTY
+    pump_ex(infd, STDOUT_FILENO, 0 /* Don't close output when done */);
+
+    // Cleanup
+    restore_stdin();
+    watch_sigwinch_cleanup();
 }
