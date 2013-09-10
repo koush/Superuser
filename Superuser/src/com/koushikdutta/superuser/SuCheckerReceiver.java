@@ -11,10 +11,14 @@ import android.util.Log;
 
 import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.SuHelper;
+import com.koushikdutta.superuser.util.exceptions.IllegalBinaryException;
+import com.koushikdutta.superuser.util.exceptions.IllegalResultException;
 
 public class SuCheckerReceiver extends BroadcastReceiver {
+	private int suUpdateNotificationState = -1;
+	
     public static void doNotification(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+    	NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setTicker(context.getString(R.string.install_superuser));
         builder.setContentTitle(context.getString(R.string.install_superuser));
         builder.setSmallIcon(R.drawable.ic_stat_notification);
@@ -49,17 +53,42 @@ public class SuCheckerReceiver extends BroadcastReceiver {
                 return;
             }
 
+            //////////////////
+            //LiTTle edit
+            //////////////////
             final Handler handler = new Handler();
             new Thread() {
                 public void run() {
                     try {
                         SuHelper.checkSu(context);
                     }
+                    catch(IllegalResultException ire){
+                    	handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                            	doNotification(context);
+                            }
+                        });
+                    }
+                    catch (IllegalBinaryException ibe) {
+                    	if(ibe.getMessage().equalsIgnoreCase("Su binary is out of date.")){
+                    		suUpdateNotificationState = Settings.getInt(context, 
+                			Settings.getSuUpdateKey(), 
+                			Settings.SU_UPDATE_NOTIFICATION_ON);
+                		}
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                            	if(suUpdateNotificationState == Settings.SU_UPDATE_NOTIFICATION_ON)
+                            		doNotification(context);
+                            }
+                        });
+                    }
                     catch (Exception ex) {
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                doNotification(context);
+                            	doNotification(context);
                             }
                         });
                     }

@@ -19,6 +19,7 @@ package com.koushikdutta.superuser;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -42,7 +43,8 @@ import com.koushikdutta.widgets.FragmentInterfaceWrapper;
 import com.koushikdutta.widgets.ListItem;
 
 public class LogFragmentInternal extends BetterListFragmentInternal {
-    public LogFragmentInternal(FragmentInterfaceWrapper fragment) {
+    
+	public LogFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
     }
 
@@ -192,5 +194,45 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 }
             }
         });
+        ////////////////////////
+        //LiTTle edit
+        ////////////////////////
+        final CompoundButton permission = (CompoundButton)view.findViewById(R.id.permission);
+        if (up == null) {
+            view.findViewById(R.id.notification_container).setVisibility(View.GONE);
+        }
+        else {
+        	if(up.getPolicyResource() == R.string.allow){
+        		permission.setChecked(true);
+        	}
+        	else if(up.getPolicyResource() == R.string.deny){
+        		permission.setChecked(false);
+        	}
+        }
+        permission.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton button, boolean isChecked) {
+                if (up == null) {
+                }
+                else {
+                	if(isChecked){
+                		up.setPolicy(UidPolicy.ALLOW);
+                	}
+                	else{
+                		up.setPolicy(UidPolicy.DENY);
+                	}
+                    SuDatabaseHelper.setPolicy(getActivity(), up);
+                    //update the adapters
+                    /*
+                     * TODO I should find a better way but this is ok 
+                     * for the moment!
+                     */
+                    Intent i = new Intent(getContext(), MainActivity.class);
+                	i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    getContext().startActivity(i); 
+                }
+            }
+        });
     }
+    
 }

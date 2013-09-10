@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Laat toe</string>
     <string name="deny">Verwerp</string>
-    <string name="status_incoming">Inkomende Superuser versoek...</string>
+    <string name="status_incoming">Inkomende Superuser versoek&#8230;</string>
     <string name="unknown_uid">Onbekende UID: %s</string>
     <string name="application_request">%s vra tans Superuser toegang aan.</string>
     <string name="info">Waarskuwing: As jy dit nie verstaan ​​nie, dan kan jy die versoek weier.</string>
@@ -67,12 +67,12 @@
     <string name="about">Meer oor Superuser</string>
     <string name="apps">Programme</string>
     <string name="installing">Installeer tans</string>
-    <string name="installing_superuser">Besig met die instalasie van Superuser\u2026</string>
+    <string name="installing_superuser">Besig met die instalasie van Superuser&#8230;</string>
     <string name="install_superuser">Installeer Superuser</string>
     <string name="install_superuser_info">Die Superuser binêre lêer (su) moet opgedateer word.\n\nKies \'n installasie metode.\n\'Recovery\' mode installasie word tensterkste aanbeveel vir HTC toestelle.</string>
     <string name="recovery_install">\'Recovery\' installasie</string>
     <string name="install">Installeer</string>
-    <string name="checking_superuser">Inspekteur Superuser\u2026</string>
+    <string name="checking_superuser">Inspekteur Superuser&#8230;</string>
     <string name="install_error">Daar was \'n fout tydens die instalasie van Superuser. Stuur \'n verslag na die ontwikelaar.</string>
     <string name="install_success">Superuser was suksesvol geïnstalleer.</string>
     <string name="su_binary_outdated">Die su lêer is oud.</string>

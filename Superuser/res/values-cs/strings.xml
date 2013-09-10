@@ -17,7 +17,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Povolit</string>
     <string name="deny">Zakázat</string>
-    <string name="status_incoming">Příchozí požadavek na Superuser\u2026</string>
+    <string name="status_incoming">Příchozí požadavek na Superuser&#8230;</string>
     <string name="unknown_uid">Neznámé UID: %s</string>
     <string name="application_request">%s požaduje Superuser přístup.</string>
     <string name="info">Varování: Pokud si nejste jisti, kdo a proč tuto akci vyvolal nebo pokud tomuto požadavku nerozumíte, je opravdu doporučeno tento požadavek nepovolit.</string>
@@ -80,12 +80,12 @@
     <string name="about">O aplikaci</string>
     <string name="apps">Aplikace</string>
     <string name="installing">Instaluje se</string>
-    <string name="installing_superuser">Instaluje se Superuser\u2026</string>
+    <string name="installing_superuser">Instaluje se Superuser&#8230;</string>
     <string name="install_superuser">Instalovat Superusera</string>
     <string name="install_superuser_info">Superuser příkaz \"su\" musí být aktualizována.\n\nJe nutné zvolit metodu instalace.\nInstalace z Recovery je doporučena pro zařízení HTC.</string>
     <string name="recovery_install">Instalovat z Recovery</string>
     <string name="install">Instalovat</string>
-    <string name="checking_superuser">Kontrola Superuser\u2026</string>
+    <string name="checking_superuser">Kontrola Superuser&#8230;</string>
     <string name="install_error">Během instalace Superusera došlo k chybě. Zašlete prosím záznam s chybou vývojáři.</string>
     <string name="install_success">Instalace Superusera byla úspěšná.</string>
     <string name="su_binary_outdated">Příkaz \"su\" je neaktuální.</string>

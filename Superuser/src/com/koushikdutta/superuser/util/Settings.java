@@ -378,4 +378,27 @@ public class Settings {
     public static final void setTheme(Context context, int theme) {
         setInt(context, KEY_THEME, theme);
     }
+    
+    ////////////////////////////
+    //LiTTle edit
+    ////////////////////////////
+    private static final String KEY_SU_UPDATE_NOTIFICATION = "su_update_notification";
+    public static final int SU_UPDATE_NOTIFICATION_OFF = 0;
+    public static final int SU_UPDATE_NOTIFICATION_ON = 1;
+    
+    public static int getSuUpdateNotificationState(Context context) {
+        switch (getInt(context, KEY_SU_UPDATE_NOTIFICATION, SU_UPDATE_NOTIFICATION_ON)) {
+        case SU_UPDATE_NOTIFICATION_OFF:
+            return SU_UPDATE_NOTIFICATION_OFF;
+        default:
+            return SU_UPDATE_NOTIFICATION_ON;
+        }
+    }
+    
+    public static final void setSuUpdateNotificationState(Context context, int state) {
+        setInt(context, KEY_SU_UPDATE_NOTIFICATION, state);
+    }
+    public static final String getSuUpdateKey() {
+        return KEY_SU_UPDATE_NOTIFICATION;
+    }
 }

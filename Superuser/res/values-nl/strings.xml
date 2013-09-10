@@ -3,7 +3,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Toestaan</string>
     <string name="deny">Weigeren</string>
-    <string name="status_incoming">Inkomend verzoek tot roottoegang\u2026</string>
+    <string name="status_incoming">Inkomend verzoek tot roottoegang&#8230;</string>
     <string name="unknown_uid">Onbekend UID: %s</string>
     <string name="application_request">%s vraagt roottoegang.</string>
     <string name="info">Let op: indien u dit niet begrijpt, is het raadzaam te weigeren.</string>
@@ -66,12 +66,12 @@
     <string name="about">Over</string>
     <string name="apps">Apps</string>
     <string name="installing">Bezig met installeren</string>
-    <string name="installing_superuser">Superuser installeren\u2026</string>
+    <string name="installing_superuser">Superuser installeren&#8230;</string>
     <string name="install_superuser">Superuser installeren</string>
     <string name="install_superuser_info">Het \'su\'-bestand moet worden bijgewerkt.\n\nKies een installatiemethode.\n\'Via recovery\' is aanbevolen voor HTC-apparaten.</string>
     <string name="recovery_install">Via recovery</string>
     <string name="install">Normaal</string>
-    <string name="checking_superuser">Superuser controleren\u2026</string>
+    <string name="checking_superuser">Superuser controleren&#8230;</string>
     <string name="install_error">Kan Superuser niet installeren. Stuur een foutrapport naar de ontwikkelaar.</string>
     <string name="install_success">Superuser succesvol geïnstalleerd.</string>
     <string name="su_binary_outdated">Het \'su\'-bestand is verouderd.</string>

@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">अनुमति दीजिये</string>
     <string name="deny">इनकार कीजिये</string>
-    <string name="status_incoming">आवक Superuser अनुरोध...</string>
+    <string name="status_incoming">आवक Superuser अनुरोध&#8230;</string>
     <string name="unknown_uid">अनजान UID: %s</string>
     <string name="application_request">%s Superuser उपयोग का अनुरोध कर रहा है|</string>
     <string name="info">चेतावनी: यदि आपको यह समझ में नहीं आ रहा, तो आपको अनुरोध इनकार करना चाहिए।</string>
@@ -67,12 +67,12 @@
     <string name="about">About</string>
     <string name="apps">Apps</string>
     <string name="installing">इंस्टॉल हो रहा है</string>
-    <string name="installing_superuser">Superuser इंस्टॉल हो रहा है...</string>
+    <string name="installing_superuser">Superuser इंस्टॉल हो रहा है&#8230;</string>
     <string name="install_superuser">Install Superuser</string>
     <string name="install_superuser_info">The Superuser binary (su) must be updated.\n\nPlease choose an installation method.\nRecovery mode installation is recommended for HTC devices.</string>
     <string name="recovery_install">Recovery Install</string>
     <string name="install">Install</string>
-    <string name="checking_superuser">Checking Superuser...</string>
+    <string name="checking_superuser">Checking Superuser&#8230;</string>
     <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
     <string name="install_success">Superuser इंस्टॉल सफल रहा|</string>
     <string name="su_binary_outdated">su binary पुराना है|</string>

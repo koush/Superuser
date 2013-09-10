@@ -3,7 +3,7 @@
     <string name="superuser">超级用户</string>
     <string name="allow">允许</string>
     <string name="deny">拒绝</string>
-    <string name="status_incoming">收到超级用户请求\u2026</string>
+    <string name="status_incoming">收到超级用户请求&#8230;</string>
     <string name="unknown_uid">未知 UID：%s</string>
     <string name="application_request">“%s”正在请求超级用户访问权限。</string>
     <string name="info">警告：如果你对此不了解，你应该选拒绝。</string>
@@ -67,12 +67,12 @@
     <string name="about">关于</string>
     <string name="apps">应用程序</string>
     <string name="installing">正在安装</string>
-    <string name="installing_superuser">正在安装超级用户\u2026</string>
+    <string name="installing_superuser">正在安装超级用户&#8230;</string>
     <string name="install_superuser">安装超级用户</string>
     <string name="install_superuser_info">超级用户二进制可执行文件 (su) 需要更新。\n\n请选择安装方式。\n对 HTC 设备建议选择恢复模式安装。</string>
     <string name="recovery_install">恢复模式安装</string>
     <string name="install">常规安装</string>
-    <string name="checking_superuser">正在检查超级用户\u2026</string>
+    <string name="checking_superuser">正在检查超级用户&#8230;</string>
     <string name="install_error">安装超级用户时出错。请将错误日志发送给开发人员。</string>
     <string name="install_success">超级用户安装成功。</string>
     <string name="su_binary_outdated">su 二进制可执行文件已过旧。</string>

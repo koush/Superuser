@@ -4,7 +4,7 @@
     <string name="superuser">Super-utilisateur</string>
     <string name="allow">Autoriser</string>
     <string name="deny">Refuser</string>
-    <string name="status_incoming">Demande des droits Super-utilisateur\u2026</string>
+    <string name="status_incoming">Demande des droits Super-utilisateur&#8230;</string>
     <string name="unknown_uid">UID Inconnu : %s</string>
     <string name="application_request">%s demande les droits Super-utilisateur.</string>
     <string name="info">Attention : Si vous ne comprenez pas ceci, vous devriez refuser la demande.</string>
@@ -67,12 +67,12 @@
     <string name="about">À propos</string>
     <string name="apps">Application</string>
     <string name="installing">Installation</string>
-    <string name="installing_superuser">Installation de Super-utilisateur\u2026</string>
+    <string name="installing_superuser">Installation de Super-utilisateur&#8230;</string>
     <string name="install_superuser">Installer Super-utilisateur</string>
     <string name="install_superuser_info">Le binaire Super-utilisateur (su) doit être mis à jour.\n\nVeuillez choisir une méthode d\'installation.\nL\'installation par Recovery est recommandée pour les appareils HTC.</string>
     <string name="recovery_install">Installation par Recovery</string>
     <string name="install">Installer</string>
-    <string name="checking_superuser">Vérification de Super-utilisateur\u2026</string>
+    <string name="checking_superuser">Vérification de Super-utilisateur&#8230;</string>
     <string name="install_error">Une erreur est survenue pendant l\'installation de Super-utilisateur. Merci d\'envoyer le rapport d\'erreur au développeur.</string>
     <string name="install_success">Super-utilisateur installé avec succès.</string>
     <string name="su_binary_outdated">Le binaire su n\'est pas à jour.</string>

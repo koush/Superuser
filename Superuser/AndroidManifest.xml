@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koushikdutta.superuser"
+<<<<<<< HEAD
     android:versionCode="1021"
     android:versionName="1.0.2.1" >
+=======
+    android:versionCode="1020"
+    android:versionName="1.0.2.0" >
+>>>>>>> 31e1931... New Exceptions added, Translations fixed, Lint's warnings fixed, New UI features
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="18"/>
 
     <permission
         android:name="android.permission.REQUEST_SUPERUSER"

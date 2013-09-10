@@ -4,7 +4,7 @@
     <string name="superuser">슈퍼유저</string>
     <string name="allow">허가</string>
     <string name="deny">취소</string>
-    <string name="status_incoming">슈퍼유저 권한 요청 중...</string>
+    <string name="status_incoming">슈퍼유저 권한 요청 중&#8230;</string>
     <string name="unknown_uid">알수없는 UID: %s</string>
     <string name="application_request">%s (이)가 슈퍼유저 권한을 요청했습니다.</string>
     <string name="info">주의: 루팅에 대해 모를시에는 허가를 누르지마세요.</string>
@@ -67,12 +67,12 @@
     <string name="about">대하여</string>
     <string name="apps">애플리케이션</string>
     <string name="installing">설치</string>
-    <string name="installing_superuser">슈퍼유저 설치중...</string>
+    <string name="installing_superuser">슈퍼유저 설치중&#8230;</string>
     <string name="install_superuser">슈퍼유저 설치</string>
     <string name="install_superuser_info">슈퍼유저 바이너리(su)를 업데이트 해야합니다.\n\n설치 방법을 선택하세요.\n리커버리 설치는 HTC 장치를 사용하는 것이 좋습니다.</string>
     <string name="recovery_install">리커버리 설치</string>
     <string name="install">설치</string>
-    <string name="checking_superuser">슈퍼유저 확인중...</string>
+    <string name="checking_superuser">슈퍼유저 확인중&#8230;</string>
     <string name="install_error">슈퍼유저를 설치하는 중에 오류가 발생했습니다.개발자에게 오류로그를 보내 주시기 바랍니다.</string>
     <string name="install_success">슈퍼유저가 성공적으로 설치되었습니다.</string>
     <string name="su_binary_outdated">su 바이너리의 유효 기간이 지났습니다.</string>

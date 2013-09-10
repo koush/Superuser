@@ -18,12 +18,18 @@ package com.koushikdutta.superuser;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+<<<<<<< HEAD
+=======
+import android.os.Handler;
+import android.os.Message;
+>>>>>>> 31e1931... New Exceptions added, Translations fixed, Lint's warnings fixed, New UI features
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +39,8 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.StreamUtility;
 import com.koushikdutta.superuser.util.SuHelper;
+import com.koushikdutta.superuser.util.exceptions.IllegalBinaryException;
+import com.koushikdutta.superuser.util.exceptions.IllegalResultException;
 import com.koushikdutta.widgets.BetterListActivity;
 
 import java.io.File;
@@ -218,8 +226,8 @@ public class MainActivity extends BetterListActivity {
         }.start();
     }
     
-    void doInstall() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    void doInstall(Context ctx) {
+    	AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
         builder.setTitle(R.string.install);
         builder.setMessage(R.string.install_superuser_info);
         if (Build.VERSION.SDK_INT < 18) {
@@ -291,13 +299,18 @@ public class MainActivity extends BetterListActivity {
                     e.printStackTrace();
                     _error = true;
                 }
+                //check the user preference
+                final int suUpdateNotificationState = Settings.getInt(MainActivity.this, 
+            			Settings.getSuUpdateKey(), 
+            			Settings.SU_UPDATE_NOTIFICATION_ON);
                 final boolean error = _error;
                 dlg.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (error) {
-                            doInstall();
+                        if (error)
+                    		if(suUpdateNotificationState == Settings.SU_UPDATE_NOTIFICATION_ON) {
+                    			doInstall(MainActivity.this);
                         }
                         else {
                             doWhatsNew();

@@ -435,5 +435,61 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
             })
             .setAttrDrawable(R.attr.themeIcon);            
         }
-    }
+        //////////////////////////////////////////////
+        //LiTTle edit
+        //////////////////////////////////////////////
+        addItem(R.string.misc, new ListItem(this, R.string.su_update_reminder, 0) {
+            void update() {
+                switch (Settings.getSuUpdateNotificationState(getActivity())) {
+                case Settings.SU_UPDATE_NOTIFICATION_OFF:
+                    setSummary(getString(R.string.no_reminder));
+                    break;
+                case Settings.SU_UPDATE_NOTIFICATION_ON:
+                    setSummary(getString(R.string.su_reminder_summary, getString(R.string.reminder)));
+                    break;
+                }
+            }
+            
+            {
+                update();
+            }
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.su_update_reminder);
+                String[] items = new String[] { getString(R.string.none), getString(R.string.reminder) };
+                builder.setItems(items, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            Settings.setSuUpdateNotificationState(getActivity(), Settings.SU_UPDATE_NOTIFICATION_OFF);
+                            break;
+                        case 1:
+                            Settings.setSuUpdateNotificationState(getActivity(), Settings.SU_UPDATE_NOTIFICATION_ON);
+                            break;
+                        }
+                        update();
+                    }
+                });
+                builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.notificationsIcon);
+        
+        addItem(R.string.misc, new ListItem(this, R.string.force_su_update, R.string.force_su_update_info) {
+            
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                MainActivity ma = new MainActivity();
+                ma.doInstall(SettingsFragmentInternal.this.getContext());
+                ma = null;
+            }
+        })
+        .setAttrDrawable(R.attr.automaticResponseIcon);
+    }  
 }

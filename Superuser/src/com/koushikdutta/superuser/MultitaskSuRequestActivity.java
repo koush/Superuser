@@ -345,8 +345,19 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                     });                    
 
                     if ("com.koushikdutta.superuser".equals(getPackageName())) {
-                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version")))
-                            SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
+                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version"))){
+                        	final int suUpdateNotificationState = Settings.getInt(MultitaskSuRequestActivity.this, 
+                        			Settings.getSuUpdateKey(), 
+                        			Settings.SU_UPDATE_NOTIFICATION_ON);
+                        	if(suUpdateNotificationState == Settings.SU_UPDATE_NOTIFICATION_ON){
+                        		runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                    	SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
+                                    }
+                                }); 
+                        	}
+                        }
                     }
                 }
                 catch (Exception ex) {

@@ -17,7 +17,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">İzin ver</string>
     <string name="deny">İzin verme</string>
-    <string name="status_incoming">Gelen yetkili kullanıcı isteği\u2026</string>
+    <string name="status_incoming">Gelen yetkili kullanıcı isteği&#8230;</string>
     <string name="unknown_uid">Bilinmeyen UID: %s</string>
     <string name="application_request">%s yetkili kullanıcı erişimi istiyor.</string>
     <string name="info">Uyarı: Eğer bundan bir şey anlamadıysanız isteğe izin vermeyin.</string>
@@ -80,12 +80,12 @@
     <string name="about">Hakkında</string>
     <string name="apps">Uygulamalar</string>
     <string name="installing">Kuruluyor</string>
-    <string name="installing_superuser">Superuser kuruluyor\u2026</string>
+    <string name="installing_superuser">Superuser kuruluyor&#8230;</string>
     <string name="install_superuser">Superuser\'i Kur</string>
     <string name="install_superuser_info">Yetkili kullanıcı ikili kodu (su) güncellenmeli.\n\nLütfen bir kurulum yöntemi seçin.\nHTC cihazlar için recovery modu kurulumu tavsiye edilir.</string>
     <string name="recovery_install">Recovery Kurulumu</string>
     <string name="install">Kur</string>
-    <string name="checking_superuser">Superuser kontrol ediliyor\u2026</string>
+    <string name="checking_superuser">Superuser kontrol ediliyor&#8230;</string>
     <string name="install_error">Superuser kurulurken hata. Lütfen hata raporunu geliştiriciye iletin</string>
     <string name="install_success">Superuser kurulumu başarılı.</string>
     <string name="su_binary_outdated">su ikili dosyası eski.</string>
