@@ -40,7 +40,9 @@
     <string name="number_seconds">%s δευτερόλεπτα</string>
     <string name="superuser_granted">%s έλαβε δικαιώματα Superuser</string>
     <string name="superuser_denied">%s αρνήθηκε δικαιώματα Superuser</string>
-    <string name="toast">Μήνυμα</string>
+    <string name="upper_toast">Μήνυμα (Άνω Μέρος)</string>
+    <string name="central_toast">Μήνυμα (Κεντρικά)</string>
+    <string name="lower_toast">Μήνυμα (Κάτω Μέρος)</string>
     <string name="notification">Ειδοποίηση</string>
     <string name="no_notification">Δεν θα εμφανίζεται ειδοποίηση</string>
     <string name="developer_warning">Προειδοποίηση για προγραμματιστές:\nandroid.permission.ACCESS_SUPERUSER\nδεν έχει δηλωθεί στο manifest.</string>
@@ -87,10 +89,6 @@
     <string name="light">Ανοιχτόχρωμο</string>
     <string name="dark">Σκοτεινό</string>
     <string name="pin_disabled">Η προστασία PIN του Superuser απενεργοποιήθηκε</string>
-    
-    <!-- LiTTle edit -->
-    <eat-comment />
-    
     <string name="misc">Διάφορα</string>
     <string name="su_update_reminder">Υπενθύμιση ενημέρωσης su</string>
     <string name="su_reminder_summary">Να εμφανίζεται κάθε %s ενημέρωσης για το su binary</string>

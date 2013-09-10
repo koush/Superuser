@@ -22,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.db.LogEntry;
@@ -72,7 +73,7 @@ public class SuReceiver extends BroadcastReceiver {
 
         if (u != null && !u.notification)
             return;
-
+        final Toast info;
         switch (Settings.getNotificationType(context)) {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
@@ -86,8 +87,20 @@ public class SuReceiver extends BroadcastReceiver {
             NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(NOTIFICATION_ID, builder.getNotification());
             break;
-        case Settings.NOTIFICATION_TYPE_TOAST:
-            Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+        case Settings.NOTIFICATION_TYPE_UPPER_TOAST:
+            info = Toast.makeText(context, toast, Toast.LENGTH_SHORT);
+            info.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
+            info.show();
+            break;
+        case Settings.NOTIFICATION_TYPE_CENTRAL_TOAST:
+        	info = Toast.makeText(context, toast, Toast.LENGTH_SHORT);
+            info.setGravity(Gravity.CENTER, 0, 0);
+            info.show();
+            break;
+        case Settings.NOTIFICATION_TYPE_LOWER_TOAST:
+        	info = Toast.makeText(context, toast, Toast.LENGTH_SHORT);
+            info.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, 0);
+            info.show();
             break;
         }
     }

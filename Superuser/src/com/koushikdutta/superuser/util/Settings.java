@@ -119,17 +119,23 @@ public class Settings {
 
     private static final String KEY_NOTIFICATION = "notification";
     public static final int NOTIFICATION_TYPE_NONE = 0;
-    public static final int NOTIFICATION_TYPE_TOAST = 1;
-    public static final int NOTIFICATION_TYPE_NOTIFICATION = 2;
-    public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_TOAST;
+    public static final int NOTIFICATION_TYPE_UPPER_TOAST = 1;
+    public static final int NOTIFICATION_TYPE_CENTRAL_TOAST = 2;
+    public static final int NOTIFICATION_TYPE_LOWER_TOAST = 3;
+    public static final int NOTIFICATION_TYPE_NOTIFICATION = 4;
+    public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_LOWER_TOAST;
     public static int getNotificationType(Context context) {
         switch (getInt(context, KEY_NOTIFICATION, NOTIFICATION_TYPE_DEFAULT)) {
         case NOTIFICATION_TYPE_NONE:
             return NOTIFICATION_TYPE_NONE;
         case NOTIFICATION_TYPE_NOTIFICATION:
             return NOTIFICATION_TYPE_NOTIFICATION;
-        case NOTIFICATION_TYPE_TOAST:
-            return NOTIFICATION_TYPE_TOAST;
+        case NOTIFICATION_TYPE_UPPER_TOAST:
+            return NOTIFICATION_TYPE_UPPER_TOAST;
+        case NOTIFICATION_TYPE_CENTRAL_TOAST:
+            return NOTIFICATION_TYPE_CENTRAL_TOAST;
+        case NOTIFICATION_TYPE_LOWER_TOAST:
+            return NOTIFICATION_TYPE_LOWER_TOAST;
         default:
             return NOTIFICATION_TYPE_DEFAULT;
         }

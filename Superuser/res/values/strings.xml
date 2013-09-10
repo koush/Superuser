@@ -40,7 +40,9 @@
     <string name="number_seconds">%s seconds</string>
     <string name="superuser_granted">Superuser granted to %s</string>
     <string name="superuser_denied">Superuser denied to %s</string>
-    <string name="toast">Toast</string>
+    <string name="upper_toast">Upper Toast</string>
+    <string name="central_toast">Central Toast</string>
+    <string name="lower_toast">Lower Toast</string>
     <string name="notification">Notification</string>
     <string name="no_notification">No notification will be shown</string>
     <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
@@ -87,10 +89,6 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="pin_disabled">Superuser PIN protection disabled</string>
-    
-    <!-- LiTTle edit -->
-    <eat-comment />
-    
     <string name="misc">Misc.</string>
     <string name="su_update_reminder">Su update reminder</string>
     <string name="su_reminder_summary">All %ss will be shown when su binary needs update</string>

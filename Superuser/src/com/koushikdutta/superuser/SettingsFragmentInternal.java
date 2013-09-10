@@ -353,8 +353,14 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 case Settings.NOTIFICATION_TYPE_NOTIFICATION:
                     setSummary(getString(R.string.notifications_summary, getString(R.string.notification)));
                     break;
-                case Settings.NOTIFICATION_TYPE_TOAST:
-                    setSummary(getString(R.string.notifications_summary, getString(R.string.toast)));
+                case Settings.NOTIFICATION_TYPE_UPPER_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.upper_toast)));
+                    break;
+                case Settings.NOTIFICATION_TYPE_CENTRAL_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.central_toast)));
+                    break;
+                case Settings.NOTIFICATION_TYPE_LOWER_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.lower_toast)));
                     break;
                 }
             }
@@ -368,7 +374,8 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.notifications);
-                String[] items = new String[] { getString(R.string.none), getString(R.string.toast), getString(R.string.notification) };
+                String[] items = new String[] { getString(R.string.none), getString(R.string.upper_toast), 
+                		getString(R.string.central_toast), getString(R.string.lower_toast), getString(R.string.notification) };
                 builder.setItems(items, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -376,11 +383,17 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                         case 0:
                             Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NONE);
                             break;
-                        case 2:
-                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NOTIFICATION);
-                            break;
                         case 1:
-                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_TOAST);
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_UPPER_TOAST);
+                            break;
+                        case 2:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_CENTRAL_TOAST);
+                            break;
+                        case 3:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_LOWER_TOAST);
+                            break;
+                        case 4:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NOTIFICATION);
                             break;
                         }
                         update();
