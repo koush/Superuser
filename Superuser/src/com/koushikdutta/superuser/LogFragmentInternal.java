@@ -18,8 +18,10 @@ package com.koushikdutta.superuser;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -70,6 +72,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         
         inflater.inflate(R.menu.policy, menu);
+        
         MenuItem delete = menu.findItem(R.id.delete);
         delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
@@ -82,6 +85,22 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 return true;
             }
         });
+        if(up != null){
+        	MenuItem run = menu.findItem(R.id.run);
+        	run.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					Activity activity = (Activity) getActivity();
+                	PackageManager pm = activity.getPackageManager();
+                	Intent launchIntent = pm.getLaunchIntentForPackage(up.packageName);
+                	activity.startActivity(launchIntent);
+					return true;
+				}
+			});
+        }
+        else
+        	menu.removeItem(R.id.run);
     }
     
     @Override

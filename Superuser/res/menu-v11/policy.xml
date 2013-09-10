@@ -5,4 +5,10 @@
         android:icon="@drawable/ic_action_trash"
         android:showAsAction="ifRoom"
         />
+    <item 
+        android:id="@+id/run"
+        android:title="@string/run"
+        android:icon="@drawable/ic_action_play"
+        android:showAsAction="ifRoom"
+        />
 </menu>
