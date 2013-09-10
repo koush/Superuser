@@ -63,7 +63,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     
     Handler mHandler = new Handler();
     
-    int mTimeLeft = 3;
+    //Instead of 3 I prefer 0 countdown!
+    int mTimeLeft = 0;
     
     Button mAllow;
     Button mDeny;
