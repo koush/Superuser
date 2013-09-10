@@ -101,4 +101,5 @@
     <string name="db_delete_error">Η ανάκληση των Superuser δικαιωμάτων στάθηκε αδύνατη γι αυτή την εφαρμογή. \n
         Επανεκκινήστε την εφαρμογή Superuser και δοκιμάστε ξανά.</string>
     <string name="ok">Εντάξει</string>
+    <string name="run">Εκτέλεση</string>
 </resources>

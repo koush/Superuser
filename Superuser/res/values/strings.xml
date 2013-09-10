@@ -102,5 +102,6 @@
         Please restart the Superuser application and try again.</string>
     <string name="ok">OK</string>
     <string name="permission">Permission</string>
+    <string name="run">Run</string>
     
 </resources>

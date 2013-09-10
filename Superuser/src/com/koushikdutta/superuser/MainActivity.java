@@ -208,25 +208,26 @@ public class MainActivity extends BetterListActivity {
 					_error = true;
                     Log.e("Superuser", "error upgrading", e);
 				}
-                
-                dlg.dismiss();
-                final boolean error = _error;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setPositiveButton(android.R.string.ok, null);
-                        builder.setTitle(R.string.install);
-                        
-                        if (error) {
-                            builder.setMessage(R.string.install_error);
-                        }
-                        else {
-                            builder.setMessage(R.string.install_success);
-                        }
-                        builder.create().show();
-                    }
-                });
+                finally{
+	                dlg.dismiss();
+	                final boolean error = _error;
+	                runOnUiThread(new Runnable() {
+	                    @Override
+	                    public void run() {
+	                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+	                        builder.setPositiveButton(android.R.string.ok, null);
+	                        builder.setTitle(R.string.install);
+	                        
+	                        if (error) {
+	                            builder.setMessage(R.string.install_error);
+	                        }
+	                        else {
+	                            builder.setMessage(R.string.install_success);
+	                        }
+	                        builder.create().show();
+	                    }
+	                });
+	            }
             };
         }.start();
     }

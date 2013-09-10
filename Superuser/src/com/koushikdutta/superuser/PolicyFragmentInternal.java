@@ -19,11 +19,13 @@ package com.koushikdutta.superuser;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
@@ -157,7 +159,8 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         final String permissionChange = (up.policy.equalsIgnoreCase(UidPolicy.ALLOW)) ? 
         		getResources().getText(R.string.deny).toString() : 
         			getResources().getText(R.string.allow).toString();
-        String[] items = new String[] {permissionChange, getString(R.string.revoke_permission), getString(R.string.details)};
+        String[] items = new String[] {permissionChange, getString(R.string.revoke_permission), 
+        		getString(R.string.run), getString(R.string.details)};
         builder.setItems(items, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -205,6 +208,12 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                     dialog.dismiss();
                     break;
                 case 2:
+                	Activity activity = (Activity) getActivity();
+                	PackageManager pm = activity.getPackageManager();
+                	Intent launchIntent = pm.getLaunchIntentForPackage(up.packageName);
+                	activity.startActivity(launchIntent);
+                	break;
+                case 3:
                 	setContent(item, up);
                     dialog.dismiss();
                     break;
