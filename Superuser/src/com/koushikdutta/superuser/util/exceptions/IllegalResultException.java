@@ -20,7 +20,7 @@ public class IllegalResultException extends Exception {
 	 * Constructs a new illegal result exception with null as its detail message.
 	 */
 	public IllegalResultException() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class IllegalResultException extends Exception {
 	 */
 	public IllegalResultException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class IllegalResultException extends Exception {
 	 */
 	public IllegalResultException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class IllegalResultException extends Exception {
 	 */
 	public IllegalResultException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

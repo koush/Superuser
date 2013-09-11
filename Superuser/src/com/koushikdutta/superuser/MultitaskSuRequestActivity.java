@@ -286,7 +286,12 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     private final static int SU_PROTOCOL_NAME_MAX = 20;
     private final static int SU_PROTOCOL_VALUE_MAX_DEFAULT = 256;
     private final static HashMap<String, Integer> SU_PROTOCOL_VALUE_MAX = new HashMap<String, Integer>() {
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 5649873127008413475L;
+
+		{
             put("command", 2048);
         }
     };
@@ -331,11 +336,11 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                             break;
                     }
                     
-                    int protocolVersion = payload.getAsInteger("version");
+                    //int protocolVersion = payload.getAsInteger("version");
                     mCallerUid = payload.getAsInteger("from.uid");
                     mDesiredUid = payload.getAsByte("to.uid");
                     mDesiredCmd = payload.getAsString("command");
-                    String calledBin = payload.getAsString("from.bin");
+                    //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
                     runOnUiThread(new Runnable() {
                         @Override

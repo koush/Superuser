@@ -17,7 +17,7 @@ public class IllegalBinaryException extends Exception {
 	 * Constructs a new illegal binary exception with null as its detail message.
 	 */
 	public IllegalBinaryException() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -27,7 +27,7 @@ public class IllegalBinaryException extends Exception {
 	 */
 	public IllegalBinaryException(String detailMessage) {
 		super(detailMessage);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -39,7 +39,7 @@ public class IllegalBinaryException extends Exception {
 	 */
 	public IllegalBinaryException(Throwable throwable) {
 		super(throwable);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class IllegalBinaryException extends Exception {
 	 */
 	public IllegalBinaryException(String detailMessage, Throwable throwable) {
 		super(detailMessage, throwable);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

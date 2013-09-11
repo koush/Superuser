@@ -19,6 +19,7 @@ package com.koushikdutta.superuser;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -152,7 +153,8 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             li.setDrawable(icon);
     }
     
-    public void showExtraActions(final UidPolicy up, final ListItem item){
+    @SuppressLint("HandlerLeak")
+    private void showExtraActions(final UidPolicy up, final ListItem item){
     	AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(up.name);
         builder.setIcon(Helper.loadPackageIcon(getActivity(), up.packageName));
@@ -184,10 +186,13 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                     getContext().startActivity(i); 
                 	break;
                 case 1:
+                	/* I want the activity to be alive. After all the result will be 
+                	 * shown immediately to the user when he/she will see that an 
+                	 * application is removed or show the error dialog.
+                	 */                	
                 	final Handler handler = new Handler(){
                 		@Override
                 		public void handleMessage(Message msg) {
-                			// TODO Auto-generated method stub
                 			if(msg.getData().getBoolean(DATA_BUNDLE_KEY))
                 				removeItem(item);
                 			else
