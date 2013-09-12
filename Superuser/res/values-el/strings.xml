@@ -102,4 +102,11 @@
         Επανεκκινήστε την εφαρμογή Superuser και δοκιμάστε ξανά.</string>
     <string name="ok">Εντάξει</string>
     <string name="run">Εκτέλεση</string>
+    <string name="tablet_mode">Γραφική Διεπαφή Tablet</string>
+    <string name="tablet_mode_info">Η δυνατότητα αυτή είναι διαθέσιμη αποκλειστικά για χρήση σε κινητα 
+        τηλέφωνα. Αν η εφαρμογή δεν εμφανίζεται με την γραφική διεπαφή που χρησιμοποιείται για tablets 
+        και βλέπετε αυτό το μήνυμα παρακαλώ πατήστε το κουμπί \"%s\" και αποστείλετε 
+        την αναφορά σφάλματος.</string>
+    <string name="got_it">Το \'χω!</string>
+    <string name="submit_error">Υποβολή σφάλματος</string>
 </resources>

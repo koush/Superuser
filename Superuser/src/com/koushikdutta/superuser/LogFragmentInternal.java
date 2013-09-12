@@ -213,9 +213,6 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 }
             }
         });
-        ////////////////////////
-        //LiTTle edit
-        ////////////////////////
         final CompoundButton permission = (CompoundButton)view.findViewById(R.id.permission);
         if (up == null) {
             view.findViewById(R.id.notification_container).setVisibility(View.GONE);

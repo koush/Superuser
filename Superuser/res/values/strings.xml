@@ -103,5 +103,11 @@
     <string name="ok">OK</string>
     <string name="permission">Permission</string>
     <string name="run">Run</string>
+    <string name="tablet_mode">Tablet UI</string>
+    <string name="tablet_mode_info">This feature is available only when you use the application 
+        in phones. If you don\'t see the tablet UI for this application and you see 
+        this message please click \"%s\" button!</string>
+    <string name="got_it">Got it!</string>
+    <string name="submit_error">Submit error</string>
     
 </resources>
