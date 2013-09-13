@@ -72,7 +72,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     boolean mHandled;
     
     public int getGracePeriod() {
-        return 10;
+        return Settings.getGracePeriodPrivilege(MultitaskSuRequestActivity.this);
     }
     
     int getUntil() {
