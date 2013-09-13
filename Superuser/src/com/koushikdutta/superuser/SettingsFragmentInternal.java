@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -311,7 +312,9 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
         })
         .setAttrDrawable(R.attr.pinProtectionIcon);
 
-        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity()))) {
+        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), 
+        		getString(R.string.request_timeout_summary, 
+        				Settings.getRequestTimeout(getActivity()))) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -329,6 +332,50 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     }
                 });
                 builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.requestTimeoutIcon);
+        
+        addItem(R.string.security, new ListItem(this, getString(R.string.grace_period), 
+        		getString(R.string.grace_period_summary, 
+        				Settings.getGracePeriodPrivilege(getActivity()))) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                final Context ctx = getActivity();
+                LayoutInflater li = LayoutInflater.from(ctx);
+                View promptsView = li.inflate(R.layout.grace_period_prompt_dialog, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                builder.setView(promptsView);
+                builder.setTitle(R.string.grace_period);
+                builder.setCancelable(true);
+                
+                final EditText userInput = (EditText) promptsView
+						.findViewById(R.id.grace_period_editText);
+                final int currentGracePeriod = Settings.getGracePeriodPrivilege(ctx);
+                userInput.setHint(String.valueOf(currentGracePeriod));
+                
+                builder.setPositiveButton(R.string.apply, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	String gracePeriodStr = userInput.getText().toString();
+                    	int gracePeriod = currentGracePeriod;
+                    	if(gracePeriodStr.length() != 0){
+                    		gracePeriod = Integer.parseInt(gracePeriodStr);
+                    	}
+                    	Settings.setGracePeriodPrivilege(getActivity(), gracePeriod);
+                        setSummary(getString(R.string.grace_period_summary, 
+                        		Settings.getGracePeriodPrivilege(ctx)));
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         })
         .setAttrDrawable(R.attr.requestTimeoutIcon);

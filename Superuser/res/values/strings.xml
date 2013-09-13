@@ -109,5 +109,11 @@
         this message please click \"%s\" button!</string>
     <string name="got_it">Got it!</string>
     <string name="submit_error">Submit error</string>
+    <string name="grace_period_prompt">Specify grace period for every application (minutes):</string>
+    <string name="grace_period">Grace Period</string>
+    <string name="grace_period_summary">An application will have superuser privileges for %s minutes</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
+    
     
 </resources>

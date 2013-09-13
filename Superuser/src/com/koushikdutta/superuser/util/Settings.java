@@ -116,6 +116,16 @@ public class Settings {
     public static void setTimeout(Context context, int timeout) {
         setInt(context, KEY_TIMEOUT, timeout);
     }
+    
+    private static final String KEY_GRACE_PERIOD = "grace_period";
+    public static final int GRACE_PERIOD_PRIVILEGE_DEFAULT = 10;
+    public static int getGracePeriodPrivilege(Context context) {
+        return getInt(context, KEY_GRACE_PERIOD, GRACE_PERIOD_PRIVILEGE_DEFAULT);
+    }
+    
+    public static void setGracePeriodPrivilege(Context context, int gracePeriod) {
+        setInt(context, KEY_GRACE_PERIOD, gracePeriod);
+    }
 
     private static final String KEY_NOTIFICATION = "notification";
     public static final int NOTIFICATION_TYPE_NONE = 0;

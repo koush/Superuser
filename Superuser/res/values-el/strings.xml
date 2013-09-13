@@ -103,10 +103,16 @@
     <string name="ok">Εντάξει</string>
     <string name="run">Εκτέλεση</string>
     <string name="tablet_mode">Γραφική Διεπαφή Tablet</string>
-    <string name="tablet_mode_info">Η δυνατότητα αυτή είναι διαθέσιμη αποκλειστικά για χρήση σε κινητα 
-        τηλέφωνα. Αν η εφαρμογή δεν εμφανίζεται με την γραφική διεπαφή που χρησιμοποιείται για tablets 
+    <string name="tablet_mode_info">Η δυνατότητα αυτή είναι διαθέσιμη αποκλειστικά για χρήση σε κινητά 
+        τηλέφωνα. Αν η εφαρμογή δεν εμφανίζεται με τη γραφική διεπαφή που χρησιμοποιείται για tablets 
         και βλέπετε αυτό το μήνυμα παρακαλώ πατήστε το κουμπί \"%s\" και αποστείλετε 
         την αναφορά σφάλματος.</string>
     <string name="got_it">Το \'χω!</string>
     <string name="submit_error">Υποβολή σφάλματος</string>
+    <string name="grace_period_prompt">Καθόρισε την περίοδο χάριτος για κάθε εφαρμογή (σε λεπτά):</string>
+    <string name="grace_period">Περίοδος Χάριτος</string>
+    <string name="grace_period_summary">Μια εφαρμογή θα απολαμβάνει τα προνόμια του superuser 
+        για %s λεπτά</string>
+    <string name="apply">Εφαρμογή</string>
+    <string name="cancel">Άκυρο</string>
 </resources>

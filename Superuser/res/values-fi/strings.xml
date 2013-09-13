@@ -3,7 +3,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Salli</string>
     <string name="deny">Estä</string>
-	<string name="status_incoming">Superuser pyyntö&#8230;</string>
+    <string name="status_incoming">Superuser pyyntö&#8230;</string>
     <string name="unknown_uid">Tuntematon UID: %s</string>
     <string name="application_request">%s tarvitsee pääkäyttäjän oikeuksia jatkaakseen.</string>
     <string name="info">Varoitus: Jos et tiedä mitä olet tekemässä, sinun pitäisi estää pyyntö.</string>

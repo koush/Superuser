@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/grace_period_linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:id="@+id/grace_period_prompt_textView"
+        style="@android:style/TextAppearance.Medium"
+		android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/grace_period_prompt"/>
+ 
+    <EditText
+        android:id="@+id/grace_period_editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:layout_gravity="center"
+        android:gravity="center"
+        android:inputType="number">
+ 
+        <requestFocus />
+ 
+    </EditText>
+
+</LinearLayout>
