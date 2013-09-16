@@ -4,7 +4,7 @@
     <string name="superuser">Superusuario</string>
     <string name="allow">Permitir</string>
     <string name="deny">Denegar</string>
-    <string name="status_incoming">Solicitud de Superusuario&#8230;</string>
+    <string name="status_incoming">Solicitud de Superusuario\u2026</string>
     <string name="unknown_uid">UID desconocido: %s</string>
     <string name="application_request">%s esta solicitando acceso administrativo.</string>
     <string name="info">Atención: Si no has iniciado esta acción, o si no entiendes esta petición, es mejor que no la permitas.</string>
@@ -67,12 +67,12 @@
     <string name="about">Acerca de</string>
     <string name="apps">Aplicaciones</string>
     <string name="installing">Instalando</string>
-    <string name="installing_superuser">Instalando Superusuario&#8230;</string>
+    <string name="installing_superuser">Instalando Superusuario\u2026</string>
     <string name="install_superuser">Instalar Superusuario</string>
     <string name="install_superuser_info">El binario de Superusuario \u00ABsu\u00BB se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
-    <string name="checking_superuser">Probando Superusuario&#8230;</string>
+    <string name="checking_superuser">Probando Superusuario\u2026</string>
     <string name="install_error">Ha ocurrido un error mientras se instalaba Superusuario. Por favor, envía un registro del error al desarrollador</string>
     <string name="install_success">La instalación de Superusuario se ha realizado con éxito.</string>
     <string name="su_binary_outdated">El binario \u00ABsu\u00BB está desactualizado.</string>

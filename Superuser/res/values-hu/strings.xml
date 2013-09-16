@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Engedélyez</string>
     <string name="deny">Megtagad</string>
-    <string name="status_incoming">Rendszergazdai jog kérése&#8230;</string>
+    <string name="status_incoming">Rendszergazdai jog kérése\u2026</string>
     <string name="unknown_uid">Ismeretlen UID: %s</string>
     <string name="application_request">%s rendszergazdai jogokat kér.</string>
     <string name="info">Figyelem: Amennyiben nincs tisztában a funkcióval, jobban jár, ha letiltja!</string>
@@ -67,12 +67,12 @@
     <string name="about">Névjegy</string>
     <string name="apps">Alkalmazások</string>
     <string name="installing">Telepítés</string>
-    <string name="installing_superuser">Superuser telepítése&#8230;</string>
+    <string name="installing_superuser">Superuser telepítése\u2026</string>
     <string name="install_superuser">Superuser telepítés</string>
     <string name="install_superuser_info">A Superuser binárist (su) frissíteni kell.\n\nKérjük, válassza ki a telepítés módját.\nHTC készülékeknél Recovery módú telepítés ajánlott.</string>
     <string name="recovery_install">Recovery telepítés</string>
     <string name="install">Telepítés</string>
-    <string name="checking_superuser">Superuser ellenőrzése&#8230;</string>
+    <string name="checking_superuser">Superuser ellenőrzése\u2026</string>
     <string name="install_error">Hiba történt a Superuser telepítésekor. Kérjük, küldje el a hibanaplót a fejlesztőknek.</string>
     <string name="install_success">A Superuser telepítése sikeres volt.</string>
     <string name="su_binary_outdated">A su bináris elavult.</string>

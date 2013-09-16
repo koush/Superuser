@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Povoliť</string>
     <string name="deny">Odmietnuť</string>
-    <string name="status_incoming">Prichádzajúca Superuser žiadosť&#8230;</string>
+    <string name="status_incoming">Prichádzajúca Superuser žiadosť...</string>
     <string name="unknown_uid">Neznáme UID: %s</string>
     <string name="application_request">%s žiada Superuser prístup.</string>
     <string name="info">Varovanie: Ak tomuto nechápete, mali by ste žiadosť odmietnuť.</string>
@@ -67,12 +67,12 @@
     <string name="about">O aplikácii</string>
     <string name="apps">Aplikácie</string>
     <string name="installing">Inštalujem</string>
-    <string name="installing_superuser">Inštalujem Superusera&#8230;</string>
+    <string name="installing_superuser">Inštalujem Superusera...</string>
     <string name="install_superuser">Inštalovať Superusera</string>
     <string name="install_superuser_info">Binárne súbory Superusera (su) musia byť aktualizované.\n\nProsím vyberte metódu inštalovania.\nInštalácia cez recovery je odporúčaná pre HTC zariadenia.</string>
     <string name="recovery_install">Inštalovať cez recovery</string>
     <string name="install">Inštalovať</string>
-    <string name="checking_superuser">Kontrolujem Superusera&#8230;</string>
+    <string name="checking_superuser">Kontrolujem Superusera...</string>
     <string name="install_error">Došlo k chybe pri inštalácii Superusera. Prosím pošlite záznam s chybou vývojárovi.</string>
     <string name="install_success">Inštalácia Superusera bola úspešná.</string>
     <string name="su_binary_outdated">Binárne súbory (su) sú zastarané.</string>

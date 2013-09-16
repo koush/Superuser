@@ -368,8 +368,8 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                         		Settings.getGracePeriodPrivilege(ctx)));
                     }
                 });
-                builder.setNegativeButton(R.string.cancel, new OnClickListener() {
-                    @Override
+                builder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+		    @Override
                     public void onClick(DialogInterface dialog, int which) {
                     	dialog.dismiss();
                     }

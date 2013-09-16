@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Cho phép</string>
     <string name="deny">Từ chối</string>
-    <string name="status_incoming">Yêu cầu quyền superuser&#8230;</string>
+    <string name="status_incoming">Yêu cầu quyền superuser...</string>
     <string name="unknown_uid">Không rõ UID: %s</string>
     <string name="application_request">%s đang yêu cầu quyền truy cập Superuser.</string>
     <string name="info">Cảnh báo: Nếu bạn không hiểu điều này, bạn nên từ chối yêu cầu.</string>
@@ -67,12 +67,12 @@
     <string name="about">Giới thiệu</string>
     <string name="apps">Ứng dụng</string>
     <string name="installing">Đang cài đặt</string>
-    <string name="installing_superuser">Đang cài đặt Superuser&#8230;</string>
+    <string name="installing_superuser">Đang cài đặt Superuser...</string>
     <string name="install_superuser">Cài đặt Superuser</string>
     <string name="install_superuser_info">Cần cập nhật lệnh Superuser (su).\n\nVui lòng chọn phương cách cập nhật.\nKhuyên dùng chế độ Hồi phục cho thiết bị HTC.</string>
     <string name="recovery_install">Cài đặt Hồi phục</string>
     <string name="install">Cài đặt</string>
-    <string name="checking_superuser">Đang kiểm tra Superuser&#8230;</string>
+    <string name="checking_superuser">Đang kiểm tra Superuser...</string>
     <string name="install_error">Có lỗi trong khi cài Superuser. Vui lòng gửi nhật trình lỗi cho lập trình viên.</string>
     <string name="install_success">Cài đặt Superuser thành công.</string>
     <string name="su_binary_outdated">Chương trình su đã cũ.</string>
