@@ -63,7 +63,8 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     
     Handler mHandler = new Handler();
     
-    int mTimeLeft = 3;
+    //Instead of 3 I prefer 0 countdown!
+    int mTimeLeft = 0;
     
     Button mAllow;
     Button mDeny;
@@ -71,7 +72,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     boolean mHandled;
     
     public int getGracePeriod() {
-        return 10;
+        return Settings.getGracePeriodPrivilege(MultitaskSuRequestActivity.this);
     }
     
     int getUntil() {
@@ -285,7 +286,12 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     private final static int SU_PROTOCOL_NAME_MAX = 20;
     private final static int SU_PROTOCOL_VALUE_MAX_DEFAULT = 256;
     private final static HashMap<String, Integer> SU_PROTOCOL_VALUE_MAX = new HashMap<String, Integer>() {
-        {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 5649873127008413475L;
+
+		{
             put("command", 2048);
         }
     };
@@ -330,11 +336,11 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                             break;
                     }
                     
-                    int protocolVersion = payload.getAsInteger("version");
+                    //int protocolVersion = payload.getAsInteger("version");
                     mCallerUid = payload.getAsInteger("from.uid");
                     mDesiredUid = payload.getAsByte("to.uid");
                     mDesiredCmd = payload.getAsString("command");
-                    String calledBin = payload.getAsString("from.bin");
+                    //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
                     runOnUiThread(new Runnable() {
                         @Override
@@ -345,8 +351,19 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                     });                    
 
                     if ("com.koushikdutta.superuser".equals(getPackageName())) {
-                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version")))
-                            SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
+                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version"))){
+                        	final int suUpdateNotificationState = Settings.getInt(MultitaskSuRequestActivity.this, 
+                        			Settings.getSuUpdateKey(), 
+                        			Settings.SU_UPDATE_NOTIFICATION_ON);
+                        	if(suUpdateNotificationState == Settings.SU_UPDATE_NOTIFICATION_ON){
+                        		runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                    	SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
+                                    }
+                                }); 
+                        	}
+                        }
                     }
                 }
                 catch (Exception ex) {

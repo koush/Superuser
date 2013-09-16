@@ -4,4 +4,9 @@
         android:title="@string/delete"
         android:icon="@drawable/ic_menu_trash"
         />
+    <item 
+        android:id="@+id/run"
+        android:title="@string/run"
+        android:icon="@drawable/ic_menu_play"
+        />
 </menu>

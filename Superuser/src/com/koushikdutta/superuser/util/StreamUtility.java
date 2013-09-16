@@ -23,7 +23,7 @@ import org.json.JSONObject;
 import android.net.http.AndroidHttpClient;
 
 public class StreamUtility {
-	private static final String LOGTAG = StreamUtility.class.getSimpleName();
+	//private static final String LOGTAG = StreamUtility.class.getSimpleName();
     public static void fastChannelCopy(final ReadableByteChannel src, final WritableByteChannel dest) throws IOException {
         final ByteBuffer buffer = ByteBuffer.allocateDirect(1 << 17);
         while (src.read(buffer) != -1) {
@@ -108,6 +108,7 @@ public class StreamUtility {
         byte[] buffer = new byte[(int) file.length()];
         DataInputStream input = new DataInputStream(new FileInputStream(file));
         input.readFully(buffer);
+        input.close();
         return new String(buffer);
     }
     

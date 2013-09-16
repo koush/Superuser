@@ -6,6 +6,8 @@
          Version Control Systems. -->
     <property file="local.properties" />
 
+	<property environment="env"/>
+
     <!-- The ant.properties file can be created by you. It is only edited by the
          'android' tool to add properties to it.
          This is the place to change some Ant specific build properties.
@@ -49,10 +51,10 @@
     <loadproperties srcFile="project.properties" />
 
     <!-- quick check on sdk.dir -->
-    <fail
+    <!--fail
             message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
             unless="sdk.dir"
-    />
+    /-->
 
     <!--
         Import per project custom build rules if present at the root of the project.

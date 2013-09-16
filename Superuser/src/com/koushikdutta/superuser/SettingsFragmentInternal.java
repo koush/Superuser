@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -68,7 +69,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 super.onCancel();
                 d.dismiss();
             };
-        }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        }.getView(), new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         d.show();
     }
     
@@ -112,7 +113,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     super.onCancel();
                     d.dismiss();
                 };
-            }.getView(), new ViewGroup.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+            }.getView(), new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
             d.show();
         }
         else {
@@ -311,7 +312,9 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
         })
         .setAttrDrawable(R.attr.pinProtectionIcon);
 
-        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), getString(R.string.request_timeout_summary, Settings.getRequestTimeout(getActivity()))) {
+        addItem(R.string.security, new ListItem(this, getString(R.string.request_timeout), 
+        		getString(R.string.request_timeout_summary, 
+        				Settings.getRequestTimeout(getActivity()))) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -329,6 +332,50 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     }
                 });
                 builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.requestTimeoutIcon);
+        
+        addItem(R.string.security, new ListItem(this, getString(R.string.grace_period), 
+        		getString(R.string.grace_period_summary, 
+        				Settings.getGracePeriodPrivilege(getActivity()))) {
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                final Context ctx = getActivity();
+                LayoutInflater li = LayoutInflater.from(ctx);
+                View promptsView = li.inflate(R.layout.grace_period_prompt_dialog, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+                builder.setView(promptsView);
+                builder.setTitle(R.string.grace_period);
+                builder.setCancelable(true);
+                
+                final EditText userInput = (EditText) promptsView
+						.findViewById(R.id.grace_period_editText);
+                final int currentGracePeriod = Settings.getGracePeriodPrivilege(ctx);
+                userInput.setHint(String.valueOf(currentGracePeriod));
+                
+                builder.setPositiveButton(R.string.apply, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	String gracePeriodStr = userInput.getText().toString();
+                    	int gracePeriod = currentGracePeriod;
+                    	if(gracePeriodStr.length() != 0){
+                    		gracePeriod = Integer.parseInt(gracePeriodStr);
+                    	}
+                    	Settings.setGracePeriodPrivilege(getActivity(), gracePeriod);
+                        setSummary(getString(R.string.grace_period_summary, 
+                        		Settings.getGracePeriodPrivilege(ctx)));
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new OnClickListener() {
+		    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         })
         .setAttrDrawable(R.attr.requestTimeoutIcon);
@@ -353,8 +400,14 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 case Settings.NOTIFICATION_TYPE_NOTIFICATION:
                     setSummary(getString(R.string.notifications_summary, getString(R.string.notification)));
                     break;
-                case Settings.NOTIFICATION_TYPE_TOAST:
-                    setSummary(getString(R.string.notifications_summary, getString(R.string.toast)));
+                case Settings.NOTIFICATION_TYPE_UPPER_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.upper_toast)));
+                    break;
+                case Settings.NOTIFICATION_TYPE_CENTRAL_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.central_toast)));
+                    break;
+                case Settings.NOTIFICATION_TYPE_LOWER_TOAST:
+                    setSummary(getString(R.string.notifications_summary, getString(R.string.lower_toast)));
                     break;
                 }
             }
@@ -368,7 +421,8 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.notifications);
-                String[] items = new String[] { getString(R.string.none), getString(R.string.toast), getString(R.string.notification) };
+                String[] items = new String[] { getString(R.string.none), getString(R.string.upper_toast), 
+                		getString(R.string.central_toast), getString(R.string.lower_toast), getString(R.string.notification) };
                 builder.setItems(items, new OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -376,11 +430,17 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                         case 0:
                             Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NONE);
                             break;
-                        case 2:
-                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NOTIFICATION);
-                            break;
                         case 1:
-                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_TOAST);
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_UPPER_TOAST);
+                            break;
+                        case 2:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_CENTRAL_TOAST);
+                            break;
+                        case 3:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_LOWER_TOAST);
+                            break;
+                        case 4:
+                            Settings.setNotificationType(getActivity(), Settings.NOTIFICATION_TYPE_NOTIFICATION);
                             break;
                         }
                         update();
@@ -435,5 +495,61 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
             })
             .setAttrDrawable(R.attr.themeIcon);            
         }
-    }
+        //////////////////////////////////////////////
+        //LiTTle edit
+        //////////////////////////////////////////////
+        addItem(R.string.misc, new ListItem(this, R.string.su_update_reminder, 0) {
+            void update() {
+                switch (Settings.getSuUpdateNotificationState(getActivity())) {
+                case Settings.SU_UPDATE_NOTIFICATION_OFF:
+                    setSummary(getString(R.string.no_reminder));
+                    break;
+                case Settings.SU_UPDATE_NOTIFICATION_ON:
+                    setSummary(getString(R.string.su_reminder_summary, getString(R.string.reminder)));
+                    break;
+                }
+            }
+            
+            {
+                update();
+            }
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.su_update_reminder);
+                String[] items = new String[] { getString(R.string.none), getString(R.string.reminder) };
+                builder.setItems(items, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case 0:
+                            Settings.setSuUpdateNotificationState(getActivity(), Settings.SU_UPDATE_NOTIFICATION_OFF);
+                            break;
+                        case 1:
+                            Settings.setSuUpdateNotificationState(getActivity(), Settings.SU_UPDATE_NOTIFICATION_ON);
+                            break;
+                        }
+                        update();
+                    }
+                });
+                builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.notificationsIcon);
+        
+        addItem(R.string.misc, new ListItem(this, R.string.force_su_update, R.string.force_su_update_info) {
+            
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
+                
+                MainActivity ma = new MainActivity();
+                ma.doInstall(SettingsFragmentInternal.this.getContext());
+                ma = null;
+            }
+        })
+        .setAttrDrawable(R.attr.automaticResponseIcon);
+    }  
 }

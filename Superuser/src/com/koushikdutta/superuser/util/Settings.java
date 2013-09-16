@@ -116,20 +116,36 @@ public class Settings {
     public static void setTimeout(Context context, int timeout) {
         setInt(context, KEY_TIMEOUT, timeout);
     }
+    
+    private static final String KEY_GRACE_PERIOD = "grace_period";
+    public static final int GRACE_PERIOD_PRIVILEGE_DEFAULT = 10;
+    public static int getGracePeriodPrivilege(Context context) {
+        return getInt(context, KEY_GRACE_PERIOD, GRACE_PERIOD_PRIVILEGE_DEFAULT);
+    }
+    
+    public static void setGracePeriodPrivilege(Context context, int gracePeriod) {
+        setInt(context, KEY_GRACE_PERIOD, gracePeriod);
+    }
 
     private static final String KEY_NOTIFICATION = "notification";
     public static final int NOTIFICATION_TYPE_NONE = 0;
-    public static final int NOTIFICATION_TYPE_TOAST = 1;
-    public static final int NOTIFICATION_TYPE_NOTIFICATION = 2;
-    public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_TOAST;
+    public static final int NOTIFICATION_TYPE_UPPER_TOAST = 1;
+    public static final int NOTIFICATION_TYPE_CENTRAL_TOAST = 2;
+    public static final int NOTIFICATION_TYPE_LOWER_TOAST = 3;
+    public static final int NOTIFICATION_TYPE_NOTIFICATION = 4;
+    public static final int NOTIFICATION_TYPE_DEFAULT = NOTIFICATION_TYPE_LOWER_TOAST;
     public static int getNotificationType(Context context) {
         switch (getInt(context, KEY_NOTIFICATION, NOTIFICATION_TYPE_DEFAULT)) {
         case NOTIFICATION_TYPE_NONE:
             return NOTIFICATION_TYPE_NONE;
         case NOTIFICATION_TYPE_NOTIFICATION:
             return NOTIFICATION_TYPE_NOTIFICATION;
-        case NOTIFICATION_TYPE_TOAST:
-            return NOTIFICATION_TYPE_TOAST;
+        case NOTIFICATION_TYPE_UPPER_TOAST:
+            return NOTIFICATION_TYPE_UPPER_TOAST;
+        case NOTIFICATION_TYPE_CENTRAL_TOAST:
+            return NOTIFICATION_TYPE_CENTRAL_TOAST;
+        case NOTIFICATION_TYPE_LOWER_TOAST:
+            return NOTIFICATION_TYPE_LOWER_TOAST;
         default:
             return NOTIFICATION_TYPE_DEFAULT;
         }
@@ -316,7 +332,7 @@ public class Settings {
     public static final int SUPERUSER_ACCESS_APPS_AND_ADB = 3;
     public static int getSuperuserAccess() {
         try {
-            Class c = Class.forName("android.os.SystemProperties");
+            Class<?> c = Class.forName("android.os.SystemProperties");
             Method m = c.getMethod("get", String.class);
             String value = (String)m.invoke(null, "persist.sys.root_access");
             int val = Integer.valueOf(value);
@@ -377,5 +393,28 @@ public class Settings {
     
     public static final void setTheme(Context context, int theme) {
         setInt(context, KEY_THEME, theme);
+    }
+    
+    ////////////////////////////
+    //LiTTle edit
+    ////////////////////////////
+    private static final String KEY_SU_UPDATE_NOTIFICATION = "su_update_notification";
+    public static final int SU_UPDATE_NOTIFICATION_OFF = 0;
+    public static final int SU_UPDATE_NOTIFICATION_ON = 1;
+    
+    public static int getSuUpdateNotificationState(Context context) {
+        switch (getInt(context, KEY_SU_UPDATE_NOTIFICATION, SU_UPDATE_NOTIFICATION_ON)) {
+        case SU_UPDATE_NOTIFICATION_OFF:
+            return SU_UPDATE_NOTIFICATION_OFF;
+        default:
+            return SU_UPDATE_NOTIFICATION_ON;
+        }
+    }
+    
+    public static final void setSuUpdateNotificationState(Context context, int state) {
+        setInt(context, KEY_SU_UPDATE_NOTIFICATION, state);
+    }
+    public static final String getSuUpdateKey() {
+        return KEY_SU_UPDATE_NOTIFICATION;
     }
 }

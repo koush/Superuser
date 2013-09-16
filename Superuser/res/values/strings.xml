@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
-    <string name="status_incoming">Incoming Superuser Request...</string>
+    <string name="status_incoming">Incoming Superuser Request\u2026</string>
     <string name="unknown_uid">Unknown UID: %s</string>
     <string name="application_request">%s is requesting Superuser access.</string>
     <string name="info">Warning: If you do not understand this, you should deny the request.</string>
@@ -40,7 +40,9 @@
     <string name="number_seconds">%s seconds</string>
     <string name="superuser_granted">Superuser granted to %s</string>
     <string name="superuser_denied">Superuser denied to %s</string>
-    <string name="toast">Toast</string>
+    <string name="upper_toast">Upper Toast</string>
+    <string name="central_toast">Central Toast</string>
+    <string name="lower_toast">Lower Toast</string>
     <string name="notification">Notification</string>
     <string name="no_notification">No notification will be shown</string>
     <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
@@ -67,12 +69,12 @@
     <string name="about">About</string>
     <string name="apps">Apps</string>
     <string name="installing">Installing</string>
-    <string name="installing_superuser">Installing Superuser...</string>
+    <string name="installing_superuser">Installing Superuser\u2026</string>
     <string name="install_superuser">Install Superuser</string>
     <string name="install_superuser_info">The Superuser binary (su) must be updated.\n\nPlease choose an installation method.\nRecovery mode installation is recommended for HTC devices.</string>
     <string name="recovery_install">Recovery Install</string>
     <string name="install">Install</string>
-    <string name="checking_superuser">Checking Superuser...</string>
+    <string name="checking_superuser">Checking Superuser\u2026</string>
     <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
     <string name="install_success">Installation of Superuser was successful.</string>
     <string name="su_binary_outdated">The su binary is out of date.</string>
@@ -87,4 +89,29 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="pin_disabled">Superuser PIN protection disabled</string>
+    <string name="misc">Misc.</string>
+    <string name="su_update_reminder">Su update reminder</string>
+    <string name="su_reminder_summary">All %ss will be shown when su binary needs update</string>
+    <string name="reminder">Reminder</string>
+    <string name="no_reminder">No reminder will be shown</string>
+    <string name="force_su_update">Force su binary update</string>
+    <string name="force_su_update_info">Touch it to show the update dialog for su binary</string>
+    <string name="revoke_permission">Revoke Superuser permission</string>
+    <string name="details">Details</string>
+    <string name="db_delete_error">Superuser permission cannot be revoked from this application. \n
+        Please restart the Superuser application and try again.</string>
+    <string name="permission">Permission</string>
+    <string name="run">Run</string>
+    <string name="tablet_mode">Tablet UI</string>
+    <string name="tablet_mode_info">This feature is available only when you use the application 
+        in phones. If you don\'t see the tablet UI for this application and you see 
+        this message please click \"%s\" button!</string>
+    <string name="got_it">Got it!</string>
+    <string name="submit_error">Submit error</string>
+    <string name="grace_period_prompt">Specify grace period for every application (minutes):</string>
+    <string name="grace_period">Grace Period</string>
+    <string name="grace_period_summary">An application will have superuser privileges for %s minutes</string>
+    <string name="apply">Apply</string>
+    
+    
 </resources>
