@@ -317,7 +317,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         		.setIcon(Helper.loadPackageIcon(getActivity(), policy.packageName))
         		.setMessage(getResources().getText(resource))
         		.setCancelable(true)
-        		.setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
+        		.setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
     	           public void onClick(DialogInterface dialog, int id) {
     	        	   dialog.dismiss();
     	           }

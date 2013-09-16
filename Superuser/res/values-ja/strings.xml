@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">許可</string>
     <string name="deny">拒否</string>
-    <string name="status_incoming">Superuser権限の要求がありました&#8230;</string>
+    <string name="status_incoming">Superuser権限の要求がありました...</string>
     <string name="unknown_uid">不明な UID: %s</string>
     <string name="application_request">%s はSuperuser権限を要求しています.</string>
     <string name="info">警告: この要求に心当たりがない場合、拒否を選んでください.</string>
@@ -67,12 +67,12 @@
     <string name="about">情報</string>
     <string name="apps">アプリ</string>
     <string name="installing">インストール中</string>
-    <string name="installing_superuser">Superuserのインストール&#8230;</string>
+    <string name="installing_superuser">Superuserのインストール...</string>
     <string name="install_superuser">Superuserのインストール</string>
     <string name="install_superuser_info">Superuserバイナリ(su)を更新してください.\n\n更新方法を選んでください.\nHTC機種の場合リカバリインストールを選択してください.</string>
     <string name="recovery_install">リカバリー インストール</string>
     <string name="install">インストール</string>
-    <string name="checking_superuser">Superuserの確認中&#8230;</string>
+    <string name="checking_superuser">Superuserの確認中...</string>
     <string name="install_error">Superuserのインストールに失敗しました.エラーログを開発者に送ってください.</string>
     <string name="install_success">Superuserのインストールに成功しました.</string>
     <string name="su_binary_outdated">suバイナリが古いようです.</string>
@@ -88,4 +88,3 @@
     <string name="dark">ダーク</string>
     <string name="pin_disabled">SuperuserのPIN保護は無効です</string>
 </resources>
-
