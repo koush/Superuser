@@ -29,6 +29,7 @@
 #include <getopt.h>
 #include <stdint.h>
 #include <pwd.h>
+#include <sys/mount.h>
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <sys/types.h>
@@ -347,6 +348,19 @@ int run_daemon() {
      */
     unlink(sun.sun_path);
     unlink(REQUESTOR_DAEMON_PATH);
+
+    /*
+     * Mount emulated storage, if present. Normally that's done by zygote,
+     * but as we're started via init, we have to do it ourselves.
+     */
+    const char *emulated_source = getenv("EMULATED_STORAGE_SOURCE");
+    const char *emulated_target = getenv("EMULATED_STORAGE_TARGET");
+    if (emulated_source && *emulated_source && emulated_target && *emulated_target) {
+        if (mount(emulated_source, emulated_target, NULL,
+                MS_BIND | MS_NOEXEC | MS_NOSUID, NULL) < 0) {
+            PLOGE("mount emulated storage");
+        }
+    }
 
     int previous_umask = umask(027);
     mkdir(REQUESTOR_DAEMON_PATH, 0777);
