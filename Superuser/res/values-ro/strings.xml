@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Permiteţi</string>
     <string name="deny">Refuzaţi</string>
-    <string name="status_incoming">Cerere superuser de intrare...</string>
+    <string name="status_incoming">Cerere superuser de intrare\u2026</string>
     <string name="unknown_uid">UID necunoscut: %s</string>
     <string name="application_request">%s cere acces Superuser.</string>
     <string name="info">Avertizare: Dacă nu înţelegeţi aceasta, ar trebui să refuzaţi cererea.</string>
@@ -67,12 +67,12 @@
     <string name="about">Despre</string>
     <string name="apps">Aplicaţii</string>
     <string name="installing">Instalare</string>
-    <string name="installing_superuser">Instalare Superuser...</string>
+    <string name="installing_superuser">Instalare Superuser\u2026</string>
     <string name="install_superuser">Instalaţi Superuser</string>
     <string name="install_superuser_info">Este necesară actualizarea fişierului binar su pentru Superuser.\n\nSelectaţi o metodă de actualizare.\nModul Recuperare este recomandat pentru dispozitivele HTC.</string>
     <string name="recovery_install">Instalţi din Recuperare</string>
     <string name="install">Instalaţi</string>
-    <string name="checking_superuser">Verificare Superuser...</string>
+    <string name="checking_superuser">Verificare Superuser\u2026</string>
     <string name="install_error">A fost o eroare la instalarea Superuser. Trimiteţi un log al erorii către dezvoltator.</string>
     <string name="install_success">Instalarea cu succes Superuser.</string>
     <string name="su_binary_outdated">Fişierul binar su este expirat.</string>
