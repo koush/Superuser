@@ -44,7 +44,7 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
             public Context getContext() {
                 return LogNativeFragment.this.getContext();
             }
-            
+
             @Override
             void onDelete() {
                 super.onDelete();
@@ -52,7 +52,7 @@ public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
             }
         };
     }
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView((LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE), container, savedInstanceState);

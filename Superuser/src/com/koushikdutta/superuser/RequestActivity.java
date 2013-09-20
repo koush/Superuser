@@ -30,7 +30,7 @@ public class RequestActivity extends Activity {
             finish();
             return;
         }
-        
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         String name = getClass().getPackage().getName() + "." + MultitaskSuRequestActivity.class.getSimpleName();
         intent.setClassName(this, name);

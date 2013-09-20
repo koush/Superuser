@@ -15,7 +15,7 @@ public class SuHelper {
             throw new Exception("no data");
         if (!result.contains(context.getPackageName()))
             throw new Exception("unknown su");
-        
+
         String[] parts = result.split(" ");
         if (!CURRENT_VERSION.equals(parts[0]))
             throw new Exception("binary is old");

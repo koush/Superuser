@@ -51,7 +51,7 @@ public class MainActivity extends BetterListActivity {
     public PolicyFragmentInternal getFragment() {
         return (PolicyFragmentInternal)super.getFragment();
     }
-    
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = new MenuInflater(this);
@@ -64,7 +64,7 @@ public class MainActivity extends BetterListActivity {
                 return true;
             }
         });
-        
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -109,7 +109,7 @@ public class MainActivity extends BetterListActivity {
                 in.close();
                 zf.close();
             }
-            
+
             public void run() {
                 try {
                     File zip = getFileStreamPath("superuser.zip");
@@ -167,7 +167,7 @@ public class MainActivity extends BetterListActivity {
             }
         }.start();
     }
-    
+
     void doSystemInstall() {
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.installing);
@@ -212,7 +212,7 @@ public class MainActivity extends BetterListActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setPositiveButton(android.R.string.ok, null);
                         builder.setTitle(R.string.install);
-                        
+
                         if (error) {
                             builder.setMessage(R.string.install_error);
                         }
@@ -225,7 +225,7 @@ public class MainActivity extends BetterListActivity {
             };
         }.start();
     }
-    
+
     void doInstall() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.install);
@@ -247,11 +247,11 @@ public class MainActivity extends BetterListActivity {
         });
         builder.create().show();
     }
-    
+
     private void saveWhatsNew() {
         Settings.setString(this, "whats_new", WHATS_NEW);
     }
-    
+
     // this is intentionally not localized as it will change constantly.
     private static final String WHATS_NEW = "Added support for Android 4.3.";
     protected void doWhatsNew() {
@@ -278,12 +278,12 @@ public class MainActivity extends BetterListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Settings.applyDarkThemeSetting(this, R.style.SuperuserDarkActivity);
         super.onCreate(savedInstanceState);
-        
+
         if (Settings.getBoolean(this, "first_run", true)) {
             saveWhatsNew();
             Settings.setBoolean(this, "first_run", false);
         }
-        
+
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.superuser);
         dlg.setMessage(getString(R.string.checking_superuser));

@@ -30,15 +30,15 @@ public class SuCheckerReceiver extends BroadcastReceiver {
         NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(10000, builder.build());
     }
-    
+
     private static final String ACTION_DELETED = "internal.superuser.ACTION_CHECK_DELETED";
-    
+
     @Override
     public void onReceive(final Context context, Intent intent) {
         if (intent == null)
             return;
-        
-        
+
+
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) || "internal.superuser.BOOT_TEST".equals(intent.getAction())) {
             // if the user deleted the notification in the past, don't bother them again for a while
             int counter = Settings.getCheckSuQuietCounter(context);

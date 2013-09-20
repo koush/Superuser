@@ -51,22 +51,22 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
         this.up = up;
         return this;
     }
-    
+
     int mListContentId;
     public void setListContentId(int id) {
         mListContentId = id;
     }
-    
+
     public int getListContentId() {
         return mListContentId;
     }
-    
+
     void onDelete() {
     }
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        
+
         inflater.inflate(R.menu.policy, menu);
         MenuItem delete = menu.findItem(R.id.delete);
         delete.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -81,7 +81,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             }
         });
     }
-    
+
     @Override
     protected int getListItemResource() {
         return R.layout.log_item;
@@ -90,12 +90,12 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
-        
+
         LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         getListView().addHeaderView(inflater.inflate(R.layout.policy_header, null));
-        
+
         getFragment().setHasOptionsMenu(true);
-        
+
         if (up == null) {
             Bundle bundle = getFragment().getArguments();
             if (bundle != null) {
@@ -107,7 +107,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
                 }
             }
         }
-        
+
         ArrayList<LogEntry> logs;
         java.text.DateFormat day = DateFormat.getDateFormat(getActivity());
         java.text.DateFormat time = DateFormat.getTimeFormat(getActivity());
@@ -116,7 +116,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             icon.setImageDrawable(Helper.loadPackageIcon(getActivity(), up.packageName));
             TextView name = (TextView)view.findViewById(R.id.name);
             name.setText(up.name);
-            
+
             ((TextView)view.findViewById(R.id.uid_header)).setText(Integer.toString(up.desiredUid));
             ((TextView)view.findViewById(R.id.command_header)).setText(TextUtils.isEmpty(up.command) ? getString(R.string.all_commands) : up.command);
             String app = up.username;
@@ -134,7 +134,7 @@ public class LogFragmentInternal extends BetterListFragmentInternal {
             view.findViewById(R.id.policy_header).setVisibility(View.GONE);
             logs = SuperuserDatabaseHelper.getLogs(getActivity());
         }
-        
+
         for (LogEntry log: logs) {
             final String date = time.format(log.getDate());
             String title = date;

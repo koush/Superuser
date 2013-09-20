@@ -99,22 +99,22 @@ public class Settings {
             return defaultValue;
         }
     }
-    
+
     private static final String KEY_LOGGING = "logging";
     public static boolean getLogging(Context context) {
         return getBoolean(context, KEY_LOGGING, true);
     }
-    
+
     public static void setLogging(Context context, boolean logging) {
         setBoolean(context, KEY_LOGGING, logging);
     }
-    
+
     private static final String KEY_TIMEOUT = "timeout";
     public static final int REQUEST_TIMEOUT_DEFAULT = 30;
     public static int getRequestTimeout(Context context) {
         return getInt(context, KEY_TIMEOUT, REQUEST_TIMEOUT_DEFAULT);
     }
-    
+
     public static void setTimeout(Context context, int timeout) {
         setInt(context, KEY_TIMEOUT, timeout);
     }
@@ -136,16 +136,16 @@ public class Settings {
             return NOTIFICATION_TYPE_DEFAULT;
         }
     }
-    
+
     public static void setNotificationType(Context context, int notification) {
         setInt(context, KEY_NOTIFICATION, notification);
     }
-    
+
     public static final String KEY_PIN = "pin";
     public static final boolean isPinProtected(Context context) {
         return Settings.getString(context, KEY_PIN) != null;
     }
-    
+
     private static String digest(String value) {
         // ok, there's honestly no point in digesting the pin.
         // if someone gets a hold of the hash, there's really only like
@@ -162,11 +162,11 @@ public class Settings {
             return value;
         }
     }
-    
+
     public static void setPin(Context context, String pin) {
         Settings.setString(context, KEY_PIN, digest(pin));
     }
-    
+
     public static boolean checkPin(Context context, String pin) {
         pin = digest(pin);
         String hashed = Settings.getString(context, KEY_PIN);
@@ -179,11 +179,11 @@ public class Settings {
     public static boolean getRequirePermission(Context context) {
         return getBoolean(context, KEY_REQUIRE_PREMISSION, false);
     }
-    
+
     public static void setRequirePermission(Context context, boolean require) {
         setBoolean(context, KEY_REQUIRE_PREMISSION, require);
     }
-    
+
     private static final String KEY_AUTOMATIC_RESPONSE = "automatic_response";
     public static final int AUTOMATIC_RESPONSE_PROMPT = 0;
     public static final int AUTOMATIC_RESPONSE_ALLOW = 1;
@@ -205,12 +205,12 @@ public class Settings {
     public static void setAutomaticResponse(Context context, int response) {
         setInt(context, KEY_AUTOMATIC_RESPONSE, response);
     }
-    
-    
+
+
     static public String readFile(String filename) throws IOException {
         return readFile(new File(filename));
     }
-    
+
     static public String readFile(File file) throws IOException {
         byte[] buffer = new byte[(int) file.length()];
         DataInputStream input = new DataInputStream(new FileInputStream(file));
@@ -218,11 +218,11 @@ public class Settings {
         input.close();
         return new String(buffer);
     }
-    
+
     public static void writeFile(File file, String string) throws IOException {
         writeFile(file.getAbsolutePath(), string);
     }
-    
+
     public static void writeFile(String file, String string) throws IOException {
         File f = new File(file);
         f.getParentFile().mkdirs();
@@ -230,7 +230,7 @@ public class Settings {
         dout.write(string.getBytes());
         dout.close();
     }
-    
+
     public static byte[] readToEndAsArray(InputStream input) throws IOException {
         DataInputStream dis = new DataInputStream(input);
         byte[] stuff = new byte[1024];
@@ -252,7 +252,7 @@ public class Settings {
     public static final int MULTIUSER_MODE_OWNER_MANAGED = 1;
     public static final int MULTIUSER_MODE_USER = 2;
     public static final int MULTIUSER_MODE_NONE = 3;
-    
+
     private static final String MULTIUSER_VALUE_OWNER_ONLY  = "owner";
     private static final String MULTIUSER_VALUE_OWNER_MANAGED = "managed";
     private static final String MULTIUSER_VALUE_USER = "user";
@@ -263,7 +263,7 @@ public class Settings {
 
         if (!Helper.supportsMultipleUsers(context))
             return MULTIUSER_MODE_NONE;
-        
+
         try {
             String mode;
             if (Helper.isAdminUser(context)) {
@@ -274,7 +274,7 @@ public class Settings {
                 Process p = Runtime.getRuntime().exec("su -u");
                 mode = readToEnd(p.getInputStream()).trim();
             }
-            
+
             if (MULTIUSER_VALUE_OWNER_MANAGED.equals(mode))
                 return MULTIUSER_MODE_OWNER_MANAGED;
             if (MULTIUSER_VALUE_USER.equals(mode))
@@ -286,7 +286,7 @@ public class Settings {
         }
         return MULTIUSER_MODE_OWNER_ONLY;
     }
-    
+
     public static void setMultiuserMode(Context context, int mode) {
         if (!Helper.isAdminUser(context))
             return;
@@ -310,15 +310,15 @@ public class Settings {
         catch (Exception ex) {
         }
     }
-    
-    
+
+
     public static final int SUPERUSER_ACCESS_DISABLED = 0;
     public static final int SUPERUSER_ACCESS_APPS_ONLY = 1;
     public static final int SUPERUSER_ACCESS_ADB_ONLY = 2;
     public static final int SUPERUSER_ACCESS_APPS_AND_ADB = 3;
     public static int getSuperuserAccess() {
         try {
-            Class c = Class.forName("android.os.SystemProperties");
+            Class<?> c = Class.forName("android.os.SystemProperties");
             Method m = c.getMethod("get", String.class);
             String value = (String)m.invoke(null, "persist.sys.root_access");
             int val = Integer.valueOf(value);
@@ -336,11 +336,11 @@ public class Settings {
             return SUPERUSER_ACCESS_APPS_AND_ADB;
         }
     }
-    
+
     public static void setSuperuserAccess(int mode) {
         try {
             if (android.os.Process.myUid() == android.os.Process.SYSTEM_UID) {
-                Class c = Class.forName("android.os.SystemProperties");
+                Class<?> c = Class.forName("android.os.SystemProperties");
                 Method m = c.getMethod("set", String.class, String.class);
                 m.invoke(null, "persist.sys.root_access", String.valueOf(mode));
                 if (mode == getSuperuserAccess()) return;
@@ -356,16 +356,16 @@ public class Settings {
             Log.w(TAG, "got exception: ", ex);
         }
     }
-    
+
     private static final String CHECK_SU_QUIET = "check_su_quiet";
     public static final int getCheckSuQuietCounter(Context context) {
         return getInt(context, CHECK_SU_QUIET, 0);
     }
-    
+
     public static final void setCheckSuQuietCounter(Context context, int counter) {
         setInt(context, CHECK_SU_QUIET, counter);
     }
-    
+
     private static final String KEY_THEME = "theme";
     public static final int THEME_LIGHT = 0;
     public static final int THEME_DARK = 1;
@@ -379,11 +379,11 @@ public class Settings {
         catch (Exception e) {
         }
     }
-    
+
     public static final int getTheme(Context context) {
         return getInt(context, KEY_THEME, THEME_LIGHT);
     }
-    
+
     public static final void setTheme(Context context, int theme) {
         setInt(context, KEY_THEME, theme);
     }

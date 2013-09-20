@@ -47,7 +47,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
     public PolicyFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
     }
-    
+
     ContextThemeWrapper mWrapper;
     @Override
     public Context getContext() {
@@ -58,17 +58,17 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         mWrapper = new ContextThemeWrapper(super.getContext(), value.resourceId);
         return mWrapper;
     }
-    
+
     void showAllLogs() {
         setContent(null, null);
         getListView().clearChoices();
     }
-    
+
     void load() {
         clear();
         final ArrayList<UidPolicy> policies = SuDatabaseHelper.getPolicies(getActivity());
-        
-        SQLiteDatabase db = new SuperuserDatabaseHelper(getActivity()).getReadableDatabase(); 
+
+        SQLiteDatabase db = new SuperuserDatabaseHelper(getActivity()).getReadableDatabase();
         try {
             for (UidPolicy up: policies) {
                 int last = 0;
@@ -82,7 +82,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             db.close();
         }
     }
-    
+
     public void onResume() {
         super.onResume();
         load();
@@ -90,15 +90,15 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
 
     FragmentInterfaceWrapper mContent;
 
-    
+
     @Override
     public void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
 
         getFragment().setHasOptionsMenu(true);
-        
+
         setEmpty(R.string.no_apps);
-        
+
         load();
 
         if ("com.koushikdutta.superuser".equals(getContext().getPackageName())) {
@@ -109,7 +109,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         if (!isPaged())
             showAllLogs();
     }
-    
+
     public Date getLastDate(int last) {
         return new Date((long)last * 1000);
     }
@@ -128,21 +128,21 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                 setContent(this, up);
             };
         });
-        
+
         Drawable icon = Helper.loadPackageIcon(getActivity(), up.packageName);
         if (icon == null)
             li.setIcon(R.drawable.ic_launcher);
         else
             li.setDrawable(icon);
     }
-    
+
     public void onConfigurationChanged(Configuration newConfig) {
     };
 
     protected LogNativeFragment createLogNativeFragment() {
         return new LogNativeFragment();
     }
-    
+
     protected SettingsNativeFragment createSettingsNativeFragment() {
         return new SettingsNativeFragment();
     }
@@ -160,7 +160,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         l.getInternal().setListContentId(getFragment().getId());
         return l;
     }
-    
+
     void setContent(final ListItem li, final UidPolicy up) {
         if (getActivity() instanceof FragmentActivity) {
             LogFragment l = new LogFragment();
@@ -171,11 +171,11 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
         else {
             mContent = setContentNative(li, up);
         }
-        
+
         setContent(mContent, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
 
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -189,13 +189,13 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                 return true;
             }
         });
-        
+
         MenuItem settings = menu.findItem(R.id.settings);
         settings.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             void openSettingsNative(final MenuItem item) {
                 setContent(createSettingsNativeFragment(), true, getString(R.string.settings));
             }
-            
+
             @Override
             public boolean onMenuItemClick(final MenuItem item) {
                 if (getActivity() instanceof FragmentActivity) {
