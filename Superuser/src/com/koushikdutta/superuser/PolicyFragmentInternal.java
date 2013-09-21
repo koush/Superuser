@@ -19,11 +19,18 @@ package com.koushikdutta.superuser;
 import java.util.ArrayList;
 import java.util.Date;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
@@ -44,6 +51,9 @@ import com.koushikdutta.widgets.ListContentFragmentInternal;
 import com.koushikdutta.widgets.ListItem;
 
 public class PolicyFragmentInternal extends ListContentFragmentInternal {
+
+ private static final String DATA_BUNDLE_KEY = "deleted";
+
     public PolicyFragmentInternal(FragmentInterfaceWrapper fragment) {
         super(fragment);
     }
@@ -127,6 +137,11 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
 
                 setContent(this, up);
             };
+            @Override
+            public boolean onLongClick() {
+              showExtraActions(up, this);
+             return true;
+            }
         });
 
         Drawable icon = Helper.loadPackageIcon(getActivity(), up.packageName);
@@ -134,6 +149,88 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
             li.setIcon(R.drawable.ic_launcher);
         else
             li.setDrawable(icon);
+    }
+
+    public void showExtraActions(final UidPolicy up, final ListItem item){
+     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(up.name);
+        builder.setIcon(Helper.loadPackageIcon(getActivity(), up.packageName));
+        final String permissionChange = (up.policy.equalsIgnoreCase(UidPolicy.ALLOW)) ?
+          getResources().getText(R.string.deny).toString() :
+           getResources().getText(R.string.allow).toString();
+        String[] items = new String[] {permissionChange, getString(R.string.revoke_permission),
+          getString(R.string.details)};
+        builder.setItems(items, new OnClickListener() {
+            @SuppressLint("HandlerLeak")
+   @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                case 0:
+                    if(permissionChange.equalsIgnoreCase(
+                     getResources().getText(R.string.allow).toString())){
+                 up.setPolicy(UidPolicy.ALLOW);
+                    }
+                    else{
+                 up.setPolicy(UidPolicy.DENY);
+                    }
+                    SuDatabaseHelper.setPolicy(getActivity(), up);
+                    //update the adapters
+                    /*
+                     * TODO I should find a better way but this is ok
+                     * for the moment!
+                     */
+                    Intent i = new Intent(getContext(), MainActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    getContext().startActivity(i);
+                    break;
+                case 1:
+                    final Handler handler = new Handler(){
+                 @Override
+                 public void handleMessage(Message msg) {
+                     // TODO Auto-generated method stub
+                     if(msg.getData().getBoolean(DATA_BUNDLE_KEY))
+                  removeItem(item);
+                     else
+                  showErrorDialog(up, R.string.db_delete_error);
+                 }
+                    };
+                    new Thread(){
+                 public void run(){
+                     final boolean done = SuDatabaseHelper.delete(getActivity(), up);
+                     Message msg = handler.obtainMessage();
+                     Bundle bundle = new Bundle();
+                     bundle.putBoolean(DATA_BUNDLE_KEY, done);
+                     msg.setData(bundle);
+                     handler.sendMessage(msg);
+                 }
+                    }.start();
+                    //dismiss the actions' dialog
+                    dialog.dismiss();
+                    break;
+                case 2:
+                    setContent(item, up);
+                    dialog.dismiss();
+                    break;
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showErrorDialog(UidPolicy policy, int resource){
+     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+       .setTitle(policy.name)
+          .setIcon(Helper.loadPackageIcon(getActivity(), policy.packageName))
+          .setMessage(getResources().getText(resource))
+          .setCancelable(true)
+          .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                 dialog.dismiss();
+                }
+            });
+     AlertDialog alert = builder.create();
+     alert.show();
     }
 
     public void onConfigurationChanged(Configuration newConfig) {

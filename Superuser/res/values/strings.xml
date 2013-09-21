@@ -101,4 +101,7 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="pin_disabled">Superuser PIN protection disabled</string>
+    <string name="revoke_permission">Revoke Superuser permission</string>
+    <string name="details">Details</string>
+    <string name="db_delete_error">Superuser permission cannot be revoked from this application. \nPlease restart the Superuser application and try again.</string>
 </resources>
