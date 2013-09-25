@@ -17,7 +17,7 @@ LOCAL_PATH := $(my_path)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
-LOCAL_MODULE_TAGS := eng debug
+LOCAL_MODULE_TAGS := eng debug optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc
 LOCAL_C_INCLUDES := external/sqlite/dist
