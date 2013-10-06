@@ -559,6 +559,9 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
  * Find the properties ourselves.
  */
 int access_disabled(const struct su_initiator *from) {
+#ifndef SUPERUSER_EMBEDDED
+    return 0;
+#else
     char *data;
     char build_type[PROPERTY_VALUE_MAX];
     char debuggable[PROPERTY_VALUE_MAX], enabled[PROPERTY_VALUE_MAX];
@@ -608,6 +611,7 @@ int access_disabled(const struct su_initiator *from) {
 
     }
     return 0;
+#endif
 }
 
 static int is_api_18() {
