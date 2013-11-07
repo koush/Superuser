@@ -38,7 +38,10 @@
 #include <pthread.h>
 #include <sched.h>
 #include <termios.h>
+
+#ifdef SUPERUSER_EMBEDEDED
 #include <cutils/multiuser.h>
+#endif
 
 #include "su.h"
 #include "utils.h"
@@ -95,6 +98,7 @@ static void write_string(int fd, char* val) {
     }
 }
 
+#ifdef SUPERUSER_EMBEDDED
 static void mount_emulated_storage(int user_id) {
     const char *emulated_source = getenv("EMULATED_STORAGE_SOURCE");
     const char *emulated_target = getenv("EMULATED_STORAGE_TARGET");
@@ -129,6 +133,7 @@ static void mount_emulated_storage(int user_id) {
         PLOGE("mount legacy path");
     }
 }
+#endif
 
 static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** argv) {
     if (-1 == dup2(outfd, STDOUT_FILENO)) {
@@ -331,9 +336,11 @@ static int daemon_accept(int fd) {
             outfd = pts;
         }
 
+#ifdef SUPERUSER_EMBEDEDED
         if (mount_storage) {
             mount_emulated_storage(multiuser_get_user_id(daemon_from_uid));
         }
+#endif
 
         return run_daemon_child(infd, outfd, errfd, argc, argv);
     }
