@@ -67,13 +67,19 @@ public class MainActivity extends BetterListActivity {
         
         return super.onCreateOptionsMenu(menu);
     }
+
+    private String getArch() {
+        String prop = System.getProperty("os.arch");
+        if (prop.contains("x86") || prop.contains("i686") || prop.contains("i386")) {
+            return "x86";
+        } else {
+            return "armeabi";
+        }
+    }
     
     File extractSu() throws IOException, InterruptedException {
-        String arch = "armeabi";
-        if (System.getProperty("os.arch").contains("x86") || System.getProperty("os.arch").contains("i686") || System.getProperty("os.arch").contains("i386"))
-            arch = "x86";
         ZipFile zf = new ZipFile(getPackageCodePath());
-        ZipEntry su = zf.getEntry("assets/" + arch + "/su");
+        ZipEntry su = zf.getEntry("assets/" + getArch() + "/su");
         InputStream zin = zf.getInputStream(su);
         File ret = getFileStreamPath("su");
         FileOutputStream fout = new FileOutputStream(ret);
