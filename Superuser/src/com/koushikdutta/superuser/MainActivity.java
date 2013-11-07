@@ -72,6 +72,8 @@ public class MainActivity extends BetterListActivity {
         String prop = System.getProperty("os.arch");
         if (prop.contains("x86") || prop.contains("i686") || prop.contains("i386")) {
             return "x86";
+        } else if (prop.contains("mips")) {
+            return "mips";
         } else {
             return "armeabi";
         }

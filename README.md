@@ -61,6 +61,7 @@ Outputs:
 * bin/Superuser-release.apk - Superuser Android app
 * libs/armeabi/su - ARM su binary
 * libs/x86/su - x86 su binary
+* libs/mips/su - MIPS su binary
 
 ## Building the su binary
 
