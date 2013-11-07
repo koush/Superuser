@@ -117,7 +117,7 @@ public class MainActivity extends BetterListActivity {
                     zout.close();
 
                     ZipFile zf = new ZipFile(getPackageCodePath());
-                    ZipEntry ze = zf.getEntry("assets/reboot");
+                    ZipEntry ze = zf.getEntry("assets/" + getArch() + "/reboot");
                     InputStream in;
                     FileOutputStream reboot;
                     StreamUtility.copyStream(in = zf.getInputStream(ze), reboot = openFileOutput("reboot", MODE_PRIVATE));
