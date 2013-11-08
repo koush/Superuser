@@ -87,4 +87,7 @@
     <string name="light">Ανοιχτόχρωμο</string>
     <string name="dark">Σκοτεινό</string>
     <string name="pin_disabled">Η προστασία PIN του Superuser απενεργοποιήθηκε</string>
+    <string name="revoke_permission">Ανάκληση δικαιωμάτων Superuser</string>
+    <string name="details">Λεπτομέρειες</string>
+    <string name="db_delete_error">Η ανάκληση των Superuser δικαιωμάτων στάθηκε αδύνατη γι αυτή την εφαρμογή. \nΕπανεκκινήστε την εφαρμογή Superuser και δοκιμάστε ξανά.</string>
 </resources>
