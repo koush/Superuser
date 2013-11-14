@@ -71,11 +71,6 @@
 #define REQUESTOR_DATABASE_PATH REQUESTOR "/databases/su.sqlite"
 #define REQUESTOR_MULTIUSER_MODE REQUESTOR_FILES_PATH "/multiuser_mode"
 
-/* intent actions */
-#define ACTION_REQUEST "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".RequestActivity"
-#define ACTION_NOTIFY "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".NotifyActivity"
-#define ACTION_RESULT "broadcast -n " REQUESTOR "/" REQUESTOR_PREFIX ".SuReceiver"
-
 #define DEFAULT_SHELL "/system/bin/sh"
 
 #define xstr(a) str(a)
@@ -160,7 +155,6 @@ extern policy_t database_check(struct su_context *ctx);
 extern void set_identity(unsigned int uid);
 extern int send_request(struct su_context *ctx);
 extern int send_result(struct su_context *ctx, policy_t policy);
-extern int silent_run(char* command);
 
 static inline char *get_command(const struct su_request *to)
 {
