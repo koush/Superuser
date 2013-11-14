@@ -375,6 +375,11 @@ done:
 }
 
 int run_daemon() {
+    if (getuid() != 0 || getgid() != 0) {
+        PLOGE("daemon requires root. uid/gid not root");
+        return -1;
+    }
+
     int fd;
     struct sockaddr_un sun;
 
