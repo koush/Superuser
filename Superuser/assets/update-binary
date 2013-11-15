@@ -62,7 +62,7 @@ MAJ=${VERSION%%.*}
 MIN=${VERSION#*.}
 MIN=${MIN//.*}
 
-if [ "$MAJ" -ge 4 -a "$MIN" -ge 3 ]
+if [ "${MAJ}${MIN}" -ge 43 ]
 then
   # on 4.3+, the daemon need not be setuid.
   chmod 0755 /system/xbin/su
