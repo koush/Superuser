@@ -631,11 +631,15 @@ int main(int argc, char *argv[]) {
 
     // attempt to use the daemon client if not root,
     // or this is api 18 and adb shell (/data is not readable even as root)
-    if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) || (is_api_18() && getuid() == AID_SHELL)) {
-        // attempt to connect to daemon...
-        LOGD("starting daemon client %d %d", getuid(), geteuid());
-        return connect_daemon(argc, argv);
+    if (is_api_18()) {
+        if (geteuid() != AID_ROOT || getuid() != AID_ROOT) {
+            // attempt to connect to daemon...
+            LOGD("starting daemon client %d %d", getuid(), geteuid());
+            return connect_daemon(argc, argv);
+        }
     }
+
+    LOGD("skipping daemon client %d %d", getuid(), geteuid());
 
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
     /* The same list than GLibc at this point */
