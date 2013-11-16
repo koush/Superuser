@@ -26,7 +26,7 @@ You'll need the "Widgets" dependency.
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
 
-Make sure the SDK Platform for API 17 is installed, through the Android SDK Manager.  Install NDK Revision 8e from [here](http://developer.android.com/tools/sdk/ndk/index.html).
+Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.  Install NDK Revision 9b from [here](http://developer.android.com/tools/sdk/ndk/index.html).
 
 ## Eclipse
 
