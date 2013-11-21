@@ -614,13 +614,13 @@ int access_disabled(const struct su_initiator *from) {
 #endif
 }
 
-static int is_api_18() {
+static int get_api_version() {
   char sdk_ver[PROPERTY_VALUE_MAX];
   char *data = read_file("/system/build.prop");
   get_property(data, sdk_ver, "ro.build.version.sdk", "0");
   int ver = atoi(sdk_ver);
   free(data);
-  return ver >= 18;
+  return ver;
 }
 
 int main(int argc, char *argv[]) {
@@ -631,15 +631,14 @@ int main(int argc, char *argv[]) {
 
     // attempt to use the daemon client if not root,
     // or this is api 18 and adb shell (/data is not readable even as root)
-    if (is_api_18()) {
-        if (geteuid() != AID_ROOT || getuid() != AID_ROOT) {
-            // attempt to connect to daemon...
-            LOGD("starting daemon client %d %d", getuid(), geteuid());
-            return connect_daemon(argc, argv);
-        }
+    // or just always use it on API 19+ (ART)
+    if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) ||
+        (get_api_version() >= 18 && getuid() == AID_SHELL) ||
+        get_api_version() >= 19) {
+        // attempt to connect to daemon...
+        LOGD("starting daemon client %d %d", getuid(), geteuid());
+        return connect_daemon(argc, argv);
     }
-
-    LOGD("skipping daemon client %d %d", getuid(), geteuid());
 
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
     /* The same list than GLibc at this point */
