@@ -624,20 +624,13 @@ static int get_api_version() {
 }
 
 int main(int argc, char *argv[]) {
+    return su_main(argc, argv, 1);
+}
+
+int su_main(int argc, char *argv[], int need_client) {
     // start up in daemon mode if prompted
     if (argc == 2 && strcmp(argv[1], "--daemon") == 0) {
         return run_daemon();
-    }
-
-    // attempt to use the daemon client if not root,
-    // or this is api 18 and adb shell (/data is not readable even as root)
-    // or just always use it on API 19+ (ART)
-    if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) ||
-        (get_api_version() >= 18 && getuid() == AID_SHELL) ||
-        get_api_version() >= 19) {
-        // attempt to connect to daemon...
-        LOGD("starting daemon client %d %d", getuid(), geteuid());
-        return connect_daemon(argc, argv);
     }
 
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
@@ -773,6 +766,20 @@ int main(int argc, char *argv[]) {
             usage(2);
         }
     }
+
+    if (need_client) {
+        // attempt to use the daemon client if not root,
+        // or this is api 18 and adb shell (/data is not readable even as root)
+        // or just always use it on API 19+ (ART)
+        if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) ||
+            (get_api_version() >= 18 && getuid() == AID_SHELL) ||
+            get_api_version() >= 19) {
+            // attempt to connect to daemon...
+            LOGD("starting daemon client %d %d", getuid(), geteuid());
+            return connect_daemon(argc, argv);
+        }
+    }
+
     if (optind < argc && !strcmp(argv[optind], "-")) {
         ctx.to.login = 1;
         optind++;

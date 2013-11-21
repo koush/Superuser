@@ -155,7 +155,7 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
     close(outfd);
     close(errfd);
 
-    return main(argc, argv);
+	return su_main(argc, argv, 0);
 }
 
 static void pump(int input, int output) {
