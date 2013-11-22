@@ -39,7 +39,7 @@
 #include <sched.h>
 #include <termios.h>
 
-#ifdef SUPERUSER_EMBEDEDED
+#ifdef SUPERUSER_EMBEDDED
 #include <cutils/multiuser.h>
 #endif
 
@@ -349,7 +349,7 @@ unlink_n_exit:
             outfd = pts;
         }
 
-#ifdef SUPERUSER_EMBEDEDED
+#ifdef SUPERUSER_EMBEDDED
         if (mount_storage) {
             mount_emulated_storage(multiuser_get_user_id(daemon_from_uid));
         }
