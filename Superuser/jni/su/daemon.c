@@ -192,13 +192,13 @@ static void pump_async(int input, int output) {
 static int daemon_accept(int fd) {
     is_daemon = 1;
     int pid = read_int(fd);
-    LOGD("remote pid: %d", pid);
+    LOGV("remote pid: %d", pid);
     int atty = read_int(fd);
-    LOGD("remote atty: %d", atty);
+    LOGV("remote atty: %d", atty);
     daemon_from_uid = read_int(fd);
-    LOGD("remote uid: %d", daemon_from_uid);
+    LOGV("remote uid: %d", daemon_from_uid);
     daemon_from_pid = read_int(fd);
-    LOGD("remote req pid: %d", daemon_from_pid);
+    LOGV("remote req pid: %d", daemon_from_pid);
 
     struct ucred credentials;
     int ucred_length = sizeof(struct ucred);
@@ -221,7 +221,7 @@ static int daemon_accept(int fd) {
         LOGE("unable to allocate args: %d", argc);
         exit(-1);
     }
-    LOGD("remote args: %d", argc);
+    LOGV("remote args: %d", argc);
     char** argv = (char**)malloc(sizeof(char*) * (argc + 1));
     argv[argc] = NULL;
     int i;
@@ -272,7 +272,7 @@ static int daemon_accept(int fd) {
             close(ptm);
             exit(-1);
         }
-        LOGD("devname: %s", devname);
+        LOGV("devname: %s", devname);
     }
 
     int outfd = open(outfile, O_WRONLY);
@@ -359,7 +359,7 @@ static int daemon_accept(int fd) {
     // wait for the child to exit, and send the exit code
     // across the wire.
     int status;
-    LOGD("waiting for child exit");
+    LOGV("waiting for child exit");
     if (waitpid(child, &status, 0) > 0) {
         code = WEXITSTATUS(status);
     }
@@ -370,7 +370,7 @@ static int daemon_accept(int fd) {
 done:
     write(fd, &code, sizeof(int));
     close(fd);
-    LOGD("child exited");
+    LOGV("child exited");
     return code;
 }
 
@@ -473,7 +473,7 @@ int connect_daemon(int argc, char *argv[]) {
         exit(-1);
     }
 
-    LOGD("connecting client %d", getpid());
+    LOGV("connecting client %d", getpid());
 
     int mount_storage = getenv("MOUNT_EMULATED_STORAGE") != NULL;
 
@@ -516,6 +516,6 @@ int connect_daemon(int argc, char *argv[]) {
     pump(outfd, STDOUT_FILENO);
 
     int code = read_int(socketfd);
-    LOGD("client exited %d", code);
+    LOGV("client exited %d", code);
     return code;
 }
