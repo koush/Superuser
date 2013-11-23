@@ -623,6 +623,28 @@ static int is_api_18() {
   return ver >= 18;
 }
 
+static void fork_for_samsung(void)
+{
+    // Samsung CONFIG_SEC_RESTRICT_SETUID wants the parent process to have
+    // EUID 0, or else our setresuid() calls will be denied.  So make sure
+    // all such syscalls are executed by a child process.
+    int rv;
+
+    switch (fork()) {
+    case 0:
+        return;
+    case -1:
+        PLOGE("fork");
+        exit(1);
+    default:
+        if (wait(&rv) < 0) {
+            exit(1);
+        } else {
+            exit(WEXITSTATUS(rv));
+        }
+    }
+}
+
 int main(int argc, char *argv[]) {
     // start up in daemon mode if prompted
     if (argc == 2 && strcmp(argv[1], "--daemon") == 0) {
@@ -640,6 +662,8 @@ int main(int argc, char *argv[]) {
     }
 
     LOGD("skipping daemon client %d %d", getuid(), geteuid());
+
+    fork_for_samsung();
 
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
     /* The same list than GLibc at this point */
