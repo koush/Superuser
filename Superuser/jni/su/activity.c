@@ -118,7 +118,7 @@ int send_result(struct su_context *ctx, policy_t policy) {
             "--es",
             "action",
             policy == ALLOW ? "allow" : "deny",
-            "--user",
+            user[0] ? "--user" : NULL,
             android_user_id,
             NULL
         };
