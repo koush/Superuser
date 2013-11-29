@@ -90,6 +90,9 @@ int send_result(struct su_context *ctx, policy_t policy) {
     char desired_uid[256];
     sprintf(desired_uid, "%d", ctx->to.uid);
 
+    char user[64];
+    get_owner_login_user_args(ctx, user, sizeof(user));
+
     if (0 != ctx->user.android_user_id) {
         char android_user_id[256];
         sprintf(android_user_id, "%d", ctx->user.android_user_id);
@@ -124,9 +127,6 @@ int send_result(struct su_context *ctx, policy_t policy) {
         };
         silent_run(user_result_command);
     }
-
-    char user[64];
-    get_owner_login_user_args(ctx, user, sizeof(user));
 
     char *result_command[] = {
         AM_PATH,
