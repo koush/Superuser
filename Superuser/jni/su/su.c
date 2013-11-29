@@ -17,6 +17,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 #include <sys/un.h>
 #include <sys/wait.h>
 #include <sys/select.h>
@@ -81,48 +82,31 @@ int fork_zero_fucks() {
     }
 }
 
-void exec_log(char *priority, char* logline) {
-  int pid;
-  if ((pid = fork()) == 0) {
-      int null = open("/dev/null", O_WRONLY | O_CLOEXEC);
-      dup2(null, STDIN_FILENO);
-      dup2(null, STDOUT_FILENO);
-      dup2(null, STDERR_FILENO);
-      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline, NULL);
-      _exit(0);
-  }
-  int status;
-  waitpid(pid, &status, 0);
-}
-
-void exec_loge(const char* fmt, ...) {
+void exec_log(int priority, const char* fmt, ...) {
+    static int log_fd = -1;
+    struct iovec vec[3];
     va_list args;
+    char msg[PATH_MAX];
 
-    char logline[PATH_MAX];
+    if (log_fd < 0) {
+        log_fd = open("/dev/log/main", O_WRONLY);
+        if (log_fd < 0) {
+            return;
+        }
+    }
+
     va_start(args, fmt);
-    vsnprintf(logline, PATH_MAX, fmt, args);
+    vsnprintf(msg, PATH_MAX, fmt, args);
     va_end(args);
-    exec_log("e", logline);
-}
 
-void exec_logw(const char* fmt, ...) {
-    va_list args;
+    vec[0].iov_base   = (unsigned char *) &priority;
+    vec[0].iov_len    = 1;
+    vec[1].iov_base   = (void *) LOG_TAG;
+    vec[1].iov_len    = strlen(LOG_TAG) + 1;
+    vec[2].iov_base   = (void *) msg;
+    vec[2].iov_len    = strlen(msg) + 1;
 
-    char logline[PATH_MAX];
-    va_start(args, fmt);
-    vsnprintf(logline, PATH_MAX, fmt, args);
-    va_end(args);
-    exec_log("w", logline);
-}
-
-void exec_logd(const char* fmt, ...) {
-    va_list args;
-
-    char logline[PATH_MAX];
-    va_start(args, fmt);
-    vsnprintf(logline, PATH_MAX, fmt, args);
-    va_end(args);
-    exec_log("d", logline);
+    writev(log_fd, vec, 3);
 }
 
 static int from_init(struct su_initiator *from) {
@@ -427,7 +411,7 @@ do {                                        \
 static int socket_receive_result(int fd, char *result, ssize_t result_len) {
     ssize_t len;
 
-    LOGD("waiting for user");
+    LOGV("waiting for user");
     len = read(fd, result, result_len-1);
     if (len < 0) {
         PLOGE("read(result)");
