@@ -152,7 +152,7 @@ int send_result(struct su_context *ctx, policy_t policy) {
         "--es",
         "action",
         policy == ALLOW ? "allow" : "deny",
-        "--user",
+        user[0] ? "--user" : NULL,
         user,
         NULL
     };
@@ -199,7 +199,7 @@ int send_request(struct su_context *ctx) {
         "--es",
         "socket",
         ctx->sock_path,
-        "--user",
+        user[0] ? "--user" : NULL,
         user,
         NULL
     };

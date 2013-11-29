@@ -242,10 +242,13 @@ static int daemon_accept(int fd) {
     }
     if (mkfifo(errfile, 0660) != 0) {
         PLOGE("mkfifo %s", errfile);
+        unlink(outfile);
         exit(-1);
     }
     if (mkfifo(infile, 0660) != 0) {
         PLOGE("mkfifo %s", infile);
+        unlink(errfile);
+        unlink(outfile);
         exit(-1);
     }
 
@@ -265,11 +268,15 @@ static int daemon_accept(int fd) {
         ptm = open("/dev/ptmx", O_RDWR);
         if (ptm <= 0) {
             PLOGE("ptm");
-            exit(-1);
+            goto unlink_n_exit;
         }
         if(grantpt(ptm) || unlockpt(ptm) || ((devname = (char*) ptsname(ptm)) == 0)) {
             PLOGE("ptm setup");
             close(ptm);
+unlink_n_exit:
+            unlink(infile);
+            unlink(errfile);
+            unlink(outfile);
             exit(-1);
         }
         LOGV("devname: %s", devname);
@@ -278,18 +285,24 @@ static int daemon_accept(int fd) {
     int outfd = open(outfile, O_WRONLY);
     if (outfd <= 0) {
         PLOGE("outfd daemon %s", outfile);
-        goto done;
+        goto unlink_n_exit;
     }
     int errfd = open(errfile, O_WRONLY);
     if (errfd <= 0) {
         PLOGE("errfd daemon %s", errfile);
-        goto done;
+        goto unlink_n_exit;
     }
     int infd = open(infile, O_RDONLY);
     if (infd <= 0) {
         PLOGE("infd daemon %s", infile);
-        goto done;
+        goto unlink_n_exit;
     }
+
+    // Wait for client to open pipes, then remove
+    read_int(fd);
+    unlink(infile);
+    unlink(errfile);
+    unlink(outfile);
 
     int code;
     // now fork and run main, watch for the child pid exit, and send that
@@ -361,7 +374,13 @@ static int daemon_accept(int fd) {
     int status;
     LOGV("waiting for child exit");
     if (waitpid(child, &status, 0) > 0) {
-        code = WEXITSTATUS(status);
+        if (WIFEXITED(status)) {
+            code = WEXITSTATUS(status);
+        } else if (WIFSIGNALED(status)) {
+            code = 128 + WTERMSIG(status);
+        } else {
+            code = -1;
+        }
     }
     else {
         code = -1;
@@ -448,9 +467,6 @@ int connect_daemon(int argc, char *argv[]) {
     sprintf(outfile, "%s/%d.stdout", REQUESTOR_DAEMON_PATH, getpid());
     sprintf(errfile, "%s/%d.stderr", REQUESTOR_DAEMON_PATH, getpid());
     sprintf(infile, "%s/%d.stdin", REQUESTOR_DAEMON_PATH, getpid());
-    unlink(errfile);
-    unlink(infile);
-    unlink(outfile);
 
     struct sockaddr_un sun;
 
@@ -511,11 +527,19 @@ int connect_daemon(int argc, char *argv[]) {
         exit(-1);
     }
 
+    // notify daemon that the pipes are open.
+    write_int(socketfd, 1);
+
     pump_async(STDIN_FILENO, infd);
     pump_async(errfd, STDERR_FILENO);
     pump(outfd, STDOUT_FILENO);
 
+    close(infd);
+    close(errfd);
+    close(outfd);
+
     int code = read_int(socketfd);
-    LOGV("client exited %d", code);
+    close(socketfd);
+    LOGD("client exited %d", code);
     return code;
 }
