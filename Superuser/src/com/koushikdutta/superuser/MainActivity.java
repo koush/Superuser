@@ -134,8 +134,10 @@ public class MainActivity extends BetterListActivity {
                             String.format("cat %s > /cache/Superuser.apk\n", getPackageCodePath()) +
                             "mkdir /cache/recovery\n" +
                             "echo '--update_package=CACHE:superuser.zip' > /cache/recovery/command\n" +
+                            "echo 'install /cache/superuser.zip' > /cache/recovery/openrecoveryscript\n" +
                             "chmod 644 /cache/superuser.zip\n" +
                             "chmod 644 /cache/recovery/command\n" +
+                            "chmod 644 /cache/recovery/openrecoveryscript\n" +
                             "sync\n" +
                             String.format("chmod 755 %s\n", getFileStreamPath("reboot").getAbsolutePath()) +
                             "reboot recovery\n";
