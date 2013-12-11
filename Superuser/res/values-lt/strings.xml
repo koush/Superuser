@@ -2,7 +2,7 @@
 <resources>
 
     <string name="superuser">Superuser</string>
-    <string name="allow">Suteikti</string>
+    <string name="allow">Leisti</string>
     <string name="deny">Atmesti</string>
     <string name="status_incoming">Superuser užklausa\u2026</string>
     <string name="unknown_uid">Nežinomas UID: %s</string>
@@ -14,7 +14,7 @@
     <string name="uid_header">UID:</string>
     <string name="command_header">Komanda:</string>
     <string name="this_time_only">Tik šį kartą</string>
-    <string name="remember_for">Prisiminti pasirinkimą %s minutėms</string>
+    <string name="remember_for">Prisiminti pasirinkimą %s minučių</string>
     <string name="remember_forever">Prisiminti pasirinkimą</string>
     <string name="interactive">Interaktyvus</string>
     <string name="logs">Įrašai</string>
@@ -24,8 +24,8 @@
     <string name="no_apps">Nėra Superuser užklausų įrašų</string>
     <string name="logging">Įrašų vedimas</string>
     <string name="logging_summary">Įjungti arba išjungti Superuser įrašų vedimą</string>
-    <string name="pin_protection">PIN apsauga</string>
-    <string name="pin_protection_summary">Reikalauti PIN Superuser užklausoms</string>
+    <string name="pin_protection">PIN kodo apsauga</string>
+    <string name="pin_protection_summary">Reikalauti PIN kodo Superuser užklausoms</string>
     <string name="request_timeout">Užklausos laikas</string>
     <string name="request_timeout_summary">Superuser užklausa bus atmesta po %s sekundžių, jei teisės nebus suteiktos</string>
     <string name="notifications">Įspėjimai</string>
@@ -37,7 +37,7 @@
     <string name="confirm_pin">Patvirtinkite PIN kodą</string>
     <string name="pin_mismatch">Nesutampa PIN kodas</string>
     <string name="pin_set">Superuser PIN kodo apsauga įjungta</string>
-    <string name="number_seconds">%s sekundės</string>
+    <string name="number_seconds">%s sekundžių</string>
     <string name="superuser_granted">Superuser teisės suteiktos %s</string>
     <string name="superuser_denied">Superuser teisės atmestos %s</string>
     <string name="toast">Info langelis</string>
