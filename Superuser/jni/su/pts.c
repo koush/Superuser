@@ -290,6 +290,7 @@ int watch_sigwinch_async(int master, int slave) {
 
     // Set the initial terminal size
     raise(SIGWINCH);
+    return 0;
 }
 
 /**
