@@ -70,12 +70,12 @@
     <string name="installing_superuser">Diegiamas Superuser\u2026</string>
     <string name="install_superuser">Įdiegti Superuser</string>
     <string name="install_superuser_info">Superuser įskiepis (su) turi būti atnaujintas.\n\nPasirinkite įdiegimo būdą.\n</string>
-    <string name="recovery_install">Įdiegti per \'Recovery\' režimą</string>
+    <string name="recovery_install">Įdiegti per atkūrimo režimą</string>
     <string name="install">Įdiegti</string>
     <string name="checking_superuser">Tikrinamas Superuser\u2026</string>
     <string name="install_error">Įvyko klaida diegiant Superuser</string>
     <string name="install_success">Superuser įdiegtas</string>
-    <string name="su_binary_outdated">\'su\' įskiepis pasenęs.</string>
+    <string name="su_binary_outdated">\„su\“ įskiepis pasenęs.</string>
     <string name="superuser_access">Superuser prieiga</string>
     <string name="access_disabled">Išjungta</string>
     <string name="apps_only">Tik programoms</string>
