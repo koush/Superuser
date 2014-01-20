@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Laat toe</string>
     <string name="deny">Verwerp</string>
-    <string name="status_incoming">Inkomende Superuser versoek...</string>
+    <string name="status_incoming">Inkomende Superuser versoek\u2026</string>
     <string name="unknown_uid">Onbekende UID: %s</string>
     <string name="application_request">%s vra tans Superuser toegang aan.</string>
     <string name="info">Waarskuwing: As jy dit nie verstaan ​​nie, dan kan jy die versoek weier.</string>

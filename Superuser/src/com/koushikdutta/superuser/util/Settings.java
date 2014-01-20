@@ -19,11 +19,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.koushikdutta.superuser.Helper;
 import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
 
 public class Settings {
+    static final String TAG = "Superuser";
     SQLiteDatabase mDatabase;
     Context mContext;
 
@@ -336,15 +338,22 @@ public class Settings {
     }
     
     public static void setSuperuserAccess(int mode) {
-        // TODO: fallback to using SystemProperties.set if this has system uid (ie, embedded)
         try {
+            if (android.os.Process.myUid() == android.os.Process.SYSTEM_UID) {
+                Class c = Class.forName("android.os.SystemProperties");
+                Method m = c.getMethod("set", String.class, String.class);
+                m.invoke(null, "persist.sys.root_access", String.valueOf(mode));
+                if (mode == getSuperuserAccess()) return;
+            }
             String command = "setprop persist.sys.root_access " + mode;
             Process p = Runtime.getRuntime().exec("su");
             p.getOutputStream().write(command.getBytes());
             p.getOutputStream().close();
-            p.waitFor();
+            int ret = p.waitFor();
+            if (ret != 0) Log.w(TAG, "su failed: " + ret);
         }
         catch (Exception ex) {
+            Log.w(TAG, "got exception: ", ex);
         }
     }
     

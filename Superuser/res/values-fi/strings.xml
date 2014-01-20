@@ -3,7 +3,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Salli</string>
     <string name="deny">Estä</string>
-    <string name="status_incoming">Pääkäyttäjän oikeudet tarvitaan...</string>
+    <string name="status_incoming">Pääkäyttäjän oikeudet tarvitaan\u2026</string>
     <string name="unknown_uid">Tuntematon UID: %s</string>
     <string name="application_request">%s tarvitsee pääkäyttäjän oikeuksia jatkaakseen.</string>
     <string name="info">Varoitus: Jos et tiedä mitä olet tekemässä, sinun pitäisi estää pyyntö.</string>
@@ -66,12 +66,12 @@
     <string name="about">Tietoja</string>
     <string name="apps">Sovellukset</string>
     <string name="installing">Asennetaan</string>
-    <string name="installing_superuser">Asennetaan Superuseria...</string>
+    <string name="installing_superuser">Asennetaan Superuseria\u2026</string>
     <string name="install_superuser">Asenna Superuser</string>
     <string name="install_superuser_info">Superuser-binääri pitää päivittää. \n\Valitse asennustapa.\nRecovery-tilassa asentaminen on suositeltavaa HTC:n laitteilla.</string>
     <string name="recovery_install">Recovery-asennus</string>
     <string name="install">Asenna</string>
-    <string name="checking_superuser">Tarkistetaan...</string>
+    <string name="checking_superuser">Tarkistetaan\u2026</string>
     <string name="install_error">Superuserin asennus ei onnistunut. Lähetä lokitiedosto virheestä kehittäjälle.</string>
     <string name="install_success">Superuser asennettu onnistuneesti.</string>
     <string name="su_binary_outdated">su-binääri on vanhentunut.</string>

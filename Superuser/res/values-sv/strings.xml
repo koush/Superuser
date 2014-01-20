@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Tillåt</string>
     <string name="deny">Neka</string>
-    <string name="status_incoming">Inkommande Superuserbegäran...</string>
+    <string name="status_incoming">Inkommande Superuserbegäran\u2026</string>
     <string name="unknown_uid">Okänt UID: %s</string>
     <string name="application_request">%s begär Superuseråtkomst.</string>
     <string name="info">Varning: Om du inte förstår detta bör du neka begäran.</string>
@@ -67,12 +67,12 @@
     <string name="about">Om</string>
     <string name="apps">Appar</string>
     <string name="installing">Installerar</string>
-    <string name="installing_superuser">Installerar Superuser...</string>
+    <string name="installing_superuser">Installerar Superuser\u2026</string>
     <string name="install_superuser">Installera Superuser</string>
     <string name="install_superuser_info">Superuserbinären (su) måste uppdateras.\n\nVälj en installationsmetod.\nRecoveryinstallation rekommenderas för enheter från HTC.</string>
     <string name="recovery_install">Recoveryinstallation</string>
     <string name="install">Installation</string>
-    <string name="checking_superuser">Kontrollerar Superuser...</string>
+    <string name="checking_superuser">Kontrollerar Superuser\u2026</string>
     <string name="install_error">Ett fel uppstod när Superuser installerades. Skicka en logg till utvecklaren för att möjliggöra felsökning.</string>
     <string name="install_success">Superuser installerades korrekt.</string>
     <string name="su_binary_outdated">Superuserbinären (su) är inaktuell.</string>

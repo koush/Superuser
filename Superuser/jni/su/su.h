@@ -71,18 +71,13 @@
 #define REQUESTOR_DATABASE_PATH REQUESTOR "/databases/su.sqlite"
 #define REQUESTOR_MULTIUSER_MODE REQUESTOR_FILES_PATH "/multiuser_mode"
 
-/* intent actions */
-#define ACTION_REQUEST "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".RequestActivity"
-#define ACTION_NOTIFY "start -n " REQUESTOR "/" REQUESTOR_PREFIX ".NotifyActivity"
-#define ACTION_RESULT "broadcast -n " REQUESTOR "/" REQUESTOR_PREFIX ".SuReceiver"
-
 #define DEFAULT_SHELL "/system/bin/sh"
 
 #define xstr(a) str(a)
 #define str(a) #a
 
 #ifndef VERSION_CODE
-#define VERSION_CODE 13
+#define VERSION_CODE 15
 #endif
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
@@ -160,7 +155,6 @@ extern policy_t database_check(struct su_context *ctx);
 extern void set_identity(unsigned int uid);
 extern int send_request(struct su_context *ctx);
 extern int send_result(struct su_context *ctx, policy_t policy);
-extern int silent_run(char* command);
 
 static inline char *get_command(const struct su_request *to)
 {
@@ -174,27 +168,39 @@ static inline char *get_command(const struct su_request *to)
   return DEFAULT_SHELL;
 }
 
-void exec_loge(const char* fmt, ...);
-void exec_logw(const char* fmt, ...);
-void exec_logd(const char* fmt, ...);
-
 int run_daemon();
 int connect_daemon(int argc, char *argv[]);
+int su_main(int argc, char *argv[], int need_client);
 // for when you give zero fucks about the state of the child process.
 // this version of fork understands you don't care about the child.
 // deadbeat dad fork.
 int fork_zero_fucks();
 
-// fallback to using /system/bin/log.
-// can't use liblog.so because this is a static binary.
-#ifndef LOGE
-#define LOGE exec_loge
+// can't use liblog.so because this is a static binary, so we need
+// to implement this ourselves
+#include <android/log.h>
+
+void exec_log(int priority, const char* fmt, ...);
+
+#ifndef LOG_NDEBUG
+#define LOG_NDEBUG 1
 #endif
-#ifndef LOGD
-#define LOGD exec_logd
+
+#ifndef LOGE
+#define LOGE(fmt,args...) exec_log(ANDROID_LOG_ERROR, fmt, ##args)
 #endif
 #ifndef LOGW
-#define LOGW exec_logw
+#define LOGW(fmt,args...) exec_log(ANDROID_LOG_WARN, fmt, ##args)
+#endif
+#ifndef LOGD
+#define LOGD(fmt,args...) exec_log(ANDROID_LOG_DEBUG, fmt, ##args)
+#endif
+#ifndef LOGV
+#if LOG_NDEBUG
+#define LOGV(...)   ((void)0)
+#else
+#define LOGV(fmt,args...) exec_log(ANDROID_LOG_VERBOSE, fmt, ##args)
+#endif
 #endif
 
 #if 0

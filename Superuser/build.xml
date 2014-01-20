@@ -99,6 +99,7 @@
           <arg value="../bin/update.zip"/>
           <arg value="armeabi"/>
           <arg value="x86"/>
+          <arg value="mips"/>
         </exec>
     </target>
 

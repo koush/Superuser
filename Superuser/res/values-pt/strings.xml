@@ -3,7 +3,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Permitir</string>
     <string name="deny">Negar</string>
-    <string name="status_incoming">Pedido de entrada de Superuser...</string>
+    <string name="status_incoming">Pedido de entrada de Superuser\u2026</string>
     <string name="unknown_uid">UID Desconhecido: %s</string>
     <string name="application_request">%s está solicitando acesso de Superuser.</string>
     <string name="info">Aviso: Se você não iniciou esta ação, você deve negar o pedido.</string>
@@ -66,12 +66,12 @@
     <string name="about">Sobre</string>
     <string name="apps">Aplicativos</string>
     <string name="installing">Instalando</string>
-    <string name="installing_superuser">Instalando Superuser...</string>
+    <string name="installing_superuser">Instalando Superuser\u2026</string>
     <string name="install_superuser">Instalar Superuser</string>
     <string name="install_superuser_info">O binário do Superuser (su) deve ser atualizado.\n\nPor favor escolha um método de instalação.\nInstalação em modo de recuperação é recomendada para dispositivos HTC.</string>
     <string name="recovery_install">Instalação pela Recuperação</string>
     <string name="install">Instalar</string>
-    <string name="checking_superuser">Verificando Superuser...</string>
+    <string name="checking_superuser">Verificando Superuser\u2026</string>
     <string name="install_error">Houve um erro ao instalar o Superuser. Por favor, envie um log do erro para o desenvolvedor.</string>
     <string name="install_success">A instalação do Superuser foi bem sucedida.</string>
     <string name="su_binary_outdated">O binário do Superuser (su) está desatualizado.</string>

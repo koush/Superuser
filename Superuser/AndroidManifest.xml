@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koushikdutta.superuser"
-    android:versionCode="1021"
-    android:versionName="1.0.2.1" >
+    android:versionCode="1027"
+    android:versionName="1.0.2.8" >
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
 
     <permission
         android:name="android.permission.REQUEST_SUPERUSER"
