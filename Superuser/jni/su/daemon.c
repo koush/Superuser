@@ -356,12 +356,6 @@ static int daemon_accept(int fd) {
             PLOGE("unable to write exit code");
         }
 
-#ifdef SUPERUSER_EMBEDDED
-        if (mount_storage) {
-            mount_emulated_storage(multiuser_get_user_id(daemon_from_uid));
-        }
-#endif
-
         close(fd);
         LOGD("child exited");
         return code;
@@ -405,6 +399,12 @@ static int daemon_accept(int fd) {
         // ioctl(infd, TIOCSCTTY, 1);
     }
     free(pts_slave);
+
+#ifdef SUPERUSER_EMBEDDED
+    if (mount_storage) {
+        mount_emulated_storage(multiuser_get_user_id(daemon_from_uid));
+    }
+#endif
 
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
