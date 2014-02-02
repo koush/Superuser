@@ -120,6 +120,11 @@ static int from_init(struct su_initiator *from) {
     from->uid = getuid();
     from->pid = getppid();
 
+    if (is_daemon) {
+        from->uid = daemon_from_uid;
+        from->pid = daemon_from_pid;
+    }
+
     /* Get the command line */
     snprintf(path, sizeof(path), "/proc/%u/cmdline", from->pid);
     fd = open(path, O_RDONLY);
@@ -174,11 +179,6 @@ static int from_init(struct su_initiator *from) {
     pw = getpwuid(from->uid);
     if (pw && pw->pw_name) {
         strncpy(from->name, pw->pw_name, sizeof(from->name));
-    }
-
-    if (is_daemon) {
-        from->uid = daemon_from_uid;
-        from->pid = daemon_from_pid;
     }
 
     return 0;
@@ -639,6 +639,7 @@ int su_main(int argc, char *argv[], int need_client) {
         return run_daemon();
     }
 
+    int ppid = getppid();
     fork_for_samsung();
 
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
@@ -784,7 +785,7 @@ int su_main(int argc, char *argv[], int need_client) {
             get_api_version() >= 19) {
             // attempt to connect to daemon...
             LOGD("starting daemon client %d %d", getuid(), geteuid());
-            return connect_daemon(argc, argv);
+            return connect_daemon(argc, argv, ppid);
         }
     }
 

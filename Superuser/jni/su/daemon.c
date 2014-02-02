@@ -528,7 +528,7 @@ static void setup_sighandlers(void) {
     }
 }
 
-int connect_daemon(int argc, char *argv[]) {
+int connect_daemon(int argc, char *argv[], int ppid) {
     int uid = getuid();
     int ptmx;
     char pts_slave[PATH_MAX];
@@ -587,7 +587,7 @@ int connect_daemon(int argc, char *argv[]) {
     // User ID
     write_int(socketfd, uid);
     // Parent PID
-    write_int(socketfd, getppid());
+    write_int(socketfd, ppid);
     write_int(socketfd, mount_storage);
 
     // Send stdin
