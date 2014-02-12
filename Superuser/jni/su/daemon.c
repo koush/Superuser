@@ -394,9 +394,10 @@ static int daemon_accept(int fd) {
             errfd = ptsfd;
         }
     } else {
-        // TODO: Check system property, if PTYs are disabled,
-        // made infd the CTTY using:
-        // ioctl(infd, TIOCSCTTY, 1);
+        // If a TTY was sent directly, make it the CTTY.
+        if (isatty(infd)) {
+            ioctl(infd, TIOCSCTTY, 1);
+        }
     }
     free(pts_slave);
 
@@ -562,11 +563,13 @@ int connect_daemon(int argc, char *argv[], int ppid) {
     // Determine which one of our streams are attached to a TTY
     int atty = 0;
 
-    // TODO: Check a system property and never use PTYs if
-    // the property is set.
-    if (isatty(STDIN_FILENO))  atty |= ATTY_IN;
-    if (isatty(STDOUT_FILENO)) atty |= ATTY_OUT;
-    if (isatty(STDERR_FILENO)) atty |= ATTY_ERR;
+    // Send TTYs directly (instead of proxying with a PTY) if
+    // the SUPERUSER_SEND_TTY environment variable is set.
+    if (getenv("SUPERUSER_SEND_TTY") == NULL) {
+        if (isatty(STDIN_FILENO))  atty |= ATTY_IN;
+        if (isatty(STDOUT_FILENO)) atty |= ATTY_OUT;
+        if (isatty(STDERR_FILENO)) atty |= ATTY_ERR;
+    }
 
     if (atty) {
         // We need a PTY. Get one.
