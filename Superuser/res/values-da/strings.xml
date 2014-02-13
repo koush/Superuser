@@ -4,7 +4,7 @@
     <string name="superuser">Superuser</string>
     <string name="allow">Tillad</string>
     <string name="deny">Afvis</string>
-    <string name="status_incoming">Indkommende Superuser-anmodning...</string>
+    <string name="status_incoming">Indkommende Superuser-anmodning\u2026</string>
     <string name="unknown_uid">Ukendt UID: %s</string>
     <string name="application_request">%s anmoder om Superuser-rettigheder.</string>
     <string name="info">Advarsel: Hvis du ikke forstår dette, bør du afvise anmodningen.</string>
@@ -67,12 +67,12 @@
     <string name="about">Om</string>
     <string name="apps">Apps</string>
     <string name="installing">Installerer</string>
-    <string name="installing_superuser">Installerer Superuser...</string>
+    <string name="installing_superuser">Installerer Superuser\u2026</string>
     <string name="install_superuser">Installer Superuser</string>
     <string name="install_superuser_info">Superuser-binaryet (su) skal opdateres.\n\nVælg venligst en installationsmetode.\nInstallation gennem recovery anbefales til HTC-enheder.</string>
     <string name="recovery_install">Recovery-installering</string>
     <string name="install">Installer</string>
-    <string name="checking_superuser">Checker Superuser...</string>
+    <string name="checking_superuser">Checker Superuser\u2026</string>
     <string name="install_error">Der skete en fejl i installationen af Superuser. Send venligst en log af fejlen til udvikleren.</string>
     <string name="install_success">Installationen af Superuser var sucessfuld.</string>
     <string name="su_binary_outdated">Superuser-binaryet er for gammelt.</string>

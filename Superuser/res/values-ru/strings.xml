@@ -4,7 +4,7 @@
     <string name="superuser">Суперпользователь</string>
     <string name="allow">Разрешить</string>
     <string name="deny">Отказать</string>
-    <string name="status_incoming">Запрос прав Суперпользователя...</string>
+    <string name="status_incoming">Запрос прав Суперпользователя\u2026</string>
     <string name="unknown_uid">Неизвестный UID: %s</string>
     <string name="application_request">%s запрашивает права Суперпользователя</string>
     <string name="info">Внимание: если вы не запрашивали это действие или не понимаете что это за запрос, отклоните его</string>
@@ -67,12 +67,12 @@
     <string name="about">О приложении</string>
     <string name="apps">Другие приложения</string>
     <string name="installing">Установка</string>
-    <string name="installing_superuser">Установка Суперпользователя...</string>
+    <string name="installing_superuser">Установка Суперпользователя\u2026</string>
     <string name="install_superuser">Установить Суперпользователя</string>
     <string name="install_superuser_info">Программа Суперпользователь (su) нуждается в обновлении.\n\nПожалуйста, выберите метод установки.\nСпособ установки через Recovery рекомендуется для устройств HTC</string>
     <string name="recovery_install">Через Recovery</string>
     <string name="install">Установить</string>
-    <string name="checking_superuser">Проверка Суперпользователя...</string>
+    <string name="checking_superuser">Проверка Суперпользователя\u2026</string>
     <string name="install_error">Произошла ошибка при установке Суперпользователя. Пожалуйста, отправте лог ошибки разработчику</string>
     <string name="install_success">Установка Суперспользователя прошла успешно!</string>
     <string name="su_binary_outdated">Файл su устарел</string>

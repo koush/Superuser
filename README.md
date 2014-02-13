@@ -26,6 +26,8 @@ You'll need the "Widgets" dependency.
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
 
+Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.  Install NDK Revision 9b from [here](http://developer.android.com/tools/sdk/ndk/index.html).
+
 ## Eclipse
 
 In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work (TM).
@@ -36,11 +38,19 @@ In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work 
 * $ cd /path/to/src
 * $ cd Superuser/Superuser
 
-In this directory, create a file called local.properties. This file is used by ant for custom properties. You need to specify the location of the ndk directory:
+In this directory, create a file called local.properties. This file is used by ant for custom properties. You need to specify the location of the ndk directory and your keystore parameters:
 
 ```
 ndk.dir=/Users/koush/src/android-ndk
+key.store=/Users/koush/.keystore
+key.alias=mykey
 ```
+
+If you do not have a release key yet, [create one using keytool](http://developer.android.com/tools/publishing/app-signing.html).
+
+Set up your SDK path (this is the directory containing platform-tools/, tools/, etc.):
+
+* $ export ANDROID_HOME=/Users/koush/src/sdk
 
 Then you can build:
 
@@ -48,9 +58,10 @@ Then you can build:
 
 Outputs:
 * bin/update.zip - Recovery installable zip
-* bin/Superuser.apk - Superuser Android app
+* bin/Superuser-release.apk - Superuser Android app
 * libs/armeabi/su - ARM su binary
 * libs/x86/su - x86 su binary
+* libs/mips/su - MIPS su binary
 
 ## Building the su binary
 
