@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+     Copyright (C) 2013-2014 The CyanogenMod Project
 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
     <string name="superuser">Superuser</string>
     <string name="allow">אפשר</string>
     <string name="deny">דחה</string>
@@ -75,10 +89,16 @@
     <string name="checking_superuser">בודק Superuser...</string>
     <string name="install_error">אירעה שגיאה בעת התקנת Superuser. בבקשה שלח דוח למפתח התוכנה.</string>
     <string name="install_success">התקנת Superuser הצליחה.</string>
+    <string name="su_binary_outdated">גרסת ה-su פגת תוקף.</string>
+    <string name="superuser_access">הרשאת Superuser</string>
     <string name="access_disabled">מבוטל</string>
     <string name="apps_only">יישומים בלבד</string>
     <string name="adb_only">ADB בלבד</string>
     <string name="apps_and_adb">יישומים ו-ADB</string>
     <string name="whats_new">מה חדש?</string>
     <string name="rate">דרג</string>
+    <string name="theme">ערכת עיצוב</string>
+    <string name="light">בהיר</string>
+    <string name="dark">כהה</string>
+    <string name="pin_disabled">הגנת PIN ל-Superuser מושבתת</string>
 </resources>
