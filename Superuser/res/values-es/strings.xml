@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+     Copyright (C) 2013-2014 The CyanogenMod Project
 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
     <string name="superuser">Superusuario</string>
     <string name="allow">Permitir</string>
     <string name="deny">Denegar</string>
     <string name="status_incoming">Solicitud de Superusuario\u2026</string>
     <string name="unknown_uid">UID desconocido: %s</string>
-    <string name="application_request">%s esta solicitando acceso administrativo.</string>
+    <string name="application_request">%s está solicitando acceso administrativo.</string>
     <string name="info">Atención: Si no has iniciado esta acción, o si no entiendes esta petición, es mejor que no la permitas.</string>
     <string name="request">Petición Superusuario</string>
     <string name="package_header">Paquete:</string>
     <string name="app_header">Aplicación:</string>
     <string name="uid_header">UID solicitado:</string>
     <string name="command_header">Comando:</string>
-    <string name="this_time_only">Sólo esta vez</string>
+    <string name="this_time_only">Solo esta vez</string>
     <string name="remember_for">Recordar durante %s minutos</string>
     <string name="remember_forever">Recordar indefinidamente</string>
     <string name="interactive">Interactivo</string>
@@ -21,7 +35,7 @@
     <string name="settings">Ajustes</string>
     <string name="delete">Eliminar</string>
     <string name="no_logs">No hay información de registro</string>
-    <string name="no_apps">No hay aplicaciones en lista</string>
+    <string name="no_apps">No hay aplicaciones en lista.</string>
     <string name="logging">Registro</string>
     <string name="logging_summary">Habilitar o deshabilitar el registro de todas las peticiones</string>
     <string name="pin_protection">Protección por PIN</string>
@@ -30,7 +44,7 @@
     <string name="request_timeout_summary">Las peticiones tienen un tiempo de espera y se denegarán después de %s segundos</string>
     <string name="notifications">Notificaciones</string>
     <string name="none">Ninguna</string>
-    <string name="notifications_summary">Notificación que se mostrará cuando a una aplicación se la concede acceso administrativo: %s</string>
+    <string name="notifications_summary">Notificación que se mostrará cuando se conceda acceso administrativo a una aplicación: %s</string>
     <string name="enter_pin">Introducir PIN</string>
     <string name="enter_new_pin">Introducir nuevo PIN</string>
     <string name="incorrect_pin">PIN incorrecto</string>
@@ -47,7 +61,7 @@
     <string name="superuser_description">Acceso completo a todas las funciones y almacenamiento del dispositivo</string>
     <string name="superuser_description_more">Superusuario permite el acceso a todas las funciones y almacenamiento del dispositivo, incluyendo los elementos de hardware seguros y sensibles del dispositivo. Este permiso es potencialmente peligroso.</string>
     <string name="declared_permission">Permiso declarado</string>
-    <string name="declared_permission_summary">Sólo permitir peticiones de aplicaciones que declaren android.permission.ACCESS_SUPERUSER</string>
+    <string name="declared_permission_summary">Solo permitir peticiones de aplicaciones que declaren android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Respuesta automática</string>
     <string name="prompt">Preguntar</string>
     <string name="automatic_response_allow_summary">Permitir nuevas peticiones automáticamente</string>
@@ -55,13 +69,13 @@
     <string name="automatic_response_prompt_summary">Mostrar un dialogo de confirmación para las nuevas peticiones</string>
     <string name="security">Seguridad</string>
     <string name="multiuser_policy">Política multiusuario</string>
-    <string name="multiuser_owner_only_summary">Sólo el propietario del dispositivo puede acceder a Superusuario</string>
+    <string name="multiuser_owner_only_summary">Solo el propietario del dispositivo puede acceder a Superusuario</string>
     <string name="multiuser_owner_managed_summary">Se preguntará al propietario del dispositivo cuando otro usuario solicite acceso a Superusuario</string>
     <string name="multiuser_user_summary">Todos los usuarios pueden acceder a Superusuario</string>
-    <string name="multiuser_owner_only">Sólo el propietario</string>
+    <string name="multiuser_owner_only">Solo el propietario</string>
     <string name="multiuser_owner_managed">Administrado por el propietario</string>
     <string name="multiuser_user">Todos los usuarios</string>
-    <string name="multiuser_require_owner">La política multiusuario sólo puede ser administrada por el propietario del dispositivo.</string>
+    <string name="multiuser_require_owner">La política multiusuario solo puede ser administrada por el propietario del dispositivo.</string>
     <string name="owner_login_info">Por favor, cambia a la cuenta del propietario para permitir o denegar esta petición.</string>
     <string name="all_commands">Todos los comandos</string>
     <string name="about">Acerca de</string>
@@ -69,7 +83,7 @@
     <string name="installing">Instalando</string>
     <string name="installing_superuser">Instalando Superusuario\u2026</string>
     <string name="install_superuser">Instalar Superusuario</string>
-    <string name="install_superuser_info">El binario de Superusuario \u00ABsu\u00BB se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
+    <string name="install_superuser_info">El binario de Superusuario (su) se debe actualizar.\n\nPor favor, escoge un método de instalación.\nSe recomienda el modo recuperación para los dispositivos HTC.</string>
     <string name="recovery_install">Instalar en modo recuperación</string>
     <string name="install">Instalar</string>
     <string name="checking_superuser">Probando Superusuario\u2026</string>
@@ -78,8 +92,8 @@
     <string name="su_binary_outdated">El binario \u00ABsu\u00BB está desactualizado.</string>
     <string name="superuser_access">Acceso administrativo</string>
     <string name="access_disabled">Deshabilitado</string>
-    <string name="apps_only">Sólo aplicaciones</string>
-    <string name="adb_only">Sólo ADB</string>
+    <string name="apps_only">Solo aplicaciones</string>
+    <string name="adb_only">Solo ADB</string>
     <string name="apps_and_adb">Aplicaciones y ADB</string>
     <string name="whats_new">Novedades</string>
     <string name="rate">Valorar</string>
