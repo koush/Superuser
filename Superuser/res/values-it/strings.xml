@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+     Copyright (C) 2013-2014 The CyanogenMod Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="superuser">Superuser</string>
     <string name="allow">Consenti</string>
     <string name="deny">Nega</string>
@@ -22,7 +37,7 @@
     <string name="no_logs">Nessun log</string>
     <string name="no_apps">Nessuna App gestita da Superuser.</string>
     <string name="logging">Registrazione log</string>
-    <string name="logging_summary">Abilitare o disabilitare tutte le richieste di log da parte di Superuser</string>
+    <string name="logging_summary">Attiva o disattiva tutte le richieste di log da parte di Superuser</string>
     <string name="pin_protection">Protezione con PIN</string>
     <string name="pin_protection_summary">Sarà richiesto l\'inserimento del PIN per approvare la richiesta di Superuser</string>
     <string name="request_timeout">Scadenza richieste</string>
@@ -35,7 +50,7 @@
     <string name="incorrect_pin">PIN errato</string>
     <string name="confirm_pin">Conferma PIN</string>
     <string name="pin_mismatch">Il PIN inserito non corrisponde</string>
-    <string name="pin_set">Protezione di Superuser con PIN abilitata</string>
+    <string name="pin_set">Protezione di Superuser con PIN attivata</string>
     <string name="number_seconds">%s secondi</string>
     <string name="superuser_granted">A %s è stato garantito l\'accesso a Superuser</string>
     <string name="superuser_denied">A %s è stato negato l\'accesso a Superuser</string>
@@ -46,10 +61,10 @@
     <string name="superuser_description">massimi privilegi per accedere a tutti gli strumenti e memoria del dispositivo</string>
     <string name="superuser_description_more">Superuser garantisce completo accesso a tutti gli stumenti e memoria interna del dispositivo, compresi gli elementi hardware in sicurezza del tuo dispositivo. Questo permesso è potenzialmente dannoso.</string>
     <string name="declared_permission">Dichiarazione dei Permessi</string>
-    <string name="declared_permission_summary">Abilita solo richieste da App che dichiarano android.permission.ACCESS_SUPERUSER</string>
+    <string name="declared_permission_summary">Consenti solo richieste da App che dichiarano android.permission.ACCESS_SUPERUSER</string>
     <string name="automatic_response">Risposta Automatica</string>
     <string name="prompt">Prompt</string>
-    <string name="automatic_response_allow_summary">Abilita automaticamente le nuove richieste</string>
+    <string name="automatic_response_allow_summary">Consenti automaticamente le nuove richieste</string>
     <string name="automatic_response_deny_summary">Nega automaticamente le nuove richieste</string>
     <string name="automatic_response_prompt_summary">Mostra finestra di dialogo per le nuove richieste</string>
     <string name="security">Sicurezza</string>
@@ -76,7 +91,7 @@
     <string name="install_success">L\'installazione di Superuser è avvenuta con successo.</string>
     <string name="su_binary_outdated">Il file binario su è obsoleto.</string>
     <string name="superuser_access">Accesso a Superuser</string>
-    <string name="access_disabled">Disabilitato</string>
+    <string name="access_disabled">Disattivato</string>
     <string name="apps_only">Solo Applicazioni</string>
     <string name="adb_only">Solo ADB</string>
     <string name="apps_and_adb">Applicazioni ed ADB</string>
@@ -85,5 +100,8 @@
     <string name="theme">Tema</string>
     <string name="light">Chiaro</string>
     <string name="dark">Scuro</string>
-    <string name="pin_disabled">Protezione di Superuser con PIN disabilitata</string>
+    <string name="pin_disabled">Protezione di Superuser con PIN disattivata</string>
+    <string name="revoke_permission">Revoca permesso Superuser</string>
+    <string name="details">Dettagli</string>
+    <string name="db_delete_error">Il permesso Superuser non può essere revocato da questa applicazione. Si prega di riavviare l\'applicazione Superuser e riprovare.</string>
 </resources>
