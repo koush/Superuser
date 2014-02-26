@@ -271,9 +271,7 @@ void set_identity(unsigned int uid) {
 }
 
 static void socket_cleanup(struct su_context *ctx) {
-    if (ctx && ctx->sock_path[0]) {
-        if (unlink(ctx->sock_path))
-            PLOGE("unlink (%s)", ctx->sock_path);
+    if (ctx) {
         ctx->sock_path[0] = 0;
     }
 }
@@ -313,15 +311,12 @@ static int socket_create_temp(char *path, size_t len) {
     snprintf(path, len, "%s/.socket%d", REQUESTOR_CACHE_PATH, getpid());
     memset(sun.sun_path, 0, sizeof(sun.sun_path));
     snprintf(sun.sun_path, sizeof(sun.sun_path), "%s", path);
+    /* use abstract namespace for socket path */
+    sun.sun_path[0] = '\0';
+    strcpy(&sun.sun_path[1], path);
+    size_t size = offsetof(struct sockaddr_un, sun_path) + 1 + strlen(&sun.sun_path[1]);
 
-    /*
-     * Delete the socket to protect from situations when
-     * something bad occured previously and the kernel reused pid from that process.
-     * Small probability, isn't it.
-     */
-    unlink(sun.sun_path);
-
-    if (bind(fd, (struct sockaddr*)&sun, sizeof(sun)) < 0) {
+    if (bind(fd, (struct sockaddr*)&sun, size) < 0) {
         PLOGE("bind");
         goto err;
     }
