@@ -101,4 +101,7 @@
     <string name="light">Claro</string>
     <string name="dark">Oscuro</string>
     <string name="pin_disabled">Protección por PIN desactivada</string>
+    <string name="revoke_permission">Revocar acceso administrativo</string>
+    <string name="details">Detalles</string>
+    <string name="db_delete_error">El acceso administrativo no puede ser revocado para esta aplicación.\nPor favor, reinicia la aplicación Superusuario e inténtalo de nuevo.</string>
 </resources>
