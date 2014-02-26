@@ -140,7 +140,6 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         }
         catch (Exception ex) {
         }
-        new File(mSocketPath).delete();
     }
 
     public static final String PERMISSION = "android.permission.ACCESS_SUPERUSER";
@@ -303,7 +302,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
             public void run() {
                 try {
                     mSocket = new LocalSocket();
-                    mSocket.connect(new LocalSocketAddress(mSocketPath, Namespace.FILESYSTEM));
+                    mSocket.connect(new LocalSocketAddress(mSocketPath, Namespace.ABSTRACT));
 
                     DataInputStream is = new DataInputStream(mSocket.getInputStream());
                     
@@ -391,21 +390,6 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         setContentView();
 
         manageSocket();
-        
-        
-        // watch for the socket disappearing. that means su died.
-        new Runnable() {
-            public void run() {
-                if (isFinishing())
-                    return;
-                if (!new File(mSocketPath).exists()) {
-                    finish();
-                    return;
-                }
-                
-                mHandler.postDelayed(this, 1000);
-            };
-        }.run();
         
         mHandler.postDelayed(new Runnable() {
             @Override
