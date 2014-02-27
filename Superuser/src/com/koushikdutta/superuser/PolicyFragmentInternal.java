@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -179,7 +180,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                      * TODO I should find a better way but this is ok
                      * for the moment!
                      */
-                    Intent i = new Intent(getContext(), MainActivity.class);
+                    Intent i = new Intent(getContext(), getActivity().getClass());
                     i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                     getContext().startActivity(i);
                     break;
