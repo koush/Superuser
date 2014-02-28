@@ -87,4 +87,7 @@
     <string name="light">Lumineux</string>
     <string name="dark">Sombre</string>
     <string name="pin_disabled">La protection par code est désactivée</string>
+    <string name="revoke_permission">Révoquer les permissions Super-utilisateur</string>
+    <string name="details">Détails</string>
+    <string name="db_delete_error">Les droits Super-utilisateur ne peuvent pas être supprimés depuis cette application.\nRedémarrez l\'application Super-utilisateur et essayez de nouveau.</string>
 </resources>
