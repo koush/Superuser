@@ -37,7 +37,7 @@
     <string name="no_logs">No Logs</string>
     <string name="no_apps">There are currently no Superuser app policies.</string>
     <string name="logging">Logging</string>
-    <string name="logging_summary">Enable or disable all Superuser request logging</string>
+    <string name="logging_summary">Enable all Superuser request logging</string>
     <string name="pin_protection">PIN Protection</string>
     <string name="pin_protection_summary">Require entry of a PIN to approve Superuser requests</string>
     <string name="request_timeout">Request Timeout</string>
@@ -103,5 +103,5 @@
     <string name="pin_disabled">Superuser PIN protection disabled</string>
     <string name="revoke_permission">Revoke Superuser permission</string>
     <string name="details">Details</string>
-    <string name="db_delete_error">Superuser permission cannot be revoked from this application. \nPlease restart the Superuser application and try again.</string>
+    <string name="db_delete_error">Superuser permission cannot be revoked from this app.\nPlease restart the Superuser app and try again.</string>
 </resources>
