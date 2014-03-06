@@ -87,4 +87,7 @@
     <string name="light">Hell</string>
     <string name="dark">Dunkel</string>
     <string name="pin_disabled">Superuser-PIN-Schutz deaktiviert</string>
+    <string name="revoke_permission">Superuser-Zugriff entziehen</string>
+    <string name="details">Details</string>
+    <string name="db_delete_error">Dieser App kann der Superuser-Zugriff nicht entzogen werden.\nStarten Sie die Superuser-App neu und versuchen Sie es erneut.</string>
 </resources>
