@@ -176,13 +176,7 @@ public class PolicyFragmentInternal extends ListContentFragmentInternal {
                     }
                     SuDatabaseHelper.setPolicy(getActivity(), up);
                     //update the adapters
-                    /*
-                     * TODO I should find a better way but this is ok
-                     * for the moment!
-                     */
-                    Intent i = new Intent(getContext(), getActivity().getClass());
-                    i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                    getContext().startActivity(i);
+                    load();
                     break;
                 case 1:
                     final Handler handler = new Handler(){
