@@ -100,4 +100,7 @@
     <string name="light">Světlé</string>
     <string name="dark">Tmavé</string>
     <string name="pin_disabled">Superuser ochrana PINem vypnuta</string>
+    <string name="revoke_permission">Odmítnout oprávnění Superuser</string>
+    <string name="details">Podrobnosti</string>
+    <string name="db_delete_error">Oprávnění Superuser nelze této aplikaci odmítnout.\nProsím restartujte aplikaci Superuser a zkuste znovu.</string>
 </resources>
