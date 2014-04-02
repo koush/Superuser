@@ -38,7 +38,7 @@
   <string name="no_logs">Δεν υπάρχει αρχείο καταγραφής</string>
   <string name="no_apps">Δεν υπάρχουν πολιτικές εφαρμογών Superuser</string>
   <string name="logging">Καταγραφή</string>
-  <string name="logging_summary">Ενεργοποίηση ή απενεργοποίηση της καταγραφής όλων των αιτήσεων Superuser</string>
+  <string name="logging_summary">Ενεργοποίηση της καταγραφής όλων των αιτήσεων Superuser</string>
   <string name="pin_protection">Προστασία PIN</string>
   <string name="pin_protection_summary">Απαίτηση εισαγωγής PIN για την έγκριση των αιτήσεων Superuser</string>
   <string name="request_timeout">Χρον. όριο αίτησης</string>
@@ -104,5 +104,5 @@
   <string name="pin_disabled">Η προστασία PIN του Superuser απενεργοποιήθηκε</string>
   <string name="revoke_permission">Ανάκληση δικαιωμάτων Superuser</string>
   <string name="details">Λεπτομέρειες</string>
-  <string name="db_delete_error">Η ανάκληση των Superuser δικαιωμάτων στάθηκε αδύνατη γι αυτή την εφαρμογή. \nΕπανεκκινήστε την εφαρμογή Superuser και δοκιμάστε ξανά.</string>
+  <string name="db_delete_error">Η ανάκληση των δικαιωμάτων Superuser στάθηκε αδύνατη γι αυτή την εφαρμογή.\nΕπανεκκινήστε την εφαρμογή Superuser και δοκιμάστε ξανά.</string>
 </resources>
