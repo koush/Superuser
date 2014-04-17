@@ -103,6 +103,5 @@
   <string name="dark">Ciemny</string>
   <string name="pin_disabled">Zabezpieczenie PIN-em wyłączone.</string>
   <string name="revoke_permission">Odwołanie uprawnień Superuser</string>
-  <string name="details">Szczegółowy</string>
   <string name="db_delete_error">Uprawnienia administratora nie mogą być odwołane z tej aplikacji.\nProszę zrestartować aplikację Superuser i spróbować ponownie.</string>
 </resources>

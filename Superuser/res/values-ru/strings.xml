@@ -103,6 +103,6 @@
   <string name="dark">Тёмная</string>
   <string name="pin_disabled">Защита PIN-кодом отключена</string>
   <string name="revoke_permission">Отозвать права Суперпользователя</string>
-  <string name="details">Подробный список</string>
+  <string name="details">Подробно</string>
   <string name="db_delete_error">Не удаётся отозвать права Суперпользователя.\nПерезапустите это приложение и повторите попытку.</string>
 </resources>

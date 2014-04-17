@@ -22,7 +22,7 @@
   <string name="status_incoming">スーパーユーザーリクエストがありました\u2026</string>
   <string name="unknown_uid">不明なUID: %s</string>
   <string name="application_request">%sがスーパーユーザーアクセスをリクエストしています。</string>
-  <string name="info">警告: このリクエストに心当たりがなければ、リクエストを拒否することを推奨します。</string>
+  <string name="info">警告: 心当たりのないリクエストは拒否した方がよいでしょう。</string>
   <string name="request">スーパーユーザーリクエスト</string>
   <string name="package_header">パッケージ:</string>
   <string name="app_header">アプリ:</string>
@@ -30,7 +30,7 @@
   <string name="command_header">コマンド:</string>
   <string name="this_time_only">1回のみ</string>
   <string name="remember_for">%s分間のみ</string>
-  <string name="remember_forever">選択を記憶</string>
+  <string name="remember_forever">選択を記憶する</string>
   <string name="interactive">インタラクティブ</string>
   <string name="logs">ログ</string>
   <string name="settings">設定</string>
@@ -38,14 +38,14 @@
   <string name="no_logs">ログはありません</string>
   <string name="no_apps">スーパーユーザーアプリのポリシーはありません。</string>
   <string name="logging">ログを記録</string>
-  <string name="logging_summary">すべてのスーパーユーザーリクエストのログを記録する</string>
+  <string name="logging_summary">すべてのスーパーユーザーリクエストのログを有効にする</string>
   <string name="pin_protection">PINによる保護</string>
   <string name="pin_protection_summary">スーパーユーザーリクエストの承認にPINの入力を要求する</string>
   <string name="request_timeout">リクエストのタイムアウト</string>
-  <string name="request_timeout_summary">スーパーユーザーリクエストに%s秒応答が無い場合は自動的に拒否する</string>
+  <string name="request_timeout_summary">スーパーユーザーリクエストは%s秒でタイムアウトして拒否されます</string>
   <string name="notifications">通知</string>
   <string name="none">なし</string>
-  <string name="notifications_summary">スーパーユーザー権限がアプリに許可または拒否された際に%sを表示する</string>
+  <string name="notifications_summary">アプリにスーパーユーザー権限が許可または拒否された際に%sを表示する</string>
   <string name="enter_pin">PINを入力</string>
   <string name="enter_new_pin">新しいPINを入力</string>
   <string name="incorrect_pin">PINが正しくありません</string>
@@ -68,7 +68,7 @@
   <string name="automatic_response_allow_summary">新しいリクエストを自動的に許可する</string>
   <string name="automatic_response_deny_summary">新しいリクエストを自動的に拒否する</string>
   <string name="automatic_response_prompt_summary">新しいリクエストをダイアログで確認する</string>
-  <string name="security">セキュリティー</string>
+  <string name="security">セキュリティ</string>
   <string name="multiuser_policy">マルチユーザーポリシー</string>
   <string name="multiuser_owner_only_summary">端末の所有者のみスーパーユーザーをリクエストできます</string>
   <string name="multiuser_owner_managed_summary">他のユーザーがスーパーユーザーをリクエストした際に端末の所有者にプロンプトで確認する</string>
