@@ -33,6 +33,8 @@
   <string name="remember_forever">Recordar indefinidamente</string>
   <string name="interactive">Interactivu</string>
   <string name="logs">Rexistros</string>
+  <string name="settings">Axustes</string>
+  <string name="delete">Desaniciar</string>
   <string name="no_logs">Ensin rexistros</string>
   <string name="no_apps">Anguaño, nun hai polítiques d\'app de Superusuariu.</string>
   <string name="logging">Logging</string>
@@ -42,6 +44,7 @@
   <string name="request_timeout">Tiempu d\'espera</string>
   <string name="request_timeout_summary">Les solicitúes tienen un tiempu d\'espera y van refugase dempués de %s segundos</string>
   <string name="notifications">Notificaciones</string>
+  <string name="none">Nengún</string>
   <string name="notifications_summary">Va amosase una %s cuando a una aplicación se-y otorguen o refugen permisos de Superusuariu</string>
   <string name="enter_pin">Inxertar PIN</string>
   <string name="enter_new_pin">Inxertar PIN nuevu</string>
@@ -90,9 +93,16 @@
   <string name="su_binary_outdated">El binariu su ta caducáu.</string>
   <string name="superuser_access">Accesu al Superusuariu</string>
   <string name="access_disabled">Desactiváu</string>
+  <string name="apps_only">Namái aplicaciones</string>
+  <string name="adb_only">Namái ADB</string>
+  <string name="apps_and_adb">Aplicaciones y ADB</string>
   <string name="whats_new">Novedaes</string>
   <string name="rate">Puntúa</string>
+  <string name="theme">Tema</string>
+  <string name="light">Claru</string>
+  <string name="dark">Escuru</string>
   <string name="pin_disabled">La proteición del Superusuariu ta desactivada</string>
   <string name="revoke_permission">Revocar el permisu de Superusuariu</string>
+  <string name="details">Detalles</string>
   <string name="db_delete_error">El permisu de superusuariu nun pue revocase dende esta app.\nPor favor reanicia l\'app del Superusuariu y prueba otra vuelta.</string>
 </resources>

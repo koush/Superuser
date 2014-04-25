@@ -84,13 +84,13 @@
   <string name="installing">正在安裝</string>
   <string name="installing_superuser">正在安裝超級使用者\u2026</string>
   <string name="install_superuser">安裝超級使用者</string>
-  <string name="install_superuser_info">超級使用者二進制檔 (su) 必須更新。\n\n請選擇安裝方法。\nHTC 裝置建議 recovery 模式安裝。</string>
+  <string name="install_superuser_info">超級使用者二進位檔 (su) 必須更新。\n\n請選擇安裝方法。\nHTC 裝置建議 recovery 模式安裝。</string>
   <string name="recovery_install">Recovery 安裝</string>
   <string name="install">安裝</string>
   <string name="checking_superuser">正在檢查超級使用者\u2026</string>
   <string name="install_error">安裝超級使用者時發生錯誤。請傳送錯誤紀錄給開發人員。</string>
   <string name="install_success">超級使用者安裝成功。</string>
-  <string name="su_binary_outdated">su 二進制檔已過時。</string>
+  <string name="su_binary_outdated">su 二進位檔已過時。</string>
   <string name="superuser_access">超級使用者存取權</string>
   <string name="access_disabled">停用</string>
   <string name="apps_only">僅限應用程式</string>

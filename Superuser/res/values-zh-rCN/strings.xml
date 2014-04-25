@@ -104,5 +104,6 @@
   <string name="dark">暗色调</string>
   <string name="pin_disabled">超级用户密码保护已禁用</string>
   <string name="revoke_permission">撤消超级用户权限</string>
+  <string name="details">详细信息</string>
   <string name="db_delete_error">无法撤销此应用的超级用户权限。\n请重启超级用户并再试一次。</string>
 </resources>
