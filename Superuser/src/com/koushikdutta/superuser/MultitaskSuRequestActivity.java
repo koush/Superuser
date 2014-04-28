@@ -16,12 +16,8 @@
 
 package com.koushikdutta.superuser;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.util.HashMap;
-
-import junit.framework.Assert;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -32,7 +28,6 @@ import android.net.LocalSocketAddress;
 import android.net.LocalSocketAddress.Namespace;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,8 +46,14 @@ import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
 import com.koushikdutta.superuser.util.SuHelper;
 
+import junit.framework.Assert;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.util.HashMap;
+
 @SuppressLint("ValidFragment")
-public class MultitaskSuRequestActivity extends FragmentActivity {
+public class MultitaskSuRequestActivity extends Activity {
     private static final String LOGTAG = "Superuser";
     int mCallerUid;
     int mDesiredUid;

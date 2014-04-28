@@ -48,8 +48,8 @@ public class MainActivity extends BetterListActivity {
         super(PolicyFragment.class);
     }
 
-    public PolicyFragmentInternal getFragment() {
-        return (PolicyFragmentInternal)super.getFragment();
+    public PolicyFragment getFragment() {
+        return (PolicyFragment)super.getFragment();
     }
 
     @Override
