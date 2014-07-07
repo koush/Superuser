@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,10 +49,6 @@ public class MainActivity extends BetterListActivity {
         super(PolicyFragment.class);
     }
 
-    public PolicyFragment getFragment() {
-        return (PolicyFragment)super.getFragment();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = new MenuInflater(this);
@@ -60,11 +57,28 @@ public class MainActivity extends BetterListActivity {
         about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                getFragment().setContent(new AboutFragment(), true, getString(R.string.about));
+                getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(getString(R.string.about))
+                .replace(getListContainerId(), new AboutFragment(), "content")
+                .commit();
                 return true;
             }
         });
 
+        MenuItem settings = menu.findItem(R.id.settings);
+        settings.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(getString(R.string.settings))
+                .replace(getListContainerId(), new SettingsFragment(), "content")
+                .commit();
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -4,9 +4,5 @@
         android:id="@+id/logs"
         android:icon="@drawable/ic_menu_logs"
         android:title="@string/logs"/>
-    <item
-        android:id="@+id/settings"
-        android:icon="@drawable/ic_menu_settings"
-        android:title="@string/settings"/>
 
 </menu>

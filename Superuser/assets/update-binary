@@ -56,13 +56,10 @@ chmod 644 /system/app/Superuser.apk
 
 # if the system is at least 4.3, and there is no su daemon built in,
 # let's try to install it using install-recovery.sh
-BUILD_RELEASE_VERSION="$(grep 'ro\.build\.version\.release' /system/build.prop)"
-VERSION="${BUILD_RELEASE_VERSION##*=}"
-MAJ=${VERSION%%.*}
-MIN=${VERSION#*.}
-MIN=${MIN//.*}
+BUILD_VERSION_SDK="$(grep 'ro\.build\.version\.sdk' /system/build.prop)"
+BUILD_VERSION_SDK="${BUILD_VERSION_SDK##*=}"
 
-if [ "${MAJ}${MIN}" -ge 43 ]
+if [ "$BUILD_VERSION_SDK" -ge 18 ]
 then
   # check for rom su daemon before clobbering install-recovery.sh
   if [ ! -f "/system/etc/.has_su_daemon" ]
@@ -70,8 +67,11 @@ then
       echo -n -e 'ui_print Installing Superuser daemon...\n' > /proc/self/fd/$2
       echo -n -e 'ui_print\n' > /proc/self/fd/$2
       chattr -i /system/etc/install-recovery.sh
+      chattr -i /system/bin/install-recovery.sh
       cp install-recovery.sh /system/etc/install-recovery.sh
+      cp install-recovery.sh /system/bin/install-recovery.sh
       chmod 755 /system/etc/install-recovery.sh
+      chmod 755 /system/bin/install-recovery.sh
       # note that an post install su daemon was installed
       # so recovery doesn't freak out and recommend you disable
       # the install-recovery.sh execute bit.

@@ -236,24 +236,12 @@ public class PolicyFragment extends ListContentFragment {
         setContent(l, up == null, up == null ? getString(R.string.logs) : up.getName());
     }
 
-    protected SettingsFragment createSettingsFragment() {
-        return new SettingsFragment();
-    }
-
     protected LogFragment createLogFragment() {
         return new LogFragment();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
- /* When you are in LogFragmentInternal screen and you rotate the device
-         * you are directed to the first screen (PolicyFragment).
-         * Then you will notice that the trash menu icon still exists.
-         * This is a bug because LogFragmentInternal's menu is loaded.
-         * So, clear any previously loaded menu before load this one.
-         */
-        menu.clear();
-
         super.onCreateOptionsMenu(menu, inflater);
         MenuInflater mi = new MenuInflater(getActivity());
         mi.inflate(R.menu.main, menu);
@@ -262,16 +250,6 @@ public class PolicyFragment extends ListContentFragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 showAllLogs();
-                return true;
-            }
-        });
-
-        MenuItem settings = menu.findItem(R.id.settings);
-        settings.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-                setContent(createSettingsFragment(), true, getString(R.string.settings));
                 return true;
             }
         });
