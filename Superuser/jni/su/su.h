@@ -168,6 +168,10 @@ static inline char *get_command(const struct su_request *to)
   return DEFAULT_SHELL;
 }
 
+void exec_loge(const char* fmt, ...);
+void exec_logw(const char* fmt, ...);
+void exec_logd(const char* fmt, ...);
+
 int run_daemon();
 int connect_daemon(int argc, char *argv[], int ppid);
 int su_main(int argc, char *argv[], int need_client);
@@ -176,31 +180,16 @@ int su_main(int argc, char *argv[], int need_client);
 // deadbeat dad fork.
 int fork_zero_fucks();
 
-// can't use liblog.so because this is a static binary, so we need
-// to implement this ourselves
-#include <android/log.h>
-
-void exec_log(int priority, const char* fmt, ...);
-
-#ifndef LOG_NDEBUG
-#define LOG_NDEBUG 1
-#endif
-
+// fallback to using /system/bin/log.
+// can't use liblog.so because this is a static binary.
 #ifndef LOGE
-#define LOGE(fmt,args...) exec_log(ANDROID_LOG_ERROR, fmt, ##args)
-#endif
-#ifndef LOGW
-#define LOGW(fmt,args...) exec_log(ANDROID_LOG_WARN, fmt, ##args)
+#define LOGE exec_loge
 #endif
 #ifndef LOGD
-#define LOGD(fmt,args...) exec_log(ANDROID_LOG_DEBUG, fmt, ##args)
+#define LOGD exec_logd
 #endif
-#ifndef LOGV
-#if LOG_NDEBUG
-#define LOGV(...)   ((void)0)
-#else
-#define LOGV(fmt,args...) exec_log(ANDROID_LOG_VERBOSE, fmt, ##args)
-#endif
+#ifndef LOGW
+#define LOGW exec_logw
 #endif
 
 #if 0

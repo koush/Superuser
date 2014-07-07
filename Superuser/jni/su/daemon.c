@@ -282,9 +282,9 @@ static int daemon_accept(int fd) {
     char *pts_slave = read_string(fd);
     LOGD("remote pts_slave: %s", pts_slave);
     daemon_from_uid = read_int(fd);
-    LOGV("remote uid: %d", daemon_from_uid);
+    LOGD("remote uid: %d", daemon_from_uid);
     daemon_from_pid = read_int(fd);
-    LOGV("remote req pid: %d", daemon_from_pid);
+    LOGD("remote req pid: %d", daemon_from_pid);
 
     struct ucred credentials;
     int ucred_length = sizeof(struct ucred);
@@ -312,7 +312,7 @@ static int daemon_accept(int fd) {
         LOGE("unable to allocate args: %d", argc);
         exit(-1);
     }
-    LOGV("remote args: %d", argc);
+    LOGD("remote args: %d", argc);
     char** argv = (char**)malloc(sizeof(char*) * (argc + 1));
     argv[argc] = NULL;
     int i;
@@ -562,7 +562,7 @@ int connect_daemon(int argc, char *argv[], int ppid) {
         exit(-1);
     }
 
-    LOGV("connecting client %d", getpid());
+    LOGD("connecting client %d", getpid());
 
     int mount_storage = getenv("MOUNT_EMULATED_STORAGE") != NULL;
 
