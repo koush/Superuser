@@ -28,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -125,7 +126,9 @@ public class LogFragment extends BetterListFragment {
             logs = SuperuserDatabaseHelper.getLogs(getActivity(), up, -1);
         }
         else {
-            setEmpty(R.string.no_logs);
+            TextView empty = (TextView)getLayoutInflater(savedInstanceState).inflate(R.layout.empty, null);
+            ((ViewGroup)view.findViewById(R.id.empty)).addView(empty);
+            empty.setText(R.string.no_logs);
             view.findViewById(R.id.policy_header).setVisibility(View.GONE);
             logs = SuperuserDatabaseHelper.getLogs(getActivity());
         }

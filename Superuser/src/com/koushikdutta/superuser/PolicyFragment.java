@@ -34,7 +34,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.koushikdutta.superuser.db.LogEntry;
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
@@ -96,7 +98,9 @@ public class PolicyFragment extends ListContentFragment {
 
         setHasOptionsMenu(true);
 
-        setEmpty(R.string.no_apps);
+        TextView empty = (TextView)getLayoutInflater(savedInstanceState).inflate(R.layout.empty, null);
+        ((ViewGroup)view.findViewById(R.id.empty)).addView(empty);
+        empty.setText(R.string.no_apps);
 
         load();
 
