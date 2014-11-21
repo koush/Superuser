@@ -444,6 +444,9 @@ int run_daemon() {
     int previous_umask = umask(027);
     mkdir(REQUESTOR_DAEMON_PATH, 0777);
 
+    memset(sun.sun_path, 0, sizeof(sun.sun_path));
+    memcpy(sun.sun_path, "\0" "SUPERUSER", strlen("SUPERUSER") + 1);
+
     if (bind(fd, (struct sockaddr*)&sun, sizeof(sun)) < 0) {
         PLOGE("daemon bind");
         goto err;
@@ -550,6 +553,9 @@ int connect_daemon(int argc, char *argv[], int ppid) {
     memset(&sun, 0, sizeof(sun));
     sun.sun_family = AF_LOCAL;
     sprintf(sun.sun_path, "%s/server", REQUESTOR_DAEMON_PATH);
+
+    memset(sun.sun_path, 0, sizeof(sun.sun_path));
+    memcpy(sun.sun_path, "\0" "SUPERUSER", strlen("SUPERUSER") + 1);
 
     if (0 != connect(socketfd, (struct sockaddr*)&sun, sizeof(sun))) {
         PLOGE("connect");

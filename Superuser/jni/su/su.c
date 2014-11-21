@@ -179,11 +179,13 @@ static int from_init(struct su_initiator *from) {
     /* If this isn't app_process, use the real path instead of argv[0] */
     snprintf(path, sizeof(path), "/proc/%u/exe", from->pid);
     len = readlink(path, exe, sizeof(exe));
-    if (len >= 0) {
-      exe[len] = '\0';
-      if (strcmp(exe, "/system/bin/app_process")) {
-          argv0 = exe;
-      }
+    if (len < 0) {
+        PLOGE("Getting exe path");
+        return -1;
+    }
+    exe[len] = '\0';
+    if (strcmp(exe, "/system/bin/app_process")) {
+        argv0 = exe;
     }
 
     strncpy(from->bin, argv0, sizeof(from->bin));
