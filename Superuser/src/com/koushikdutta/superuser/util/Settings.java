@@ -175,13 +175,13 @@ public class Settings {
         return pin.equals(hashed);
     }
 
-    private static final String KEY_REQUIRE_PREMISSION = "require_permission";
+    private static final String KEY_REQUIRE_PERMISSION = "require_permission";
     public static boolean getRequirePermission(Context context) {
-        return getBoolean(context, KEY_REQUIRE_PREMISSION, false);
+        return getBoolean(context, KEY_REQUIRE_PERMISSION, true);
     }
 
     public static void setRequirePermission(Context context, boolean require) {
-        setBoolean(context, KEY_REQUIRE_PREMISSION, require);
+        setBoolean(context, KEY_REQUIRE_PERMISSION, require);
     }
 
     private static final String KEY_AUTOMATIC_RESPONSE = "automatic_response";
