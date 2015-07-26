@@ -40,8 +40,10 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := placeholder
 LOCAL_MODULE_TAGS := eng debug optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_STATIC_LIBRARIES := libc libcutils libselinux
-LOCAL_SRC_FILES := Superuser/jni/placeholder/placeholder.c
+LOCAL_STATIC_LIBRARIES := libc libcutils libselinux libsepol
+LOCAL_SRC_FILES := Superuser/jni/placeholder/placeholder.c Superuser/jni/placeholder/policy.c
+LOCAL_C_INCLUDES := external/libsepol/include
+LOCAL_CFLAGS := -std=gnu99
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 include $(BUILD_EXECUTABLE)
