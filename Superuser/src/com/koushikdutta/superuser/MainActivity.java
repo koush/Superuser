@@ -57,7 +57,7 @@ public class MainActivity extends BetterListActivity {
         about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                getSupportFragmentManager()
+                getFragmentManager()
                 .beginTransaction()
                 .addToBackStack(getString(R.string.about))
                 .replace(getListContainerId(), new AboutFragment(), "content")
@@ -71,7 +71,7 @@ public class MainActivity extends BetterListActivity {
 
             @Override
             public boolean onMenuItemClick(final MenuItem item) {
-                getSupportFragmentManager()
+                getFragmentManager()
                 .beginTransaction()
                 .addToBackStack(getString(R.string.settings))
                 .replace(getListContainerId(), new SettingsFragment(), "content")
