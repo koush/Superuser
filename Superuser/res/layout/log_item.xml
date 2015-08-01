@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingLeft="?attr/listPreferredItemPaddingLeft_"
-    android:paddingRight="?attr/listPreferredItemPaddingRight_"
+    android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+    android:paddingRight="?attr/listPreferredItemPaddingRight"
     android:paddingBottom="@dimen/log_item_padding"
     android:paddingTop="@dimen/log_item_padding" >
 
