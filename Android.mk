@@ -3,16 +3,6 @@
 
 my_path := $(call my-dir)
 
-ifdef SUPERUSER_EMBEDDED
-SUPERUSER_PACKAGE := com.android.settings
-else
-ifeq ($(SUPERUSER_PACKAGE),)
-SUPERUSER_PACKAGE := com.thirdparty.superuser
-endif
-include $(my_path)/Superuser/Android.mk
-endif
-
-
 LOCAL_PATH := $(my_path)
 include $(CLEAR_VARS)
 
@@ -21,7 +11,7 @@ LOCAL_MODULE_TAGS := eng debug optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc libcutils
 LOCAL_C_INCLUDES := external/sqlite/dist
-LOCAL_SRC_FILES := Superuser/jni/su/su.c Superuser/jni/su/daemon.c Superuser/jni/su/activity.c Superuser/jni/su/db.c Superuser/jni/su/utils.c Superuser/jni/su/pts.c Superuser/jni/sqlite3/sqlite3.c
+LOCAL_SRC_FILES := executables/su/su.c executables/su/daemon.c executables/su/activity.c executables/su/db.c executables/su/utils.c executables/su/pts.c executables/sqlite3/sqlite3.c
 LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION -DREQUESTOR=\"$(SUPERUSER_PACKAGE)\"
 
 ifdef SUPERUSER_PACKAGE_PREFIX
@@ -41,7 +31,7 @@ LOCAL_MODULE := placeholder
 LOCAL_MODULE_TAGS := eng debug optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc libcutils libselinux libsepol
-LOCAL_SRC_FILES := Superuser/jni/placeholder/placeholder.c Superuser/jni/placeholder/policy.c
+LOCAL_SRC_FILES := executables/placeholder/placeholder.c executables/placeholder/policy.c
 LOCAL_C_INCLUDES := external/libsepol/include
 LOCAL_CFLAGS := -std=gnu99
 
