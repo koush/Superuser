@@ -42,5 +42,6 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
+		applicationId "com.thirdparty.superuser"
     }
 }
