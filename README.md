@@ -125,6 +125,7 @@ Here is a list of what's left to do, to be compatible with Chainfire's SuperSU (
 - Start as init instead of install_recovery ?
 - --live option to supolicy/sepolicy-inject (see https://github.com/phhusson/sepolicy-inject)
 - Check we can --context to shell, system_server, system_app, platform_app, untrusted_app (I guess there will be ptmx/SELinux problems)
+- --mount-master
 
 Here is an additional TODO list:
 - Create restricted domains, which should match of basic needs. So that we can tell users "this app is not as bad as it might"
