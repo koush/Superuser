@@ -272,7 +272,7 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
     close(outfd);
     close(errfd);
 
-    return su_main(argc, argv, 0);
+    return su_main_nodaemon(argc, argv);
 }
 
 static int daemon_accept(int fd) {
