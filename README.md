@@ -115,3 +115,18 @@ To modify packages/apps/Settings, you will need this [patch](http://review.cyano
 The patch simply references the sources checked out to external/koush and makes changes
 to XML preference files and the AndroidManifest.xml. It is a very minimal change.
 
+
+## TODO List
+
+Here is a list of what's left to do, to be compatible with Chainfire's SuperSU (as documented at https://su.chainfire.eu):
+- -cn option (--context already implemented)
+- Execute /system/su.d/
+- Set supolicy.loaded property to 1
+- Start as init instead of install_recovery ?
+- --live option to supolicy/sepolicy-inject (see https://github.com/phhusson/sepolicy-inject)
+- Check we can --context to shell, system_server, system_app, platform_app, untrusted_app (I guess there will be ptmx/SELinux problems)
+
+Here is an additional TODO list:
+- Create restricted domains, which should match of basic needs. So that we can tell users "this app is not as bad as it might"
+- Be able to switch to /any/ context with --context (just need to rewrite SELinux on the fly)
+- Per-app SELinux domain, with apps writing full rules ?
