@@ -483,6 +483,7 @@ err:
 static int quit_signals[] = { SIGALRM, SIGHUP, SIGPIPE, SIGQUIT, SIGTERM, SIGINT, 0 };
 
 static void sighandler(int sig) {
+	(void)sig;
     restore_stdin();
 
     // Assume we'll only be called before death
@@ -534,7 +535,7 @@ static void setup_sighandlers(void) {
 
 int connect_daemon(int argc, char *argv[], int ppid) {
     int uid = getuid();
-    int ptmx;
+    int ptmx = -1;
     char pts_slave[PATH_MAX];
 
     struct sockaddr_un sun;

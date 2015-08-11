@@ -75,7 +75,7 @@ int fork_zero_fucks() {
         return pid;
     }
     else {
-        if (pid = fork())
+        if ( (pid = fork()) != 0)
             exit(0);
         return 0;
     }
