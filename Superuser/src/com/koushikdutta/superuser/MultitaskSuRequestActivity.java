@@ -512,4 +512,22 @@ public class MultitaskSuRequestActivity extends Activity {
         if (mRequestReady)
             requestReady();
     }
+
+	void hideOverlays(boolean v) {
+		//TODO: Have a proper intent naming ?
+		Intent i = new Intent("eu.chainfire.supersu.action.HIDE_OVERLAYS");
+		i.putExtra("eu.chainfire.supersu.extra.HIDE", v);
+		i.addCategory("android.intent.category.INFO");
+		sendBroadcast(i);
+	}
+
+	@Override
+	protected void onPause() {
+		hideOverlays(true);
+	}
+
+	@Override
+	protected void onResume() {
+		hideOverlays(false);
+	}
 }
