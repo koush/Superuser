@@ -220,24 +220,6 @@ public class MultitaskSuRequestActivity extends Activity {
             findViewById(R.id.developer_warning).setVisibility(View.VISIBLE);
         }
 
-        // handle automatic responses
-        // these will be considered permanent user policies
-        // even though they are automatic.
-        // this is so future su requests dont invoke ui
-
-        // handle declared permission
-        if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !superuserDeclared) {
-            Log.i(LOGTAG, "Automatically denying due to missing permission");
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mHandled)
-                        handleAction(false, 0);
-                }
-            });
-            return;
-        }
-
         // automatic response
         switch (Settings.getAutomaticResponse(MultitaskSuRequestActivity.this)) {
         case Settings.AUTOMATIC_RESPONSE_ALLOW:
@@ -245,8 +227,6 @@ public class MultitaskSuRequestActivity extends Activity {
 //            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
 //                break;
             // check if the permission must be granted
-            if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !granted)
-                break;
             Log.i(LOGTAG, "Automatically allowing due to user preference");
             mHandler.post(new Runnable() {
                 @Override

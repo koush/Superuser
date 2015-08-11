@@ -23,7 +23,6 @@
 
         <item name="toggleIcon">@drawable/ic_toggle_dark</item>
         <item name="multiuserIcon">@drawable/ic_users_dark</item>
-        <item name="declaredPermissionsIcon">@drawable/ic_declare_dark</item>
         <item name="automaticResponseIcon">@drawable/ic_alert_dark</item>
         <item name="pinProtectionIcon">@drawable/ic_protected_dark</item>
         <item name="requestTimeoutIcon">@drawable/ic_timeout_dark</item>
@@ -44,7 +43,6 @@
         
         <item name="toggleIcon">@drawable/ic_toggle</item>
         <item name="multiuserIcon">@drawable/ic_users</item>
-        <item name="declaredPermissionsIcon">@drawable/ic_declare</item>
         <item name="automaticResponseIcon">@drawable/ic_alert</item>
         <item name="pinProtectionIcon">@drawable/ic_protected</item>
         <item name="requestTimeoutIcon">@drawable/ic_timeout</item>

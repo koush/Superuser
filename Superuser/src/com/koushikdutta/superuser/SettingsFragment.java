@@ -239,17 +239,6 @@ public class SettingsFragment extends BetterListFragment {
             }).setAttrDrawable(R.attr.multiuserIcon);
         }
 
-        addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary) {
-            @Override
-            public void onClick(View view) {
-                super.onClick(view);
-                Settings.setRequirePermission(getActivity(), getChecked());
-            }
-        })
-        .setAttrDrawable(R.attr.declaredPermissionsIcon)
-        .setCheckboxVisible(true)
-        .setChecked(Settings.getRequirePermission(getActivity()));
-
         addItem(R.string.security, new ListItem(this, R.string.automatic_response, 0) {
             void update() {
                 switch (Settings.getAutomaticResponse(getActivity())) {

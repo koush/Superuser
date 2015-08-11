@@ -6,7 +6,6 @@
     
     <attr name="toggleIcon" format="reference|color" />
     <attr name="multiuserIcon" format="reference|color" />
-    <attr name="declaredPermissionsIcon" format="reference|color" />
     <attr name="automaticResponseIcon" format="reference|color" />
     <attr name="pinProtectionIcon" format="reference|color" />
     <attr name="requestTimeoutIcon" format="reference|color" />
