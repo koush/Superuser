@@ -551,69 +551,6 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     exit(EXIT_FAILURE);
 }
 
-/*
- * CyanogenMod-specific behavior
- *
- * we can't simply use the property service, since we aren't launched from init
- * and can't trust the location of the property workspace.
- * Find the properties ourselves.
- */
-int access_disabled(const struct su_initiator *from) {
-#ifndef SUPERUSER_EMBEDDED
-    return 0;
-#else
-    char *data;
-    char build_type[PROPERTY_VALUE_MAX];
-    char debuggable[PROPERTY_VALUE_MAX], enabled[PROPERTY_VALUE_MAX];
-    size_t len;
-
-    data = read_file("/system/build.prop");
-    if (check_property(data, "ro.cm.version")) {
-        get_property(data, build_type, "ro.build.type", "");
-        free(data);
-
-        data = read_file("/default.prop");
-        get_property(data, debuggable, "ro.debuggable", "0");
-        free(data);
-        /* only allow su on debuggable builds */
-        if (strcmp("1", debuggable) != 0) {
-            LOGE("Root access is disabled on non-debug builds");
-            return 1;
-        }
-
-        data = read_file("/data/property/persist.sys.root_access");
-        if (data != NULL) {
-            len = strlen(data);
-            if (len >= PROPERTY_VALUE_MAX)
-                memcpy(enabled, "1", 2);
-            else
-                memcpy(enabled, data, len + 1);
-            free(data);
-        } else
-            memcpy(enabled, "1", 2);
-
-        /* enforce persist.sys.root_access on non-eng builds for apps */
-        if (strcmp("eng", build_type) != 0 &&
-                from->uid != AID_SHELL && from->uid != AID_ROOT &&
-                (atoi(enabled) & CM_ROOT_ACCESS_APPS_ONLY) != CM_ROOT_ACCESS_APPS_ONLY ) {
-            LOGE("Apps root access is disabled by system setting - "
-                 "enable it under settings -> developer options");
-            return 1;
-        }
-
-        /* disallow su in a shell if appropriate */
-        if (from->uid == AID_SHELL &&
-                (atoi(enabled) & CM_ROOT_ACCESS_ADB_ONLY) != CM_ROOT_ACCESS_ADB_ONLY ) {
-            LOGE("Shell root access is disabled by a system setting - "
-                 "enable it under settings -> developer options");
-            return 1;
-        }
-
-    }
-    return 0;
-#endif
-}
-
 static int get_api_version() {
   char sdk_ver[PROPERTY_VALUE_MAX];
   char *data = read_file("/system/build.prop");
@@ -870,12 +807,6 @@ int su_main(int argc, char *argv[], int need_client) {
     // superuser needs to be able to reenable itself when disabled...
     if (ctx.from.uid == st.st_uid) {
         allow(&ctx);
-    }
-
-    // check if superuser is disabled completely
-    if (access_disabled(&ctx.from)) {
-        LOGD("access_disabled");
-        deny(&ctx);
     }
 
     // autogrant shell at this point
