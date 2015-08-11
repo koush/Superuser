@@ -9,7 +9,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := su
 LOCAL_MODULE_TAGS := eng debug optional
 LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_STATIC_LIBRARIES := libc libcutils
+LOCAL_STATIC_LIBRARIES := libc libcutils libselinux
 LOCAL_C_INCLUDES := external/sqlite/dist
 LOCAL_SRC_FILES := executables/su/su.c executables/su/daemon.c executables/su/activity.c executables/su/db.c executables/su/utils.c executables/su/pts.c executables/sqlite3/sqlite3.c
 LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION -DREQUESTOR=\"$(SUPERUSER_PACKAGE)\"

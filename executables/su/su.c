@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <sys/types.h>
+#include <selinux/selinux.h>
 
 #include "su.h"
 #include "utils.h"
@@ -446,6 +447,7 @@ static void usage(int status) {
     "Options:\n"
     "  --daemon                      start the su daemon agent\n"
     "  -c, --command COMMAND         pass COMMAND to the invoked shell\n"
+    "  --context context             Change SELinux context\n"
     "  -h, --help                    display this help message and exit\n"
     "  -, -l, --login                pretend the shell to be a login shell\n"
     "  -m, -p,\n"
@@ -542,6 +544,10 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
             ctx->to.uid, get_command(&ctx->to), binary,
             arg0, PARG(0), PARG(1), PARG(2), PARG(3), PARG(4), PARG(5),
             (ctx->to.optind + 6 < ctx->to.argc) ? " ..." : "");
+
+	if(ctx->to.context) {
+		setcon(ctx->to.context);
+	}
 
     ctx->to.argv[--argc] = arg0;
     execvp(binary, ctx->to.argv + argc);
@@ -667,6 +673,7 @@ int su_main_nodaemon(int argc, char **argv) {
             .keepenv = 0,
             .shell = NULL,
             .command = NULL,
+			.context = NULL,
             .argv = argv,
             .argc = argc,
             .optind = 0,
@@ -690,6 +697,7 @@ int su_main_nodaemon(int argc, char **argv) {
         { "preserve-environment",    no_argument,        NULL, 'p' },
         { "shell",            required_argument,    NULL, 's' },
         { "version",            no_argument,        NULL, 'v' },
+        { "context",            required_argument,        NULL, 'z' },
         { NULL, 0, NULL, 0 },
     };
 
@@ -734,6 +742,8 @@ int su_main_nodaemon(int argc, char **argv) {
                 break;
             }
             exit(EXIT_SUCCESS);
+		case 'z':
+			ctx.to.context = optarg;
         default:
             /* Bionic getopt_long doesn't terminate its error output by newline */
             fprintf(stderr, "\n");
