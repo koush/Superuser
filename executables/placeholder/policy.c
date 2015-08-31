@@ -239,7 +239,7 @@ int setup_policy() {
 	set_permissive("install_recovery", &policydb);
 	set_permissive("shell", &policydb);
 
-	//TODO: Should only allow needed permissions
+	//TODO: Should only allow needed permissions to talk to su daemon
 	set_permissive("untrusted_app", &policydb);
 
 	fp = fopen("/data/security/current/sepolicy", "w");
