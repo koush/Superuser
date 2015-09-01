@@ -20,8 +20,8 @@ You'll need the "Widgets" dependency.
 
 * $ mkdir /path/to/src
 * $ cd /path/to/src
-* $ git clone git://github.com/koush/Superuser
-* $ git clone git://github.com/koush/Widgets
+* $ git clone git://github.com/phhusson/Superuser
+* $ git clone git://github.com/phhusson/Widgets
 
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
@@ -88,7 +88,7 @@ To do that, simply add the local_manifest.xml as described below. The second way
 into the native Android System Settings.
 
 #### Repo Setup
-Add the [local_manifest.xml](https://github.com/koush/Superuser/blob/master/local_manifest.xml) to your .repo/local_manifests
+Add the [local_manifest.xml](https://github.com/phhusson/Superuser/blob/master/local_manifest.xml) to your .repo/local_manifests
 
 #### Configuring the Package Name
 The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser.
