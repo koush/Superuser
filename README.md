@@ -21,6 +21,7 @@ You'll need the "Widgets" dependency.
 * $ mkdir /path/to/src
 * $ cd /path/to/src
 * $ git clone git://github.com/phhusson/Superuser
+* $ cd Superuser
 * $ git clone git://github.com/phhusson/Widgets
 
 These repositories do not keep the actual projects in the top level directory.
@@ -91,13 +92,13 @@ into the native Android System Settings.
 Add the [local_manifest.xml](https://github.com/phhusson/Superuser/blob/master/local_manifest.xml) to your .repo/local_manifests
 
 #### Configuring the Package Name
-The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser.
+//The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser.
 To prevent conflicts with the Play store version, the build process changes the package
 name to com.thirdparty.superuser. You can configure this value by setting the following
-in your vendor makefile or BoardConfig:
+in your build.gradle
 
 ```
-SUPERUSER_PACKAGE := com.mypackagename.superuser
+applicationId "com.thirdparty.superuser"
 ```
 
 #### Advanced - Embedding Superuser into System Settings
