@@ -503,11 +503,13 @@ public class MultitaskSuRequestActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		super.onPause();
 		hideOverlays(true);
 	}
 
 	@Override
 	protected void onResume() {
+		super.onResume();
 		hideOverlays(false);
 	}
 }
