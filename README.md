@@ -80,3 +80,16 @@ Here is an additional TODO list:
 - Create restricted domains, which should match of basic needs. So that we can tell users "this app is not as bad as it might"
 - Be able to switch to /any/ context with --context (just need to rewrite SELinux on the fly)
 - Per-app SELinux domain, with apps writing full rules ?
+
+
+## Contact me
+* IRC: #superuser-phh @ Freenode
+* mail: phh@phh.me
+
+## Communication
+
+This project is in REALLY early state, though some points have to be mentioned:
+* For development purposes, I prefer IRC
+* Any issue discussed MUST have an entry in github bugtracker
+* There will be security flaws. If you find one, please first discuss it with me privately (by mail or IRC).
+* If you feel you need to be aware of security flaws before disclosure, please contact me, I might create a dedicated mailing list.
