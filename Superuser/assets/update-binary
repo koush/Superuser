@@ -22,8 +22,10 @@ cd /tmp
 mkdir superuser
 cd superuser
 unzip -o "$3"
+
 if [ "$?" -ne "0" ]
 then
+#Called when updating SU from the app
   mkdir -p $PLATFORM
   cp /cache/su $PLATFORM/su
   cp /cache/Superuser.apk .
@@ -76,7 +78,7 @@ done
 if [ ! -f /system/bin/app_process32.old ];then
 	mv /system/bin/app_process32 /system/bin/app_process32.old
 fi
-cp placeholder /system/bin/app_process32
+cp $PLATFORM/placeholder /system/bin/app_process32
 chmod 0755 /system/bin/app_process32
 chcon u:object_r:zygote_exec:s0 /system/bin/app_process32
 
