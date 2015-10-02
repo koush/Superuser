@@ -3,6 +3,7 @@
 tmpdir="$(mktemp -d)"
 ORIG="$(pwd)"
 
+rm -f update-su.zip
 pushd "$tmpdir"
 mkdir -p META-INF/com/google/android
 cp "$ORIG"/assets/update-binary META-INF/com/google/android/update-binary
