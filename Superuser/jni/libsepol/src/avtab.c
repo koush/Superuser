@@ -49,10 +49,43 @@
 #include "debug.h"
 #include "private.h"
 
-static inline int avtab_hash(struct avtab_key *keyp, uint16_t mask)
+/* Based on MurmurHash3, written by Austin Appleby and placed in the
+ * public domain.
+ */
+static inline int avtab_hash(struct avtab_key *keyp, uint32_t mask)
 {
-	return ((keyp->target_class + (keyp->target_type << 2) +
-		 (keyp->source_type << 9)) & mask);
+	static const uint32_t c1 = 0xcc9e2d51;
+	static const uint32_t c2 = 0x1b873593;
+	static const uint32_t r1 = 15;
+	static const uint32_t r2 = 13;
+	static const uint32_t m  = 5;
+	static const uint32_t n  = 0xe6546b64;
+
+	uint32_t hash = 0;
+
+#define mix(input) { \
+	uint32_t v = input; \
+	v *= c1; \
+	v = (v << r1) | (v >> (32 - r1)); \
+	v *= c2; \
+	hash ^= v; \
+	hash = (hash << r2) | (hash >> (32 - r2)); \
+	hash = hash * m + n; \
+}
+
+	mix(keyp->target_class);
+	mix(keyp->target_type);
+	mix(keyp->source_type);
+
+#undef mix
+
+	hash ^= hash >> 16;
+	hash *= 0x85ebca6b;
+	hash ^= hash >> 13;
+	hash *= 0xc2b2ae35;
+	hash ^= hash >> 16;
+
+	return hash & mask;
 }
 
 static avtab_ptr_t
@@ -60,12 +93,28 @@ avtab_insert_node(avtab_t * h, int hvalue, avtab_ptr_t prev, avtab_key_t * key,
 		  avtab_datum_t * datum)
 {
 	avtab_ptr_t newnode;
+	avtab_operations_t *ops;
+
 	newnode = (avtab_ptr_t) malloc(sizeof(struct avtab_node));
 	if (newnode == NULL)
 		return NULL;
 	memset(newnode, 0, sizeof(struct avtab_node));
 	newnode->key = *key;
-	newnode->datum = *datum;
+
+	if (key->specified & AVTAB_OP) {
+		ops = calloc(1, sizeof(avtab_operations_t));
+		if (ops == NULL) {
+			free(newnode);
+			return NULL;
+		}
+		if (datum->ops) /* else caller populates ops*/
+			*ops = *(datum->ops);
+
+		newnode->datum.ops = ops;
+	} else {
+		newnode->datum = *datum;
+	}
+
 	if (prev) {
 		newnode->next = prev->next;
 		prev->next = newnode;
@@ -94,8 +143,11 @@ int avtab_insert(avtab_t * h, avtab_key_t * key, avtab_datum_t * datum)
 		if (key->source_type == cur->key.source_type &&
 		    key->target_type == cur->key.target_type &&
 		    key->target_class == cur->key.target_class &&
-		    (specified & cur->key.specified))
+		    (specified & cur->key.specified)) {
+			if (specified & AVTAB_OPNUM)
+				break;
 			return SEPOL_EEXIST;
+		}
 		if (key->source_type < cur->key.source_type)
 			break;
 		if (key->source_type == cur->key.source_type &&
@@ -300,7 +352,7 @@ int avtab_init(avtab_t * h)
 
 int avtab_alloc(avtab_t *h, uint32_t nrules)
 {
-	uint16_t mask = 0;
+	uint32_t mask = 0;
 	uint32_t shift = 0;
 	uint32_t work = nrules;
 	uint32_t nslot = 0;
@@ -315,8 +367,8 @@ int avtab_alloc(avtab_t *h, uint32_t nrules)
 	if (shift > 2)
 		shift = shift - 2;
 	nslot = 1 << shift;
-	if (nslot > MAX_AVTAB_SIZE)
-		nslot = MAX_AVTAB_SIZE;
+	if (nslot > MAX_AVTAB_HASH_BUCKETS)
+		nslot = MAX_AVTAB_HASH_BUCKETS;
 	mask = nslot - 1;
 
 	h->htable = calloc(nslot, sizeof(avtab_ptr_t));
@@ -363,23 +415,32 @@ static uint16_t spec_order[] = {
 	AVTAB_AUDITALLOW,
 	AVTAB_TRANSITION,
 	AVTAB_CHANGE,
-	AVTAB_MEMBER
+	AVTAB_MEMBER,
+	AVTAB_OPNUM_ALLOWED,
+	AVTAB_OPNUM_AUDITALLOW,
+	AVTAB_OPNUM_DONTAUDIT,
+	AVTAB_OPTYPE_ALLOWED,
+	AVTAB_OPTYPE_AUDITALLOW,
+	AVTAB_OPTYPE_DONTAUDIT
 };
 
 int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 		    int (*insertf) (avtab_t * a, avtab_key_t * k,
 				    avtab_datum_t * d, void *p), void *p)
 {
+	uint8_t buf8;
 	uint16_t buf16[4], enabled;
-	uint32_t buf32[7], items, items2, val;
+	uint32_t buf32[8], items, items2, val;
 	avtab_key_t key;
 	avtab_datum_t datum;
+	avtab_operations_t ops;
 	unsigned set;
 	unsigned int i;
 	int rc;
 
 	memset(&key, 0, sizeof(avtab_key_t));
 	memset(&datum, 0, sizeof(avtab_datum_t));
+	memset(&ops, 0, sizeof(avtab_operations_t));
 
 	if (vers < POLICYDB_VERSION_AVTAB) {
 		rc = next_entry(buf32, fp, sizeof(uint32_t));
@@ -472,12 +533,34 @@ int avtab_read_item(struct policy_file *fp, uint32_t vers, avtab_t * a,
 		return -1;
 	}
 
-	rc = next_entry(buf32, fp, sizeof(uint32_t));
-	if (rc < 0) {
-		ERR(fp->handle, "truncated entry");
+	if ((vers < POLICYDB_VERSION_IOCTL_OPERATIONS) &&
+			(key.specified & AVTAB_OP)) {
+		ERR(fp->handle, "policy version %u does not support ioctl "
+				"operation rules and one was specified\n", vers);
 		return -1;
+	} else if (key.specified & AVTAB_OP) {
+		rc = next_entry(&buf8, fp, sizeof(uint8_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			return -1;
+		}
+		ops.type = buf8;
+		rc = next_entry(buf32, fp, sizeof(uint32_t)*8);
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			return -1;
+		}
+		for (i = 0; i < ARRAY_SIZE(ops.perms); i++)
+			ops.perms[i] = le32_to_cpu(buf32[i]);
+		datum.ops = &ops;
+	} else {
+		rc = next_entry(buf32, fp, sizeof(uint32_t));
+		if (rc < 0) {
+			ERR(fp->handle, "truncated entry");
+			return -1;
+		}
+		datum.data = le32_to_cpu(*buf32);
 	}
-	datum.data = le32_to_cpu(*buf32);
 	return insertf(a, &key, &datum, p);
 }
 

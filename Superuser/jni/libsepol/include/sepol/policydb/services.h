@@ -15,6 +15,9 @@
 #include <sepol/policydb/flask_types.h>
 #include <sepol/policydb/policydb.h>
 #include <stddef.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 /* Set the policydb and sidtab structures to be used by
    the service functions.  If not set, then these default
@@ -75,6 +78,20 @@ extern int sepol_compute_av_reason_buffer(sepol_security_id_t ssid,
 				   unsigned int *reason,
 				   char **reason_buf,
 				   unsigned int flags);
+
+/*
+ * Returns the mls/validatetrans constraint expression calculations in
+ * a buffer that must be free'd by the caller using free(3).
+ * If the SHOW_GRANTED flag is set it will show granted and denied
+ * mls/validatetrans (the default is to show only those denied).
+ */
+extern int sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
+					sepol_security_id_t newsid,
+					sepol_security_id_t tasksid,
+					sepol_security_class_t tclass,
+					char **reason_buf,
+					unsigned int flags);
+
 /*
  * Return a class ID associated with the class string representation
  * specified by `class_name'.
@@ -209,8 +226,9 @@ extern int sepol_fs_use(const char *fstype,	/* IN */
  * fixed labeling behavior like transition SIDs or task SIDs.
  */
 extern int sepol_genfs_sid(const char *fstype,	/* IN */
-			   char *name,	/* IN */
+			   const char *name,	/* IN */
 			   sepol_security_class_t sclass,	/* IN */
 			   sepol_security_id_t * sid);	/* OUT  */
 
+__END_DECLS
 #endif

@@ -1,3 +1,40 @@
+	* Replace fmemopen() with internal function in libsepol, from James Carter.
+	* Verify users prior to evaluating users in cil, from Yuli Khodorkovskiy. 
+	* Binary modules do not support ioctl rules, from Stephen Smalley.
+	* Add support for ioctl command whitelisting, from Jeff Vander Stoep.
+	* Don't use symbol versioning for static object files, from Yuli Khodorkovskiy.
+	* Add sepol_module_policydb_to_cil(), sepol_module_package_to_cil(), and sepol_ppfile_to_module_package(), from James Carter.
+	* Move secilc out of libsepol, from Yuli Khodorkovskiy.
+	* fix building Xen policy with devicetreecon, and add devicetreecon
+	  CIL documentation, from Richard Haines.
+	* bool_copy_callback set state on creation, from Thomas Hurd.
+	* Add device tree ocontext nodes to Xen policy, from Daniel De Graaf.
+	* Widen Xen IOMEM context entries, from Daniel De Graaf.
+	* Update CIL documentation, from Richard Haines
+	* Fix error path in mls_semantic_level_expand(), from Chris PeBenito.
+	* Fix MacOS X build, from Stephen Smalley.
+	* Enabling building CIL in Android, from Stephen Smalley.
+	* Update to latest CIL, includes new name resolution and fixes ordering
+	  issues with blockinherit statements, and bug fixes
+
+2.4 2015-02-02
+	* Remove assumption that SHLIBDIR is ../../ relative to LIBDIR, from Steve
+	  Lawrence
+	* Fix bugs found by hardened gcc flags, from Nicolas Iooss.
+	* Build CIL into libsepol. libsepol can be built without CIL by setting the
+	  DISABLE_CIL flag to 'y', from Steve Lawrence
+	* Add an API function to set target_platform, from Steve Lawrence
+	* Report all neverallow violations, from Stephen Smalley
+	* Improve check_assertions performance through hash tweaks from John Brooks.
+	* Allow libsepol C++ static library on device from Daniel Cashman.
+
+2.3 2014-05-06
+	* Improve error message for name-based transition conflicts.
+	* Revert libsepol: filename_trans: use some better sorting to compare and merge.
+	* Report source file and line information for neverallow failures.
+	* Fix valgrind errors in constraint_expr_eval_reason from Richard Haines.
+	* Add sepol_validate_transition_reason_buffer function from Richard Haines.
+
 2.2 2013-10-30
 	* Allow constraint denial cause to be determined from Richard Haines.
 	  - Add kernel policy version 29.
@@ -12,23 +49,23 @@
 	* implement default type policy syntax
 	* Fix memory leak issues found by Klocwork
 
-2.1.8 2011-09-13
+2.1.8 2012-09-13
 	* fix neverallow checking on attributes
 	* Move context_copy() after switch block in ocontext_copy_*().
 	* check for missing initial SID labeling statement.
 	* Add always_check_network policy capability
 	* role_fix_callback skips out-of-scope roles during expansion.
 
-2.1.7 2011-06-28
+2.1.7 2012-06-28
 	* reserve policycapability for redhat testing of ptrace child
 	* cosmetic changes to make the source easier to read
 	* prepend instead of append to filename_trans list
 	* Android/MacOS X build support
 
-2.1.6 2011-04-23
+2.1.6 2012-04-23
 	* allocate enough space to hold filename in trans rules
 
-2.1.5 2011-03-28
+2.1.5 2012-03-28
 	* checkpolicy: implement new default labeling behaviors
 
 2.1.4 2011-10-03

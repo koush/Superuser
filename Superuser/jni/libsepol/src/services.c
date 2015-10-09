@@ -174,7 +174,7 @@ static char **expr_list;
 static int expr_buf_used;
 static int expr_buf_len;
 
-static void cat_expr_buf(char *e_buf, char *string)
+static void cat_expr_buf(char *e_buf, const char *string)
 {
 	int len, new_buf_len;
 	char *p, *new_buf = e_buf;
@@ -209,7 +209,7 @@ static void cat_expr_buf(char *e_buf, char *string)
  * POLICYDB_VERSION_CONSTRAINT_NAMES) just read the e->names list.
  */
 static void get_name_list(constraint_expr_t *e, int type,
-							char *src, char *op, int failed)
+							const char *src, const char *op, int failed)
 {
 	ebitmap_t *types;
 	int rc = 0;
@@ -273,7 +273,7 @@ static void get_name_list(constraint_expr_t *e, int type,
 	return;
 }
 
-static void msgcat(char *src, char *tgt, char *op, int failed)
+static void msgcat(const char *src, const char *tgt, const char *op, int failed)
 {
 	char tmp_buf[128];
 	if (failed)
@@ -303,7 +303,7 @@ static char *get_class_info(sepol_security_class_t tclass,
 	}
 
 	/* Determine statement type */
-	char *statements[] = {
+	const char *statements[] = {
 		"constrain ",			/* 0 */
 		"mlsconstrain ",		/* 1 */
 		"validatetrans ",		/* 2 */
@@ -344,11 +344,16 @@ static char *get_class_info(sepol_security_class_t tclass,
 		if (len < 0 || len >= class_buf_len - buf_used)
 			continue;
 
-		/* Add permission entries */
+		/* Add permission entries (validatetrans does not have perms) */
 		p += len;
 		buf_used += len;
-		len = snprintf(p, class_buf_len - buf_used, "{%s } (",
-				sepol_av_to_string(policydb, tclass, constraint->permissions));
+		if (state_num < 2) {
+			len = snprintf(p, class_buf_len - buf_used, "{%s } (",
+			sepol_av_to_string(policydb, tclass,
+				constraint->permissions));
+		} else {
+			len = snprintf(p, class_buf_len - buf_used, "(");
+		}
 		if (len < 0 || len >= class_buf_len - buf_used)
 			continue;
 		break;
@@ -411,6 +416,12 @@ static int constraint_expr_eval_reason(context_struct_t *scontext,
 	char *tgt = NULL;
 	int rc = 0, x;
 	char *class_buf = NULL;
+
+	/*
+	 * The array of expression answer buffer pointers and counter.
+	 */
+	char **answer_list = NULL;
+	int answer_counter = 0;
 
 	class_buf = get_class_info(tclass, constraint, xcontext);
 	if (!class_buf) {
@@ -681,13 +692,9 @@ mls_ops:
 	expr_counter = 0;
 
 	/*
-	 * The array of expression answer buffer pointers and counter.
 	 * Generate the same number of answer buffer entries as expression
 	 * buffers (as there will never be more).
 	 */
-	char **answer_list;
-	int answer_counter = 0;
-
 	answer_list = malloc(expr_count * sizeof(*answer_list));
 	if (!answer_list) {
 		ERR(NULL, "failed to allocate answer stack");
@@ -723,6 +730,7 @@ mls_ops:
 			push(answer_list[answer_counter++]);
 			free(a);
 			free(b);
+			free(expr_list[x]);
 		} else if (strncmp(expr_list[x], "not", 3) == 0) {
 			b = pop();
 			b_len = strlen(b);
@@ -743,6 +751,7 @@ mls_ops:
 						expr_list[x], b);
 			push(answer_list[answer_counter++]);
 			free(b);
+			free(expr_list[x]);
 		} else {
 			push(expr_list[x]);
 		}
@@ -750,8 +759,11 @@ mls_ops:
 	/* Get the final answer from tos and build constraint text */
 	a = pop();
 
-	/* Constraint calculation: rc = 0 is denied, rc = 1 is granted */
-	sprintf(tmp_buf, "Constraint %s\n", s[0] ? "GRANTED" : "DENIED");
+	/* validatetrans / constraint calculation:
+				rc = 0 is denied, rc = 1 is granted */
+	sprintf(tmp_buf, "%s %s\n",
+			xcontext ? "Validatetrans" : "Constraint",
+			s[0] ? "GRANTED" : "DENIED");
 
 	int len, new_buf_len;
 	char *p, **new_buf = r_buf;
@@ -759,7 +771,7 @@ mls_ops:
 	 * These contain the constraint components that are added to the
 	 * callers reason buffer.
 	 */
-	char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
+	const char *buffers[] = { class_buf, a, "); ", tmp_buf, 0 };
 
 	/*
 	 * This will add the constraints to the callers reason buffer (who is
@@ -807,6 +819,8 @@ out:
 		for (x = 0; expr_list[x] != NULL; x++)
 			free(expr_list[x]);
 	}
+	free(answer_list);
+	free(expr_list);
 	return rc;
 }
 
@@ -979,6 +993,68 @@ int hidden sepol_validate_transition(sepol_security_id_t oldsid,
 		constraint = constraint->next;
 	}
 
+	return 0;
+}
+
+/*
+ * sepol_validate_transition_reason_buffer - the reason buffer is realloc'd
+ * in the constraint_expr_eval_reason() function.
+ */
+int hidden sepol_validate_transition_reason_buffer(sepol_security_id_t oldsid,
+				     sepol_security_id_t newsid,
+				     sepol_security_id_t tasksid,
+				     sepol_security_class_t tclass,
+				     char **reason_buf,
+				     unsigned int flags)
+{
+	context_struct_t *ocontext;
+	context_struct_t *ncontext;
+	context_struct_t *tcontext;
+	class_datum_t *tclass_datum;
+	constraint_node_t *constraint;
+
+	if (!tclass || tclass > policydb->p_classes.nprim) {
+		ERR(NULL, "unrecognized class %d", tclass);
+		return -EINVAL;
+	}
+	tclass_datum = policydb->class_val_to_struct[tclass - 1];
+
+	ocontext = sepol_sidtab_search(sidtab, oldsid);
+	if (!ocontext) {
+		ERR(NULL, "unrecognized SID %d", oldsid);
+		return -EINVAL;
+	}
+
+	ncontext = sepol_sidtab_search(sidtab, newsid);
+	if (!ncontext) {
+		ERR(NULL, "unrecognized SID %d", newsid);
+		return -EINVAL;
+	}
+
+	tcontext = sepol_sidtab_search(sidtab, tasksid);
+	if (!tcontext) {
+		ERR(NULL, "unrecognized SID %d", tasksid);
+		return -EINVAL;
+	}
+
+	/*
+	 * Set the buffer to NULL as mls/validatetrans may not be processed.
+	 * If a buffer is required, then the routines in
+	 * constraint_expr_eval_reason will realloc in REASON_BUF_SIZE
+	 * chunks (as it gets called for each mls/validatetrans processed).
+	 * We just make sure these start from zero.
+	 */
+	*reason_buf = NULL;
+	reason_buf_used = 0;
+	reason_buf_len = 0;
+	constraint = tclass_datum->validatetrans;
+	while (constraint) {
+		if (!constraint_expr_eval_reason(ocontext, ncontext, tcontext,
+				tclass, constraint, reason_buf, flags)) {
+			return -EPERM;
+		}
+		constraint = constraint->next;
+	}
 	return 0;
 }
 
@@ -2009,7 +2085,7 @@ int hidden sepol_get_user_sids(sepol_security_id_t fromsid,
  * fixed labeling behavior like transition SIDs or task SIDs.
  */
 int hidden sepol_genfs_sid(const char *fstype,
-			   char *path,
+			   const char *path,
 			   sepol_security_class_t sclass,
 			   sepol_security_id_t * sid)
 {

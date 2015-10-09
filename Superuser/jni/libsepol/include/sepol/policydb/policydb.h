@@ -1,4 +1,3 @@
-
 /* Author : Stephen Smalley, <sds@epoch.ncsc.mil> */
 
 /*
@@ -62,12 +61,15 @@
 #include <sepol/policydb/context.h>
 #include <sepol/policydb/constraint.h>
 #include <sepol/policydb/sidtab.h>
+#include <sys/cdefs.h>
 
 #define ERRMSG_LEN 1024
 
 #define POLICYDB_SUCCESS      0
 #define POLICYDB_ERROR       -1
 #define POLICYDB_UNSUPPORTED -2
+
+__BEGIN_DECLS
 
 /*
  * A datum type is defined for each kind of symbol 
@@ -234,30 +236,48 @@ typedef struct cond_node cond_list_t;
 struct cond_av_list;
 
 typedef struct class_perm_node {
-	uint32_t class;
+	uint32_t tclass;
 	uint32_t data;		/* permissions or new type */
 	struct class_perm_node *next;
 } class_perm_node_t;
 
+typedef struct av_operations {
+	uint8_t type;
+	/* 256 bits of ioctl number permissions */
+	uint32_t perms[8];
+} av_operations_t;
+
 typedef struct avrule {
 /* these typedefs are almost exactly the same as those in avtab.h - they are
  * here because of the need to include neverallow and dontaudit messages */
-#define AVRULE_ALLOWED     1
-#define AVRULE_AUDITALLOW  2
-#define AVRULE_AUDITDENY   4
-#define AVRULE_DONTAUDIT   8
-#define AVRULE_NEVERALLOW 128
+#define AVRULE_ALLOWED			0x0001
+#define AVRULE_AUDITALLOW		0x0002
+#define AVRULE_AUDITDENY		0x0004
+#define AVRULE_DONTAUDIT		0x0008
+#define AVRULE_NEVERALLOW		0x0080
 #define AVRULE_AV         (AVRULE_ALLOWED | AVRULE_AUDITALLOW | AVRULE_AUDITDENY | AVRULE_DONTAUDIT | AVRULE_NEVERALLOW)
-#define AVRULE_TRANSITION 16
-#define AVRULE_MEMBER     32
-#define AVRULE_CHANGE     64
+#define AVRULE_TRANSITION		0x0010
+#define AVRULE_MEMBER			0x0020
+#define AVRULE_CHANGE			0x0040
 #define AVRULE_TYPE       (AVRULE_TRANSITION | AVRULE_MEMBER | AVRULE_CHANGE)
+#define AVRULE_OPNUM_ALLOWED 		0x0100
+#define AVRULE_OPNUM_AUDITALLOW		0x0200
+#define AVRULE_OPNUM_DONTAUDIT		0x0400
+#define AVRULE_OPNUM         (AVRULE_OPNUM_ALLOWED | AVRULE_OPNUM_AUDITALLOW | \
+				AVRULE_OPNUM_DONTAUDIT)
+#define AVRULE_OPTYPE_ALLOWED		0x1000
+#define AVRULE_OPTYPE_AUDITALLOW	0x2000
+#define AVRULE_OPTYPE_DONTAUDIT		0x4000
+#define AVRULE_OPTYPE         (AVRULE_OPTYPE_ALLOWED | AVRULE_OPTYPE_AUDITALLOW | \
+				AVRULE_OPTYPE_DONTAUDIT)
+#define AVRULE_OP         (AVRULE_OPNUM | AVRULE_OPTYPE)
 	uint32_t specified;
 #define RULE_SELF 1
 	uint32_t flags;
 	type_set_t stypes;
 	type_set_t ttypes;
 	class_perm_node_t *perms;
+	av_operations_t * ops;
 	unsigned long line;	/* line number from policy.conf where
 				 * this rule originated  */
 	/* source file name and line number (e.g. .te file) */
@@ -323,8 +343,8 @@ typedef struct ocontext {
 		uint32_t device;
 		uint16_t pirq;
 		struct {
-			uint32_t low_iomem;
-			uint32_t high_iomem;
+			uint64_t low_iomem;
+			uint64_t high_iomem;
 		} iomem;
 		struct {
 			uint32_t low_ioport;
@@ -373,6 +393,7 @@ typedef struct genfs {
 #define OCON_XEN_IOPORT     2    /* io ports */
 #define OCON_XEN_IOMEM	    3    /* io memory */
 #define OCON_XEN_PCIDEVICE  4    /* pci devices */
+#define OCON_XEN_DEVICETREE 5    /* device tree node */
 
 /* OCON_NUM needs to be the largest index in any platform's ocontext array */
 #define OCON_NUM   7
@@ -687,10 +708,12 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_VERSION_NEW_OBJECT_DEFAULTS	27
 #define POLICYDB_VERSION_DEFAULT_TYPE	28
 #define POLICYDB_VERSION_CONSTRAINT_NAMES	29
+#define POLICYDB_VERSION_XEN_DEVICETREE		30 /* Xen-specific */
+#define POLICYDB_VERSION_IOCTL_OPERATIONS	30 /* Linux-specific */
 
 /* Range of policy versions we understand*/
 #define POLICYDB_VERSION_MIN	POLICYDB_VERSION_BASE
-#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_CONSTRAINT_NAMES
+#define POLICYDB_VERSION_MAX	POLICYDB_VERSION_IOCTL_OPERATIONS
 
 /* Module versions and specific changes*/
 #define MOD_POLICYDB_VERSION_BASE		4
@@ -741,10 +764,8 @@ extern int policydb_set_target_platform(policydb_t *p, int platform);
 #define POLICYDB_STRING_MAX_LENGTH 32
 #define POLICYDB_MOD_MAGIC SELINUX_MOD_MAGIC
 #define POLICYDB_MOD_STRING "SE Linux Module"
-#define SEPOL_TARGET_SELINUX 0
-#define SEPOL_TARGET_XEN     1
 
-
+__END_DECLS
 #endif				/* _POLICYDB_H_ */
 
 /* FLASK */

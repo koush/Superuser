@@ -630,6 +630,7 @@ static int bool_copy_callback(hashtab_key_t key, hashtab_datum_t datum,
 		state->base->p_bools.nprim++;
 		base_bool = new_bool;
 		base_bool->flags = booldatum->flags;
+		base_bool->state = booldatum->state;
 	} else if ((booldatum->flags & COND_BOOL_FLAGS_TUNABLE) !=
 		   (base_bool->flags & COND_BOOL_FLAGS_TUNABLE)) {
 			/* A mismatch between boolean/tunable declaration
@@ -1293,21 +1294,21 @@ static int copy_avrule_list(avrule_t * list, avrule_t ** dst,
 			}
 			class_perm_node_init(new_perm);
 
-			new_perm->class =
-			    module->map[SYM_CLASSES][cur_perm->class - 1];
-			assert(new_perm->class);
+			new_perm->tclass =
+			    module->map[SYM_CLASSES][cur_perm->tclass - 1];
+			assert(new_perm->tclass);
 
 			if (new_rule->specified & AVRULE_AV) {
 				for (i = 0;
 				     i <
-				     module->perm_map_len[cur_perm->class - 1];
+				     module->perm_map_len[cur_perm->tclass - 1];
 				     i++) {
 					if (!(cur_perm->data & (1U << i)))
 						continue;
 					new_perm->data |=
 					    (1U <<
 					     (module->
-					      perm_map[cur_perm->class - 1][i] -
+					      perm_map[cur_perm->tclass - 1][i] -
 					      1));
 				}
 			} else {
@@ -2089,7 +2090,7 @@ static int debug_requirements(link_state_t * state, policydb_t * p)
 		if (ret < 0) {
 			return ret;
 		} else if (ret == 0) {
-			char *mod_name = cur->branch_list->module_name ?
+			const char *mod_name = cur->branch_list->module_name ?
 			    cur->branch_list->module_name : "BASE";
 			if (req.symbol_type == SYM_CLASSES) {
 				struct find_perm_arg fparg;
@@ -2148,7 +2149,7 @@ static void print_missing_requirements(link_state_t * state,
 				       missing_requirement_t * req)
 {
 	policydb_t *p = state->base;
-	char *mod_name = cur->branch_list->module_name ?
+	const char *mod_name = cur->branch_list->module_name ?
 	    cur->branch_list->module_name : "BASE";
 
 	if (req->symbol_type == SYM_CLASSES) {
@@ -2220,7 +2221,7 @@ static int enable_avrules(link_state_t * state, policydb_t * pol)
 			}
 			decl = block->branch_list;
 			if (state->verbose) {
-				char *mod_name = decl->module_name ?
+				const char *mod_name = decl->module_name ?
 				    decl->module_name : "BASE";
 				INFO(state->handle, "check module %s decl %d\n",
 				     mod_name, decl->decl_id);

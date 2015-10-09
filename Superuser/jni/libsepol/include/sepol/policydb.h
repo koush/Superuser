@@ -5,6 +5,9 @@
 #include <stdio.h>
 
 #include <sepol/handle.h>
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
 
 struct sepol_policy_file;
 typedef struct sepol_policy_file sepol_policy_file_t;
@@ -90,6 +93,12 @@ extern int sepol_policydb_set_vers(sepol_policydb_t * p, unsigned int vers);
 extern int sepol_policydb_set_handle_unknown(sepol_policydb_t * p,
 					     unsigned int handle_unknown);
 
+/* Set the target platform */
+#define SEPOL_TARGET_SELINUX 0
+#define SEPOL_TARGET_XEN     1
+extern int sepol_policydb_set_target_platform(sepol_policydb_t * p,
+					     int target_platform);
+
 /* 
  * Read a policydb from a policy file.
  * This automatically sets the type and version based on the 
@@ -135,4 +144,5 @@ extern int sepol_policydb_mls_enabled(const sepol_policydb_t * p);
  */
 extern int sepol_policydb_compat_net(const sepol_policydb_t * p);
 
+__END_DECLS
 #endif

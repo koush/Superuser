@@ -1,6 +1,10 @@
 #ifndef _SEPOL_DSO_H
 #define _SEPOL_DSO_H	1
 
+#if !defined(SHARED) || defined(ANDROID)
+    #define DISABLE_SYMVER 1
+#endif
+
 #ifdef SHARED
 # define hidden __attribute__ ((visibility ("hidden")))
 # define hidden_proto(fct) __hidden_proto (fct, fct##_internal)

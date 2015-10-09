@@ -101,6 +101,7 @@ static int avtab_write_item(policydb_t * p,
 			    unsigned merge, unsigned commit, uint32_t * nel)
 {
 	avtab_ptr_t node;
+	uint8_t buf8;
 	uint16_t buf16[4];
 	uint32_t buf32[10], lookup, val;
 	size_t items, items2;
@@ -220,10 +221,38 @@ static int avtab_write_item(policydb_t * p,
 	items = put_entry(buf16, sizeof(uint16_t), 4, fp);
 	if (items != 4)
 		return POLICYDB_ERROR;
-	buf32[0] = cpu_to_le32(cur->datum.data);
-	items = put_entry(buf32, sizeof(uint32_t), 1, fp);
-	if (items != 1)
+	if ((p->policyvers < POLICYDB_VERSION_IOCTL_OPERATIONS) &&
+			(cur->key.specified & AVTAB_OP)) {
+		ERR(fp->handle, "policy version %u does not support ioctl operation"
+				" rules and one was specified", p->policyvers);
 		return POLICYDB_ERROR;
+	}
+
+	if (p->target_platform != SEPOL_TARGET_SELINUX &&
+			(cur->key.specified & AVTAB_OP)) {
+		ERR(fp->handle, "Target platform %s does not support ioctl "
+				"operation rules and one was specified",
+				policydb_target_strings[p->target_platform]);
+		return POLICYDB_ERROR;
+	}
+
+	if (cur->key.specified & AVTAB_OP) {
+		buf8 = cur->datum.ops->type;
+		items = put_entry(&buf8, sizeof(uint8_t),1,fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+		for (i = 0; i < ARRAY_SIZE(cur->datum.ops->perms); i++)
+			buf32[i] = cpu_to_le32(cur->datum.ops->perms[i]);
+		items = put_entry(buf32, sizeof(uint32_t),8,fp);
+		if (items != 8)
+			return POLICYDB_ERROR;
+	} else {
+		buf32[0] = cpu_to_le32(cur->datum.data);
+		items = put_entry(buf32, sizeof(uint32_t), 1, fp);
+		if (items != 1)
+			return POLICYDB_ERROR;
+	}
+
 	return POLICYDB_SUCCESS;
 }
 
@@ -1211,7 +1240,7 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 			  struct policy_file *fp)
 {
 	unsigned int i, j;
-	size_t nel, items;
+	size_t nel, items, len;
 	uint32_t buf[32];
 	ocontext_t *c;
 	for (i = 0; i < info->ocon_num; i++) {
@@ -1252,13 +1281,31 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 					return POLICYDB_ERROR;
 				break;
 			case OCON_XEN_IOMEM:
-				buf[0] = c->u.iomem.low_iomem;
-				buf[1] = c->u.iomem.high_iomem;
-				for (j = 0; j < 2; j++)
-					buf[j] = cpu_to_le32(buf[j]);
-				items = put_entry(buf, sizeof(uint32_t), 2, fp);
-				if (items != 2)
-					return POLICYDB_ERROR;
+				if (p->policyvers >= POLICYDB_VERSION_XEN_DEVICETREE) {
+					uint64_t b64[2];
+					b64[0] = c->u.iomem.low_iomem;
+					b64[1] = c->u.iomem.high_iomem;
+					for (j = 0; j < 2; j++)
+						b64[j] = cpu_to_le64(b64[j]);
+					items = put_entry(b64, sizeof(uint64_t), 2, fp);
+					if (items != 2)
+						return POLICYDB_ERROR;
+				} else {
+					if (c->u.iomem.high_iomem > 0xFFFFFFFFULL) {
+						ERR(fp->handle, "policy version %d"
+							" cannot represent IOMEM addresses over 16TB",
+							p->policyvers);
+						return POLICYDB_ERROR;
+					}
+
+					buf[0] = c->u.iomem.low_iomem;
+					buf[1] = c->u.iomem.high_iomem;
+					for (j = 0; j < 2; j++)
+						buf[j] = cpu_to_le32(buf[j]);
+					items = put_entry(buf, sizeof(uint32_t), 2, fp);
+					if (items != 2)
+						return POLICYDB_ERROR;
+				}
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
 				break;
@@ -1266,6 +1313,18 @@ static int ocontext_write_xen(struct policydb_compat_info *info, policydb_t *p,
 				buf[0] = cpu_to_le32(c->u.device);
 				items = put_entry(buf, sizeof(uint32_t), 1, fp);
 				if (items != 1)
+					return POLICYDB_ERROR;
+				if (context_write(p, &c->context[0], fp))
+					return POLICYDB_ERROR;
+				break;
+			case OCON_XEN_DEVICETREE:
+				len = strlen(c->u.name);
+				buf[0] = cpu_to_le32(len);
+				items = put_entry(buf, sizeof(uint32_t), 1, fp);
+				if (items != 1)
+					return POLICYDB_ERROR;
+				items = put_entry(c->u.name, 1, len, fp);
+				if (items != len)
 					return POLICYDB_ERROR;
 				if (context_write(p, &c->context[0], fp))
 					return POLICYDB_ERROR;
@@ -1487,6 +1546,12 @@ static int avrule_write(avrule_t * avrule, struct policy_file *fp)
 	uint32_t buf[32], len;
 	class_perm_node_t *cur;
 
+	if (avrule->specified & AVRULE_OP) {
+		ERR(fp->handle, "module policy does not support ioctl operation"
+				" rules and one was specified");
+		return POLICYDB_ERROR;
+	}
+
 	items = 0;
 	buf[items++] = cpu_to_le32(avrule->specified);
 	buf[items++] = cpu_to_le32(avrule->flags);
@@ -1514,7 +1579,7 @@ static int avrule_write(avrule_t * avrule, struct policy_file *fp)
 	cur = avrule->perms;
 	while (cur) {
 		items = 0;
-		buf[items++] = cpu_to_le32(cur->class);
+		buf[items++] = cpu_to_le32(cur->tclass);
 		buf[items++] = cpu_to_le32(cur->data);
 		items2 = put_entry(buf, sizeof(uint32_t), items, fp);
 		if (items2 != items)
@@ -1544,7 +1609,8 @@ static int avrule_write_list(avrule_t * avrules, struct policy_file *fp)
 
 	avrule = avrules;
 	while (avrule) {
-		avrule_write(avrule, fp);
+		if (avrule_write(avrule, fp))
+			return POLICYDB_ERROR;
 		avrule = avrule->next;
 	}
 
@@ -1880,7 +1946,7 @@ int policydb_write(policydb_t * p, struct policy_file *fp)
 	size_t items, items2, len;
 	struct policydb_compat_info *info;
 	struct policy_data pd;
-	char *policydb_str;
+	const char *policydb_str;
 
 	if (p->unsupported_format)
 		return POLICYDB_UNSUPPORTED;

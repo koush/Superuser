@@ -49,82 +49,6 @@ typedef struct expand_state {
 	int expand_neverallow;
 } expand_state_t;
 
-struct linear_probe {
-	filename_trans_t **table;	/* filename_trans chunks with same stype */
-	filename_trans_t **ends;	/* pointers to ends of **table chunks */
-	uint32_t length;		/* length of the table */
-};
-
-static int linear_probe_create(struct linear_probe *probe, uint32_t length)
-{
-	probe->table = calloc(length, sizeof(*probe->table));
-	if (probe->table == NULL)
-		return -1;
-
-	probe->ends = calloc(length, sizeof(*probe->ends));
-	if (probe->ends == NULL)
-		return -1;
-
-	probe->length = length;
-
-	return 0;
-}
-
-static void linear_probe_destroy(struct linear_probe *probe)
-{
-	if (probe->length == 0)
-		return;
-
-	free(probe->table);
-	free(probe->ends);
-	memset(probe, 0, sizeof(*probe));
-}
-
-static void linear_probe_insert(struct linear_probe *probe, uint32_t key,
-				filename_trans_t *data)
-{
-	assert(probe->length > key);
-
-	if (probe->table[key] != NULL) {
-		data->next = probe->table[key];
-		probe->table[key] = data;
-	} else {
-		probe->table[key] = probe->ends[key] = data;
-	}
-}
-
-static filename_trans_t *linear_probe_find(struct linear_probe *probe, uint32_t key)
-{
-	assert(probe->length > key);
-
-	return probe->table[key];
-}
-
-/* Returns all chunks stored in the *probe as single-linked list */
-static filename_trans_t *linear_probe_dump(struct linear_probe *probe,
-					   filename_trans_t **endp)
-{
-	uint32_t i;
-	filename_trans_t *result = NULL;
-	filename_trans_t *end = NULL;
-
-	for (i = 0; i < probe->length; i++) {
-		if (probe->table[i] != NULL) {
-			if (end == NULL)
-				end = probe->ends[i];
-			probe->ends[i]->next = result;
-			result = probe->table[i];
-			probe->table[i] = probe->ends[i] = NULL;
-		}
-	}
-
-	/* Incoherent result and end pointers indicates bug */
-	assert((result != NULL && end != NULL) || (result == NULL && end == NULL));
-
-	*endp = end;
-	return result;
-}
-
 static void expand_state_init(expand_state_t * state)
 {
 	memset(state, 0, sizeof(expand_state_t));
@@ -990,10 +914,11 @@ int mls_semantic_level_expand(mls_semantic_level_t * sl, mls_level_t * l,
 		}
 		for (i = cat->low - 1; i < cat->high; i++) {
 			if (!ebitmap_get_bit(&levdatum->level->cat, i)) {
-				ERR(h, "Category %s can not be associate with "
+				ERR(h, "Category %s can not be associated with "
 				    "level %s",
 				    p->p_cat_val_to_name[i],
 				    p->p_sens_val_to_name[l->sens - 1]);
+				return -1;
 			}
 			if (ebitmap_set_bit(&l->cat, i, 1)) {
 				ERR(h, "Out of memory!");
@@ -1459,20 +1384,10 @@ static int copy_role_trans(expand_state_t * state, role_trans_rule_t * rules)
 static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *rules)
 {
 	unsigned int i, j;
-	filename_trans_t *new_trans, *cur_trans, *end;
+	filename_trans_t *new_trans, *cur_trans;
 	filename_trans_rule_t *cur_rule;
 	ebitmap_t stypes, ttypes;
 	ebitmap_node_t *snode, *tnode;
-	struct linear_probe probe;
-
-	/*
-	 * Linear probing speeds-up finding filename_trans rules with certain
-	 * "stype" value.
-	 */
-	if (linear_probe_create(&probe, 4096)) { /* Assume 4096 is enough for most cases */
-		ERR(state->handle, "Out of memory!");
-		return -1;
-	}
 
 	cur_rule = rules;
 	while (cur_rule) {
@@ -1495,14 +1410,6 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 
 		mapped_otype = state->typemap[cur_rule->otype - 1];
 
-		if (ebitmap_length(&stypes) > probe.length) {
-			linear_probe_destroy(&probe);
-			if (linear_probe_create(&probe, ebitmap_length(&stypes))) {
-				ERR(state->handle, "Out of memory!");
-				return -1;
-			}
-		}
-
 		ebitmap_for_each_bit(&stypes, snode, i) {
 			if (!ebitmap_node_get_bit(snode, i))
 				continue;
@@ -1510,19 +1417,21 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				if (!ebitmap_node_get_bit(tnode, j))
 					continue;
 
-				cur_trans = linear_probe_find(&probe, i);
-				while (cur_trans != NULL) {
-					if ((cur_trans->ttype == j + 1) &&
+				cur_trans = state->out->filename_trans;
+				while (cur_trans) {
+					if ((cur_trans->stype == i + 1) &&
+					    (cur_trans->ttype == j + 1) &&
 					    (cur_trans->tclass == cur_rule->tclass) &&
 					    (!strcmp(cur_trans->name, cur_rule->name))) {
 						/* duplicate rule, who cares */
 						if (cur_trans->otype == mapped_otype)
 							break;
-						ERR(state->handle, "Conflicting filename trans rules %s %s %s : %s otype1:%s otype2:%s",
-						    cur_trans->name,
+
+						ERR(state->handle, "Conflicting name-based type_transition %s %s:%s \"%s\":  %s vs %s",
 						    state->out->p_type_val_to_name[i],
 						    state->out->p_type_val_to_name[j],
 						    state->out->p_class_val_to_name[cur_trans->tclass - 1],
+						    cur_trans->name,
 						    state->out->p_type_val_to_name[cur_trans->otype - 1],
 						    state->out->p_type_val_to_name[mapped_otype - 1]);
 
@@ -1540,6 +1449,8 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 					return -1;
 				}
 				memset(new_trans, 0, sizeof(*new_trans));
+				new_trans->next = state->out->filename_trans;
+				state->out->filename_trans = new_trans;
 
 				new_trans->name = strdup(cur_rule->name);
 				if (!new_trans->name) {
@@ -1550,14 +1461,7 @@ static int expand_filename_trans(expand_state_t *state, filename_trans_rule_t *r
 				new_trans->ttype = j + 1;
 				new_trans->tclass = cur_rule->tclass;
 				new_trans->otype = mapped_otype;
-				linear_probe_insert(&probe, i, new_trans);
 			}
-		}
-
-		cur_trans = linear_probe_dump(&probe, &end);
-		if (cur_trans != NULL) {
-			end->next = state->out->filename_trans;
-			state->out->filename_trans = cur_trans;
 		}
 
 		ebitmap_destroy(&stypes);
@@ -1699,13 +1603,29 @@ static int expand_range_trans(expand_state_t * state,
 */
 static avtab_ptr_t find_avtab_node(sepol_handle_t * handle,
 				   avtab_t * avtab, avtab_key_t * key,
-				   cond_av_list_t ** cond)
+				   cond_av_list_t ** cond,
+				   av_operations_t *operations)
 {
 	avtab_ptr_t node;
 	avtab_datum_t avdatum;
 	cond_av_list_t *nl;
+	int type_match = 0;
 
-	node = avtab_search_node(avtab, key);
+	/* AVTAB_OPNUM entries are not necessarily unique */
+	if (key->specified & AVTAB_OPNUM) {
+		node = avtab_search_node(avtab, key);
+		while (node) {
+			if (node->datum.ops->type == operations->type) {
+				type_match = 1;
+				break;
+			}
+			node = avtab_search_node_next(node, key->specified);
+		}
+		if (!type_match)
+			node = NULL;
+	} else {
+		node = avtab_search_node(avtab, key);
+	}
 
 	/* If this is for conditional policies, keep searching in case
 	   the node is part of my conditional avtab. */
@@ -1776,7 +1696,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 		    typemap ? typemap[cur->data - 1] : cur->data;
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
-		avkey.target_class = cur->class;
+		avkey.target_class = cur->tclass;
 		avkey.specified = spec;
 
 		conflict = 0;
@@ -1829,7 +1749,7 @@ static int expand_terule_helper(sepol_handle_t * handle,
 			return EXPAND_RULE_CONFLICT;
 		}
 
-		node = find_avtab_node(handle, avtab, &avkey, cond);
+		node = find_avtab_node(handle, avtab, &avkey, cond, NULL);
 		if (!node)
 			return -1;
 		if (enabled) {
@@ -1860,13 +1780,15 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				cond_av_list_t ** cond,
 				uint32_t stype, uint32_t ttype,
 				class_perm_node_t * perms, avtab_t * avtab,
-				int enabled)
+				int enabled, av_operations_t *operations)
 {
 	avtab_key_t avkey;
 	avtab_datum_t *avdatump;
+	avtab_operations_t *ops;
 	avtab_ptr_t node;
 	class_perm_node_t *cur;
 	uint32_t spec = 0;
+	unsigned int i;
 
 	if (specified & AVRULE_ALLOWED) {
 		spec = AVTAB_ALLOWED;
@@ -1880,6 +1802,22 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 		spec = AVTAB_AUDITDENY;
 	} else if (specified & AVRULE_NEVERALLOW) {
 		spec = AVTAB_NEVERALLOW;
+	} else if (specified & AVRULE_OPNUM_ALLOWED) {
+		spec = AVTAB_OPNUM_ALLOWED;
+	} else if (specified & AVRULE_OPNUM_AUDITALLOW) {
+		spec = AVTAB_OPNUM_AUDITALLOW;
+	} else if (specified & AVRULE_OPNUM_DONTAUDIT) {
+		if (handle && handle->disable_dontaudit)
+			return EXPAND_RULE_SUCCESS;
+		spec = AVTAB_OPNUM_DONTAUDIT;
+	} else if (specified & AVRULE_OPTYPE_ALLOWED) {
+		spec = AVTAB_OPTYPE_ALLOWED;
+	} else if (specified & AVRULE_OPTYPE_AUDITALLOW) {
+		spec = AVTAB_OPTYPE_AUDITALLOW;
+	} else if (specified & AVRULE_OPTYPE_DONTAUDIT) {
+		if (handle && handle->disable_dontaudit)
+			return EXPAND_RULE_SUCCESS;
+		spec = AVTAB_OPTYPE_DONTAUDIT;
 	} else {
 		assert(0);	/* unreachable */
 	}
@@ -1888,10 +1826,10 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 	while (cur) {
 		avkey.source_type = stype + 1;
 		avkey.target_type = ttype + 1;
-		avkey.target_class = cur->class;
+		avkey.target_class = cur->tclass;
 		avkey.specified = spec;
 
-		node = find_avtab_node(handle, avtab, &avkey, cond);
+		node = find_avtab_node(handle, avtab, &avkey, cond, operations);
 		if (!node)
 			return EXPAND_RULE_ERROR;
 		if (enabled) {
@@ -1921,6 +1859,20 @@ static int expand_avrule_helper(sepol_handle_t * handle,
 				avdatump->data &= ~cur->data;
 			else
 				avdatump->data = ~cur->data;
+		} else if (specified & AVRULE_OP) {
+			if (!avdatump->ops) {
+				ops = (avtab_operations_t *)
+					calloc(1, sizeof(avtab_operations_t));
+				if (!ops) {
+					ERR(handle, "Out of memory!");
+					return -1;
+				}
+				node->datum.ops = ops;
+			}
+			node->datum.ops->type = operations->type;
+			for (i = 0; i < ARRAY_SIZE(operations->perms); i++) {
+				node->datum.ops->perms[i] |= operations->perms[i];
+			}
 		} else {
 			assert(0);	/* should never occur */
 		}
@@ -1945,10 +1897,10 @@ static int expand_rule_helper(sepol_handle_t * handle,
 		if (!ebitmap_node_get_bit(snode, i))
 			continue;
 		if (source_rule->flags & RULE_SELF) {
-			if (source_rule->specified & AVRULE_AV) {
+			if (source_rule->specified & (AVRULE_AV | AVRULE_OP)) {
 				retval = expand_avrule_helper(handle, source_rule->specified,
 							      cond, i, i, source_rule->perms,
-							      dest_avtab, enabled);
+							      dest_avtab, enabled, source_rule->ops);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
@@ -1963,10 +1915,10 @@ static int expand_rule_helper(sepol_handle_t * handle,
 		ebitmap_for_each_bit(ttypes, tnode, j) {
 			if (!ebitmap_node_get_bit(tnode, j))
 				continue;
-			if (source_rule->specified & AVRULE_AV) {
+			if (source_rule->specified & (AVRULE_AV | AVRULE_OP)) {
 				retval = expand_avrule_helper(handle, source_rule->specified,
 							      cond, i, j, source_rule->perms,
-							      dest_avtab, enabled);
+							      dest_avtab, enabled, source_rule->ops);
 				if (retval != EXPAND_RULE_SUCCESS)
 					return retval;
 			} else {
@@ -2186,6 +2138,13 @@ static int ocontext_copy_xen(expand_state_t *state)
 				break;
 			case OCON_XEN_PCIDEVICE:
 				n->u.device = c->u.device;
+				break;
+			case OCON_XEN_DEVICETREE:
+				n->u.name = strdup(c->u.name);
+				if (!n->u.name) {
+					ERR(state->handle, "Out of memory!");
+					return -1;
+				}
 				break;
 			default:
 				/* shouldn't get here */
@@ -2671,8 +2630,8 @@ static int copy_neverallow(policydb_t * dest_pol, uint32_t * typemap,
 		if (!new_perm)
 			goto err;
 		class_perm_node_init(new_perm);
-		new_perm->class = cur_perm->class;
-		assert(new_perm->class);
+		new_perm->tclass = cur_perm->tclass;
+		assert(new_perm->tclass);
 
 		/* once we have modules with permissions we'll need to map the permissions (and classes) */
 		new_perm->data = cur_perm->data;
@@ -3196,18 +3155,31 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 {
 	avtab_ptr_t node;
 	avtab_datum_t *avd;
-	int rc;
+	avtab_operations_t *ops;
+	unsigned int i;
+	unsigned int type_match = 0;
 
-	node = avtab_search_node(a, k);
-	if (!node) {
-		rc = avtab_insert(a, k, d);
-		if (rc)
-			ERR(NULL, "Out of memory!");
-		return rc;
+	if (k->specified & AVTAB_OPNUM) {
+		/*
+		 * AVTAB_OPNUM entries are not necessarily unique.
+		 * find node with matching ops->type
+		 */
+		node = avtab_search_node(a, k);
+		while (node) {
+			if (node->datum.ops->type == d->ops->type) {
+				type_match = 1;
+				break;
+			}
+			node = avtab_search_node_next(node, k->specified);
+		}
+		if (!type_match)
+			node = NULL;
+	} else {
+		node = avtab_search_node(a, k);
 	}
 
-	if ((k->specified & AVTAB_ENABLED) !=
-	    (node->key.specified & AVTAB_ENABLED)) {
+	if (!node || ((k->specified & AVTAB_ENABLED) !=
+			(node->key.specified & AVTAB_ENABLED))) {
 		node = avtab_insert_nonunique(a, k, d);
 		if (!node) {
 			ERR(NULL, "Out of memory!");
@@ -3217,6 +3189,7 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 	}
 
 	avd = &node->datum;
+	ops = node->datum.ops;
 	switch (k->specified & ~AVTAB_ENABLED) {
 	case AVTAB_ALLOWED:
 	case AVTAB_AUDITALLOW:
@@ -3224,6 +3197,15 @@ static int expand_avtab_insert(avtab_t * a, avtab_key_t * k, avtab_datum_t * d)
 		break;
 	case AVTAB_AUDITDENY:
 		avd->data &= d->data;
+		break;
+	case AVTAB_OPNUM_ALLOWED:
+	case AVTAB_OPNUM_AUDITALLOW:
+	case AVTAB_OPNUM_DONTAUDIT:
+	case AVTAB_OPTYPE_ALLOWED:
+	case AVTAB_OPTYPE_AUDITALLOW:
+	case AVTAB_OPTYPE_DONTAUDIT:
+		for (i = 0; i < ARRAY_SIZE(ops->perms); i++)
+			ops->perms[i] |= d->ops->perms[i];
 		break;
 	default:
 		ERR(NULL, "Type conflict!");
@@ -3256,12 +3238,12 @@ static int expand_avtab_node(avtab_key_t * k, avtab_datum_t * d, void *args)
 	newkey.target_class = k->target_class;
 	newkey.specified = k->specified;
 
-	if (stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
+	if (stype && ttype && stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
 		/* Both are individual types, no expansion required. */
 		return expand_avtab_insert(expa, k, d);
 	}
 
-	if (stype->flavor != TYPE_ATTRIB) {
+	if (stype && stype->flavor != TYPE_ATTRIB) {
 		/* Source is an individual type, target is an attribute. */
 		newkey.source_type = k->source_type;
 		ebitmap_for_each_bit(tattr, tnode, j) {
@@ -3275,7 +3257,7 @@ static int expand_avtab_node(avtab_key_t * k, avtab_datum_t * d, void *args)
 		return 0;
 	}
 
-	if (ttype->flavor != TYPE_ATTRIB) {
+	if (ttype && ttype->flavor != TYPE_ATTRIB) {
 		/* Target is an individual type, source is an attribute. */
 		newkey.target_type = k->target_type;
 		ebitmap_for_each_bit(sattr, snode, i) {
@@ -3386,12 +3368,12 @@ int expand_cond_av_node(policydb_t * p,
 	newkey.target_class = k->target_class;
 	newkey.specified = k->specified;
 
-	if (stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
+	if (stype && ttype && stype->flavor != TYPE_ATTRIB && ttype->flavor != TYPE_ATTRIB) {
 		/* Both are individual types, no expansion required. */
 		return expand_cond_insert(newl, expa, k, d);
 	}
 
-	if (stype->flavor != TYPE_ATTRIB) {
+	if (stype && stype->flavor != TYPE_ATTRIB) {
 		/* Source is an individual type, target is an attribute. */
 		newkey.source_type = k->source_type;
 		ebitmap_for_each_bit(tattr, tnode, j) {
@@ -3405,7 +3387,7 @@ int expand_cond_av_node(policydb_t * p,
 		return 0;
 	}
 
-	if (ttype->flavor != TYPE_ATTRIB) {
+	if (ttype && ttype->flavor != TYPE_ATTRIB) {
 		/* Target is an individual type, source is an attribute. */
 		newkey.target_type = k->target_type;
 		ebitmap_for_each_bit(sattr, snode, i) {

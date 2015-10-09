@@ -40,29 +40,47 @@
 #ifndef _SEPOL_POLICYDB_AVTAB_H_
 #define _SEPOL_POLICYDB_AVTAB_H_
 
+#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <stdint.h>
+
+__BEGIN_DECLS
 
 typedef struct avtab_key {
 	uint16_t source_type;
 	uint16_t target_type;
 	uint16_t target_class;
-#define AVTAB_ALLOWED     1
-#define AVTAB_AUDITALLOW  2
-#define AVTAB_AUDITDENY   4
-#define AVTAB_NEVERALLOW 128
-#define AVTAB_AV         (AVTAB_ALLOWED | AVTAB_AUDITALLOW | AVTAB_AUDITDENY)
-#define AVTAB_TRANSITION 16
-#define AVTAB_MEMBER     32
-#define AVTAB_CHANGE     64
-#define AVTAB_TYPE       (AVTAB_TRANSITION | AVTAB_MEMBER | AVTAB_CHANGE)
-#define AVTAB_ENABLED_OLD 0x80000000
-#define AVTAB_ENABLED    0x8000	/* reserved for used in cond_avtab */
+#define AVTAB_ALLOWED		0x0001
+#define AVTAB_AUDITALLOW	0x0002
+#define AVTAB_AUDITDENY		0x0004
+#define AVTAB_NEVERALLOW	0x0080
+#define AVTAB_AV		(AVTAB_ALLOWED | AVTAB_AUDITALLOW | AVTAB_AUDITDENY)
+#define AVTAB_TRANSITION	0x0010
+#define AVTAB_MEMBER		0x0020
+#define AVTAB_CHANGE		0x0040
+#define AVTAB_TYPE		(AVTAB_TRANSITION | AVTAB_MEMBER | AVTAB_CHANGE)
+#define AVTAB_OPNUM_ALLOWED	0x0100
+#define AVTAB_OPNUM_AUDITALLOW	0x0200
+#define AVTAB_OPNUM_DONTAUDIT	0x0400
+#define AVTAB_OPNUM		(AVTAB_OPNUM_ALLOWED | AVTAB_OPNUM_AUDITALLOW | AVTAB_OPNUM_DONTAUDIT)
+#define AVTAB_OPTYPE_ALLOWED	0x1000
+#define AVTAB_OPTYPE_AUDITALLOW	0x2000
+#define AVTAB_OPTYPE_DONTAUDIT	0x4000
+#define AVTAB_OPTYPE		(AVTAB_OPTYPE_ALLOWED | AVTAB_OPTYPE_AUDITALLOW | AVTAB_OPTYPE_DONTAUDIT)
+#define AVTAB_OP		(AVTAB_OPNUM | AVTAB_OPTYPE)
+#define AVTAB_ENABLED_OLD	0x80000000
+#define AVTAB_ENABLED		0x8000	/* reserved for used in cond_avtab */
 	uint16_t specified;	/* what fields are specified */
 } avtab_key_t;
 
+typedef struct avtab_operations {
+	uint8_t type;
+	uint32_t perms[8];
+} avtab_operations_t;
+
 typedef struct avtab_datum {
 	uint32_t data;		/* access vector or type */
+	avtab_operations_t *ops;
 } avtab_datum_t;
 
 typedef struct avtab_node *avtab_ptr_t;
@@ -81,7 +99,7 @@ typedef struct avtab {
 	avtab_ptr_t *htable;
 	uint32_t nel;		/* number of elements */
 	uint32_t nslot;         /* number of hash slots */
-	uint16_t mask;          /* mask to compute hash func */
+	uint32_t mask;          /* mask to compute hash func */
 } avtab_t;
 
 extern int avtab_init(avtab_t *);
@@ -117,11 +135,13 @@ extern avtab_ptr_t avtab_search_node(avtab_t * h, avtab_key_t * key);
 
 extern avtab_ptr_t avtab_search_node_next(avtab_ptr_t node, int specified);
 
-#define MAX_AVTAB_HASH_BITS 13
+#define MAX_AVTAB_HASH_BITS 20
 #define MAX_AVTAB_HASH_BUCKETS (1 << MAX_AVTAB_HASH_BITS)
 #define MAX_AVTAB_HASH_MASK (MAX_AVTAB_HASH_BUCKETS-1)
-#define MAX_AVTAB_SIZE MAX_AVTAB_HASH_BUCKETS
+/* avtab_alloc uses one bucket per 2-4 elements, so adjust to get maximum buckets */
+#define MAX_AVTAB_SIZE (MAX_AVTAB_HASH_BUCKETS << 1)
 
+__END_DECLS
 #endif				/* _AVTAB_H_ */
 
 /* FLASK */

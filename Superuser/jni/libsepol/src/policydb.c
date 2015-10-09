@@ -55,7 +55,7 @@
 #include "mls.h"
 
 #define POLICYDB_TARGET_SZ   ARRAY_SIZE(policydb_target_strings)
-char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
+const char *policydb_target_strings[] = { POLICYDB_STRING, POLICYDB_XEN_STRING };
 
 /* These need to be updated if SYM_NUM or OCON_NUM changes */
 static struct policydb_compat_info policydb_compat[] = {
@@ -64,6 +64,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	 .version = POLICYDB_VERSION_BOUNDARY,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_XEN_PCIDEVICE + 1,
+	 .target_platform = SEPOL_TARGET_XEN,
+	 },
+	{
+	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_XEN_DEVICETREE,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_XEN_DEVICETREE + 1,
 	 .target_platform = SEPOL_TARGET_XEN,
 	 },
 	{
@@ -167,6 +174,13 @@ static struct policydb_compat_info policydb_compat[] = {
 	{
 	 .type = POLICY_KERN,
 	 .version = POLICYDB_VERSION_CONSTRAINT_NAMES,
+	 .sym_num = SYM_NUM,
+	 .ocon_num = OCON_NODE6 + 1,
+	 .target_platform = SEPOL_TARGET_SELINUX,
+	},
+	{
+	 .type = POLICY_KERN,
+	 .version = POLICYDB_VERSION_IOCTL_OPERATIONS,
 	 .sym_num = SYM_NUM,
 	 .ocon_num = OCON_NODE6 + 1,
 	 .target_platform = SEPOL_TARGET_SELINUX,
@@ -1260,7 +1274,7 @@ void ocontext_xen_free(ocontext_t **ocontexts)
 			c = c->next;
 			context_destroy(&ctmp->context[0]);
 			context_destroy(&ctmp->context[1]);
-			if (i == OCON_ISID)
+			if (i == OCON_ISID || i == OCON_XEN_DEVICETREE)
 				free(ctmp->u.name);
 			free(ctmp);
 		}
@@ -2464,7 +2478,7 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 	policydb_t *p, struct policy_file *fp)
 {
 	unsigned int i, j;
-	size_t nel;
+	size_t nel, len;
 	ocontext_t *l, *c;
 	uint32_t buf[8];
 	int rc;
@@ -2514,11 +2528,20 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 					return -1;
 				break;
 			case OCON_XEN_IOMEM:
-				rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
-				if (rc < 0)
-					return -1;
-				c->u.iomem.low_iomem = le32_to_cpu(buf[0]);
-				c->u.iomem.high_iomem = le32_to_cpu(buf[1]);
+				if (p->policyvers >= POLICYDB_VERSION_XEN_DEVICETREE) {
+					uint64_t b64[2];
+					rc = next_entry(b64, fp, sizeof(uint64_t) * 2);
+					if (rc < 0)
+						return -1;
+					c->u.iomem.low_iomem = le64_to_cpu(b64[0]);
+					c->u.iomem.high_iomem = le64_to_cpu(b64[1]);
+				} else {
+					rc = next_entry(buf, fp, sizeof(uint32_t) * 2);
+					if (rc < 0)
+						return -1;
+					c->u.iomem.low_iomem = le32_to_cpu(buf[0]);
+					c->u.iomem.high_iomem = le32_to_cpu(buf[1]);
+				}
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
@@ -2528,6 +2551,22 @@ static int ocontext_read_xen(struct policydb_compat_info *info,
 				if (rc < 0)
 					return -1;
 				c->u.device = le32_to_cpu(buf[0]);
+				if (context_read_and_validate
+				    (&c->context[0], p, fp))
+					return -1;
+				break;
+			case OCON_XEN_DEVICETREE:
+				rc = next_entry(buf, fp, sizeof(uint32_t));
+				if (rc < 0)
+					return -1;
+				len = le32_to_cpu(buf[0]);
+				c->u.name = malloc(len + 1);
+				if (!c->u.name)
+					return -1;
+				rc = next_entry(c->u.name, fp, len);
+				if (rc < 0)
+					return -1;
+				c->u.name[len] = 0;
 				if (context_read_and_validate
 				    (&c->context[0], p, fp))
 					return -1;
@@ -3039,7 +3078,7 @@ static avrule_t *avrule_read(policydb_t * p
 			goto bad;
 		}
 
-		cur->class = le32_to_cpu(buf[0]);
+		cur->tclass = le32_to_cpu(buf[0]);
 		cur->data = le32_to_cpu(buf[1]);
 
 		if (!tail) {
