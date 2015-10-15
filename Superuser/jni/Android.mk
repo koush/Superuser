@@ -14,9 +14,7 @@ LOCAL_C_INCLUDES := jni/libselinux/include/ jni/libsepol/include/ jni/sqlite3/
 LOCAL_SRC_FILES := su/su.c su/daemon.c su/activity.c su/db.c su/utils.c su/pts.c sqlite3/sqlite3.c
 LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION -DREQUESTOR=\"$(SUPERUSER_PACKAGE)\"
 
-ifdef SUPERUSER_PACKAGE_PREFIX
-  LOCAL_CFLAGS += -DREQUESTOR_PREFIX=\"$(SUPERUSER_PACKAGE_PREFIX)\"
-endif
+LOCAL_CFLAGS += -DREQUESTOR=\"$(shell cat packageName)\"
 
 ifdef SUPERUSER_EMBEDDED
   LOCAL_CFLAGS += -DSUPERUSER_EMBEDDED
