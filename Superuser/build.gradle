@@ -40,8 +40,10 @@ android {
     buildToolsVersion '22.0.1'
 
     defaultConfig {
+        File f = new File("packageName")
         minSdkVersion 14
         targetSdkVersion 22
-		applicationId "com.thirdparty.superuser"
+        if(f.exists())
+            applicationId f.text
     }
 }
