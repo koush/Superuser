@@ -25,6 +25,15 @@ android {
         exclude 'META-INF/beans.xml'
     }
 
+    signingConfigs {
+        release {
+	        storeFile file(System.getenv("KEYSTORE"))
+            storePassword new String(System.console().readPassword("\n\$ Enter store password: "))
+            keyAlias "su"
+            keyPassword new String(System.console().readPassword("\n\$ Enter key password: "))
+        }
+    }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -45,5 +54,6 @@ android {
         targetSdkVersion 22
         if(f.exists())
             applicationId f.text
+        signingConfig signingConfigs.release
     }
 }
