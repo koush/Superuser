@@ -318,7 +318,7 @@ public class MultitaskSuRequestActivity extends Activity {
 
                     //int protocolVersion = payload.getAsInteger("version");
                     mCallerUid = payload.getAsInteger("from.uid");
-                    mDesiredUid = payload.getAsByte("to.uid");
+                    mDesiredUid = payload.getAsInteger("to.uid");
                     mDesiredCmd = payload.getAsString("command");
                     //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
