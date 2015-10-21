@@ -23,21 +23,6 @@ endif
 LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
 include $(BUILD_EXECUTABLE)
 
-include $(CLEAR_VARS)
-
-LOCAL_MODULE := placeholder
-LOCAL_MODULE_TAGS := eng debug optional
-LOCAL_FORCE_STATIC_EXECUTABLE := true
-LOCAL_STATIC_LIBRARIES := libc libcutils libselinux libsepol
-LOCAL_SRC_FILES := placeholder/placeholder.c placeholder/policy.c
-#LOCAL_C_INCLUDES := external/libsepol/include
-LOCAL_C_INCLUDES := jni/libselinux/include/ jni/libsepol/include/
-LOCAL_CFLAGS := -std=gnu99
-
-LOCAL_MODULE_PATH := $(TARGET_OUT_OPTIONAL_EXECUTABLES)
-include $(BUILD_EXECUTABLE)
-
-
 SYMLINKS := $(addprefix $(TARGET_OUT)/bin/,su)
 $(SYMLINKS):
 	@echo "Symlink: $@ -> /system/xbin/su"
