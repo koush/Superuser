@@ -37,6 +37,10 @@
 #include "su.h"
 #include "utils.h"
 
+extern int is_daemon;
+extern int daemon_from_uid;
+extern int daemon_from_pid;
+
 unsigned get_shell_uid() {
   struct passwd* ppwd = getpwnam("shell");
   if (NULL == ppwd) {
@@ -132,6 +136,11 @@ static int from_init(struct su_initiator *from) {
 
     from->uid = getuid();
     from->pid = getppid();
+
+    if (is_daemon) {
+        from->uid = daemon_from_uid;
+        from->pid = daemon_from_pid;
+    }
 
     /* Get the command line */
     snprintf(path, sizeof(path), "/proc/%u/cmdline", from->pid);
@@ -580,10 +589,27 @@ static void fork_for_samsung(void)
 }
 
 int main(int argc, char *argv[]) {
+    if (argc == 2 && strcmp(argv[1], "--daemon") == 0) {
+        return run_daemon();
+    }
     return su_main(argc, argv);
 }
 
-int su_main(int argc, char **argv) {
+int su_main(int argc, char *argv[]) {
+    int ppid = getppid();
+	if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) ||
+			(get_api_version() >= 18 && getuid() == AID_SHELL) ||
+			get_api_version() >= 19) {
+		// attempt to connect to daemon...
+		LOGD("starting daemon client %d %d", getuid(), geteuid());
+		return connect_daemon(argc, argv, ppid);
+	} else {
+		return su_main_nodaemon(argc, argv);
+	}
+
+}
+
+int su_main_nodaemon(int argc, char **argv) {
     int ppid = getppid();
     fork_for_samsung();
 
