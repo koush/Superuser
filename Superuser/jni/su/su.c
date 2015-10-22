@@ -1,4 +1,6 @@
+// vim: set ts=4 expandtab sw=4 :
 /*
+** Copyright 2015, Pierre-Hugues Husson <phh@phh.me>
 ** Copyright 2010, Adam Shanks (@ChainsDD)
 ** Copyright 2008, Zinx Verituse (@zinxv)
 **
