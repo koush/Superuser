@@ -701,7 +701,7 @@ int su_main_nodaemon(int argc, char **argv) {
         { NULL, 0, NULL, 0 },
     };
 
-    while ((c = getopt_long(argc, argv, "+c:hlmps:Vvu", long_opts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "+c:hlmps:Vvuz:", long_opts, NULL)) != -1) {
         switch(c) {
         case 'c':
             ctx.to.shell = DEFAULT_SHELL;
@@ -742,8 +742,9 @@ int su_main_nodaemon(int argc, char **argv) {
                 break;
             }
             exit(EXIT_SUCCESS);
-		case 'z':
-			ctx.to.context = optarg;
+        case 'z':
+            ctx.to.context = optarg;
+            break;
         default:
             /* Bionic getopt_long doesn't terminate its error output by newline */
             fprintf(stderr, "\n");
