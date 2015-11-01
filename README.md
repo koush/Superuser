@@ -93,3 +93,8 @@ This project is in REALLY early state, though some points have to be mentioned:
 * Any issue discussed MUST have an entry in github bugtracker
 * There will be security flaws. If you find one, please first discuss it with me privately (by mail or IRC).
 * If you feel you need to be aware of security flaws before disclosure, please contact me, I might create a dedicated mailing list.
+
+
+## Organisation
+
+https://trello.com/b/adDbOmV0/superuser
