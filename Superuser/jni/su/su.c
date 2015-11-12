@@ -660,6 +660,12 @@ int su_main_nodaemon(int argc, char **argv) {
 
     LOGD("su invoked.");
 
+    //Chainfire compatibility
+    if(argc >= 3 && strcmp(argv[1], "-cn") == 0) {
+        argc-=2;
+        argv+=2;
+    }
+
     struct su_context ctx = {
         .from = {
             .pid = -1,
