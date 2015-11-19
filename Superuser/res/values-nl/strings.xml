@@ -58,7 +58,6 @@
   <string name="toast">Toast-melding</string>
   <string name="notification">Statusbalkmelding</string>
   <string name="no_notification">Geen melding</string>
-  <string name="developer_warning">Waarschuwing voor de ontwikkelaar:\nandroid.permission.ACCESS_SUP ERUSER\nniet opgegeven in het manifest</string>
   <string name="superuser_description">volledige toegang tot apparaatopslag en -mogelijkheden</string>
   <string name="superuser_description_more">Superuser verleent volledige toegang tot alle (opslag)mogelijkheden van uw apparaat, inclusief beveiligde en kwetsbare hardware-elementen. Deze machtiging is mogelijk gevaarlijk.</string>
   <string name="automatic_response">Reactie op verzoeken</string>

@@ -42,9 +42,6 @@
   <string name="toast">提示</string>
   <string name="notification">通知</string>
   <string name="no_notification">不显示通知</string>
-  <string name="developer_warning">"开发人员警告：
-android.permission.ACCESS_SUPERUSER
-在 manifest 中未定义。"</string>
   <string name="superuser_description">对所有设备功能和存储的完整权限</string>
   <string name="superuser_description_more">超级用户授予访问你的设备的所有功能和存储设备的完整权限，包括加密和敏感硬件设备。此许可有潜在的风险。</string>
   <string name="automatic_response">自动响应</string>

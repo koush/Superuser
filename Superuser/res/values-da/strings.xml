@@ -58,7 +58,6 @@
   <string name="toast">Toast</string>
   <string name="notification">Notifikation</string>
   <string name="no_notification">Ingen notifikation vil blive vist</string>
-  <string name="developer_warning">Udvikler-advarsel:\nandroid.permission.ACCESS_SUPERUSER\ner ikke deklareret i manifestet.</string>
   <string name="superuser_description">fuld adgang til alle enheds-funktioner og lager</string>
   <string name="superuser_description_more">Superuser giver fuld adgang til alle enheds-funktioner og lager, inklusiv de sikre og følsomme hardware-elementer af din enhed. Denne tilladelse kan være farlig.</string>
   <string name="automatic_response">Automatisk svar</string>

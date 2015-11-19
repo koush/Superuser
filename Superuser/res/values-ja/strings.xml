@@ -58,7 +58,6 @@
   <string name="toast">トースト</string>
   <string name="notification">通知</string>
   <string name="no_notification">通知を表示しない</string>
-  <string name="developer_warning">開発者警告:\nandroid.permission.ACCESS_SUPERUSER\nがマニフェストで宣言されていません。</string>
   <string name="superuser_description">すべてのデバイスの機能とストレージへの完全なアクセス許可</string>
   <string name="superuser_description_more">スーパーユーザーはセキュリティーで保護されている繊細なハードウェア要素を含めた端末のすべての機能とストレージへの完全なアクセスを許可します。この権限は潜在的に危険です。</string>
   <string name="automatic_response">自動応答</string>

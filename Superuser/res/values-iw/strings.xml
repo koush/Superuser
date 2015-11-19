@@ -58,7 +58,6 @@
   <string name="toast">דיווח</string>
   <string name="notification">התראות</string>
   <string name="no_notification">התראות לא יוצגו</string>
-  <string name="developer_warning">אזהרת מפתחים: \nandroid.permission.ACCESS_SUPERUSER\n הצהיר במניפסט.</string>
   <string name="superuser_description">הרשאות מלאות לכל תכונות המכשיר והאחסון</string>
   <string name="superuser_description_more">Superuser מעניק גישה מלאה לכל תכונות המכשיר והאחסון, כולל רכיבי חומרה מאובטחים ורגישים של המכשיר. הרשאה זו עלולה להיות מסוכנת.</string>
   <string name="automatic_response">תגובה אוטומטית</string>

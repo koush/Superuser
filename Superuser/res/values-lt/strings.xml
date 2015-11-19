@@ -58,7 +58,6 @@
   <string name="toast">Informacinis langelis</string>
   <string name="notification">Pranešimas</string>
   <string name="no_notification">Pranešimas nebus rodomas</string>
-  <string name="developer_warning">Kūrėjo Įspėjimas:\nandroid.permission.ACCESS_SUPERUSER\nnedeklaruotas manifeste.</string>
   <string name="superuser_description">visos teisės į visas įrenginio funkcijas, saugyklą</string>
   <string name="superuser_description_more">„Superuser“ suteikiamos visos prieigos į visas įrenginio funkcijas, saugyklą. Šis leidimas gali būti pavojingas.</string>
   <string name="automatic_response">Automatinis atsakymas</string>

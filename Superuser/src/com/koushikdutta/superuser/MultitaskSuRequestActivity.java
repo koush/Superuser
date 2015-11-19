@@ -144,8 +144,6 @@ public class MultitaskSuRequestActivity extends Activity {
         new File(mSocketPath).delete();
     }
 
-    public static final String PERMISSION = "android.permission.ACCESS_SUPERUSER";
-
     boolean mRequestReady;
     void requestReady() {
         findViewById(R.id.incoming).setVisibility(View.GONE);
@@ -181,8 +179,6 @@ public class MultitaskSuRequestActivity extends Activity {
         ((TextView)findViewById(R.id.uid_header)).setText(Integer.toString(mDesiredUid));
         ((TextView)findViewById(R.id.command_header)).setText(mDesiredCmd);
 
-        boolean superuserDeclared = false;
-        boolean granted = false;
         if (pkgs != null && pkgs.length > 0) {
             for (String pkg: pkgs) {
                 try {
@@ -195,17 +191,6 @@ public class MultitaskSuRequestActivity extends Activity {
                     ((TextView)findViewById(R.id.app_header)).setText(pi.applicationInfo.loadLabel(pm));
                     ((TextView)findViewById(R.id.package_header)).setText(pi.packageName);
 
-                    if (pi.requestedPermissions != null) {
-                        for (String perm: pi.requestedPermissions) {
-                            if (PERMISSION.equals(perm)) {
-                                superuserDeclared = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    granted |= checkPermission(PERMISSION, mPid, mCallerUid) == PackageManager.PERMISSION_GRANTED;
-
                     // could display them all, but screw it...
                     // maybe a better ux for this later
                     break;
@@ -216,16 +201,10 @@ public class MultitaskSuRequestActivity extends Activity {
             findViewById(R.id.unknown).setVisibility(View.GONE);
         }
 
-        if (!superuserDeclared) {
-            findViewById(R.id.developer_warning).setVisibility(View.VISIBLE);
-        }
-
         // automatic response
         switch (Settings.getAutomaticResponse(MultitaskSuRequestActivity.this)) {
         case Settings.AUTOMATIC_RESPONSE_ALLOW:
-//            // automatic response and pin can not be used together
-//            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
-//                break;
+            // automatic response and pin can not be used together
             // check if the permission must be granted
             Log.i(LOGTAG, "Automatically allowing due to user preference");
             mHandler.post(new Runnable() {

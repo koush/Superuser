@@ -58,7 +58,6 @@
   <string name="toast">Alertă</string>
   <string name="notification">Notificare</string>
   <string name="no_notification">Nici o notificare nu va fi afişată</string>
-  <string name="developer_warning">Avertizare Dezvoltator:\nandroid.permission.ACCESS_SUPERUSER\nnu este declarat în manifest.</string>
   <string name="superuser_description">permisiuni depline pentru toate caracteristicile dispozitivului şi stocare</string>
   <string name="superuser_description_more">Superuser acordă acces deplin pentru toate caracteristicile dispozitivului şi stocare, inclusiv elementele sigure și sensibile hardware ale dispozitivului dvs. Această permisiune este potențial periculoasă.</string>
   <string name="automatic_response">Răspuns automat</string>

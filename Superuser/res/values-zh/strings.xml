@@ -42,7 +42,6 @@
   <string name="toast">彈出訊息（Toast）</string>
   <string name="notification">通知（Notification）</string>
   <string name="no_notification">不會顯示通知</string>
-  <string name="developer_warning">開發者警告：\n還沒有在 manifest 宣告\nandroid.permission.ACCESS_SUPERUSER</string>
   <string name="superuser_description">所有裝置功能和儲存空間的全部權限</string>
   <string name="superuser_description_more">超級使用者獲得所有裝置功能和儲存空間的訪問權限，包括裝置安全和敏感的硬件元素。這個權限是有潛在風險。</string>
   <string name="automatic_response">自動回應</string>

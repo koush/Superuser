@@ -57,7 +57,6 @@
   <string name="toast">Toast</string>
   <string name="notification">Notification</string>
   <string name="no_notification">No notification will be shown</string>
-  <string name="developer_warning">Developer Warning:\nandroid.permission.ACCESS_SUPERUSER\nnot declared in manifest.</string>
   <string name="superuser_description">full permissions to all device features and storage</string>
   <string name="superuser_description_more">Superuser grants full access to all device features and storage, including the secure and sensitive hardware elements of your device. This permission is potentially dangerous.</string>
   <string name="automatic_response">Automatic Response</string>

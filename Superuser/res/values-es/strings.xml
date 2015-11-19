@@ -58,7 +58,6 @@
   <string name="toast">Notificación emergente</string>
   <string name="notification">Barra de estado</string>
   <string name="no_notification">No se mostrará ninguna notificación</string>
-  <string name="developer_warning">Advertencia al desarrollador:\nandroid.permission.ACCESS_SUPERUSER\nno declarado en manifest.</string>
   <string name="superuser_description">Acceso completo a todas las funciones y almacenamiento del dispositivo</string>
   <string name="superuser_description_more">Superusuario permite el acceso a todas las funciones y almacenamiento del dispositivo, incluyendo los elementos de hardware seguros y sensibles del dispositivo. Este permiso es potencialmente peligroso.</string>
   <string name="automatic_response">Respuesta automática</string>

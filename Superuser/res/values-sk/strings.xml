@@ -58,7 +58,6 @@
   <string name="toast">Toast</string>
   <string name="notification">Oznámenie</string>
   <string name="no_notification">Žiadne oznámenie nebude zobrazené</string>
-  <string name="developer_warning">Varovanie pre vývojara:\nandroid.permission.ACCESS_SUPERUSER\n povolenie nie je deklarované v manifeste.</string>
   <string name="superuser_description">plné povolenia pre všetky funkcie zariadenia a úložisko</string>
   <string name="superuser_description_more">Superuser povolí plný prístup pre všetky funkcie zariadenia a úložisko, vrátane bezpečnostných a citlivých hardvérových prvkov zariadenia. Toto povolenie je potenciálne nebezpečné.</string>
   <string name="automatic_response">Automatická odozva</string>

@@ -58,7 +58,6 @@
   <string name="toast">Opspring kennisgewing</string>
   <string name="notification">Kennisgewing</string>
   <string name="no_notification">Geen kennisgewings sal vertoon word nie</string>
-  <string name="developer_warning">Ontwikkelaar Waarskuwing:\nandroid.permission.ACCESS_SUPERUSER\nis nie in program \'manifest\' verklaar nie.</string>
   <string name="superuser_description">Volle regte aan alle toestel funksies en stoorspasie</string>
   <string name="superuser_description_more">Superuser verleen volle (Administrasie) toegang tot alle toestel funksies en stoorspasie, insluitend veilige en sensitiewe hardeware elemente van jou toestel. Hierdie toestemming kan potensieel gevaarlik wees.</string>
   <string name="automatic_response">Outomatiese reaksie</string>
