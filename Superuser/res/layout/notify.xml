@@ -70,13 +70,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/holo_blue_dark"
             android:orientation="vertical" >
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:background="@color/background_dark"
+        android:background="@color/holo_blue_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
