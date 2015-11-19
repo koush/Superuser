@@ -81,7 +81,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
+            android:background="@color/holo_blue_bright"
             android:orientation="vertical" >
         </LinearLayout>
     </LinearLayout>
@@ -108,7 +108,7 @@
             <LinearLayout
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@android:color/darker_gray" >
+                android:background="@color/holo_blue_bright" >
             </LinearLayout>
         </LinearLayout>
 
