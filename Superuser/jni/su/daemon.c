@@ -33,6 +33,7 @@
 #include <pwd.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#include <sys/sendfile.h>
 #include <stdarg.h>
 #include <sys/types.h>
 #include <pthread.h>
@@ -410,11 +411,63 @@ static int daemon_accept(int fd) {
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
 
+static int copy_file(const char* src, const char* dst, int mode) {
+	int ifd = open(src, O_RDONLY);
+	if(ifd<0)
+		return 1;
+	int ofd = open(dst, O_WRONLY|O_CREAT, mode);
+	if(ofd<0)
+		return 1;
+	size_t s = lseek(ifd, 0, SEEK_END);
+	if(s<0)
+		return 1;
+	lseek(ifd, 0, SEEK_SET);
+	int ret = sendfile(ofd, ifd, NULL, s);
+	if(ret<0)
+		return 1;
+	close(ofd);
+	close(ifd);
+	return 0;
+}
+
+static void prepare_bind() {
+	int ret = 0;
+	//Check if there is a use to mount bind
+	if(access("/system/xbin/su", R_OK) != 0)
+		return;
+
+	ret = mkdir("/dev/su", 0700);
+
+	ret = copy_file("/sbin/su", "/dev/su/su", 0755);
+	if(ret) {
+		PLOGE("Failed to copy su");
+		return;
+	}
+
+	ret = setfilecon("/dev/su/su", "u:object_r:system_file:s0");
+	if(ret) {
+		LOGE("Failed to set file context");
+		return;
+	}
+
+	ret = mount("/dev/su/su", "/system/xbin/su", "", MS_BIND, NULL);
+	if(ret) {
+		LOGE("Failed to mount bind");
+		return;
+	}
+}
+
+static void prepare() {
+	prepare_bind();
+}
+
 int run_daemon() {
     if (getuid() != 0 || getgid() != 0) {
         PLOGE("daemon requires root. uid/gid not root");
         return -1;
     }
+
+	prepare();
 
     int fd;
     struct sockaddr_un sun;
