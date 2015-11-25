@@ -8,6 +8,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := su
 LOCAL_MODULE_TAGS := eng debug optional
+LOCAL_LDFLAGS := -static
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc libcutils libselinux
 LOCAL_C_INCLUDES := jni/libselinux/include/ jni/libsepol/include/ jni/sqlite3/
