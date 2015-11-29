@@ -443,6 +443,7 @@ static void prepare_bind() {
 		PLOGE("Failed to copy su");
 		return;
 	}
+	chmod("/dev/su/su", 0755);
 
 	ret = setfilecon("/dev/su/su", "u:object_r:system_file:s0");
 	if(ret) {
