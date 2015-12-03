@@ -12,8 +12,8 @@ LOCAL_LDFLAGS := -static
 LOCAL_FORCE_STATIC_EXECUTABLE := true
 LOCAL_STATIC_LIBRARIES := libc libcutils libselinux
 LOCAL_C_INCLUDES := jni/libselinux/include/ jni/libsepol/include/ jni/sqlite3/
-LOCAL_SRC_FILES := su/su.c su/daemon.c su/activity.c su/db.c su/utils.c su/pts.c sqlite3/sqlite3.c
-LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION
+LOCAL_SRC_FILES := su/su.c su/daemon.c su/activity.c su/db.c su/utils.c su/pts.c sqlite3/sqlite3.c su/hacks.c
+LOCAL_CFLAGS := -DSQLITE_OMIT_LOAD_EXTENSION -std=gnu11
 
 LOCAL_CFLAGS += -DREQUESTOR=\"$(shell cat packageName)\"
 

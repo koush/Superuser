@@ -488,6 +488,8 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     char *arg0;
     int argc, err;
 
+    hacks_update_context(ctx);
+
     umask(ctx->umask);
     int send_to_app = 1;
 
@@ -758,6 +760,7 @@ int su_main_nodaemon(int argc, char **argv) {
             usage(2);
         }
     }
+    hacks_init();
     if (optind < argc && !strcmp(argv[optind], "-")) {
         ctx.to.login = 1;
         optind++;
