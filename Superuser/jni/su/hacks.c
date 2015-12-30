@@ -22,6 +22,7 @@ void hacks_init() {
 	getcwd(oldCwd, sizeof(oldCwd));
 	chdir("/data/data");
 	for(int i=0; i<(sizeof(apps_list)/sizeof(apps_list[0])); ++i) {
+		apps_list[i].uid = -1;
 		struct stat st_buf;
 		int ret = stat(apps_list[i].package, &st_buf);
 		LOGW("hacks: Testing (%s:%d:%d)", apps_list[i].package, ret, st_buf.st_uid);
