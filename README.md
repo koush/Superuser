@@ -29,8 +29,6 @@ Make sure the SDK Platform for API 19 is installed, through the Android SDK Mana
 
 ## Building the su and placeholder binaries
 
-You can use ant as shown above, to build the binary, but it can also be built without building the APK.
-
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
 * $ cd /path/to/src/
@@ -57,13 +55,28 @@ applicationId "com.thirdparty.superuser"
 
 ## How to install?
 
-At the moment, I'm not sure this SuperUser is stable enough for ready-to-flash zip, though I'll probably make one.
-To install it, here are the needed steps:
+You can install su in various different ways. All are not listed here.
+
+### Editing /system partition, and using placeholder binary
+
+One way is through placeholder binary. It doesn't require to modify boot.img, only system partition.
+This doesn't work on Android M, and is considered obsolete. (SELinux policies aren't keeping up)
+
+To install it this way, here are the needed steps:
 - Rename /system/bin/app_process32 to /system/bin/app_process32.old
 - Copy placeholder to system/bin/app_process32
 - Ensure permissions of app_process32 are the same as of app_process32.old, including SELinux attributes (should be 0755 u:object_r:zygote_exec:s0)
 - Put su file in system/xbin/
 - Add /system/xbin/su --daemon in install-recovery.sh
+
+### From sources
+
+Please refer to https://github.com/seSuperuser/AOSP-SU-PATCH/
+
+### Editing boot partition
+
+Please refer to https://github.com/phhusson/super-bootimg/
+
 
 ## TODO List
 
