@@ -373,6 +373,23 @@ static int daemon_accept(int fd) {
 
     int ptsfd;
     if (pts_slave[0]) {
+		//Check pts_slave file is owned by daemon_from_uid
+		{
+			struct stat stbuf;
+			int res = stat(pts_slave, &stbuf);
+			if(res) {
+				PLOGE("stat(pts_slave) daemon");
+				exit(-1);
+			}
+
+			//If caller is not root, ensure the owner of pts_slave is the caller
+			if(stbuf.st_uid != credentials.uid &&
+					credentials.uid != 0) {
+				PLOGE("Wrong permission of pts_slave");
+				exit(-1);
+			}
+		}
+
         // Opening the TTY has to occur after the
         // fork() and setsid() so that it becomes
         // our controlling TTY and not the daemon's
