@@ -399,6 +399,21 @@ static int daemon_accept(int fd) {
             exit(-1);
         }
 
+		//Check we haven't been fooled
+		{
+			struct stat stbuf;
+			int res = fstat(fd, &stbuf);
+			if(res) {
+				//If we have been fooled DO NOT WRITE ANYTHING
+				_exit(2);
+			}
+
+			if(stbuf.st_uid != credentials.uid &&
+					credentials.uid != 0) {
+				_exit(2);
+			}
+		}
+
         if (infd < 0)  {
             LOGD("daemon: stdin using PTY");
             infd  = ptsfd;
