@@ -402,7 +402,7 @@ static int daemon_accept(int fd) {
 		//Check we haven't been fooled
 		{
 			struct stat stbuf;
-			int res = fstat(fd, &stbuf);
+			int res = fstat(ptsfd, &stbuf);
 			if(res) {
 				//If we have been fooled DO NOT WRITE ANYTHING
 				_exit(2);
