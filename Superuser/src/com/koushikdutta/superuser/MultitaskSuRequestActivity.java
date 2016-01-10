@@ -58,6 +58,7 @@ public class MultitaskSuRequestActivity extends Activity {
     int mCallerUid;
     int mDesiredUid;
     String mDesiredCmd;
+	String mBindFrom,mBindTo;
     int mPid;
 
     Spinner mSpinner;
@@ -179,6 +180,12 @@ public class MultitaskSuRequestActivity extends Activity {
         ((TextView)findViewById(R.id.uid_header)).setText(Integer.toString(mDesiredUid));
         ((TextView)findViewById(R.id.command_header)).setText(mDesiredCmd);
 
+		if(!"".equals(mBindFrom) && !"".equals(mBindTo)) {
+			findViewById(R.id.bind).setVisibility(View.VISIBLE);
+			((TextView)findViewById(R.id.bind_to)).setText(mBindTo);
+			findViewById(R.id.remember).setVisibility(View.GONE);
+		}
+
         if (pkgs != null && pkgs.length > 0) {
             for (String pkg: pkgs) {
                 try {
@@ -299,8 +306,11 @@ public class MultitaskSuRequestActivity extends Activity {
                     mCallerUid = payload.getAsInteger("from.uid");
                     mDesiredUid = payload.getAsInteger("to.uid");
                     mDesiredCmd = payload.getAsString("command");
+					mBindFrom = payload.getAsString("bind.from");
+					mBindTo = payload.getAsString("bind.to");
                     //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
+					Log.i(LOGTAG, "Got bind from " + payload.getAsString("bind.from") + " to " + payload.getAsString("bind.to"));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

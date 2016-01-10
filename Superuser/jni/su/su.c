@@ -17,6 +17,7 @@
 ** limitations under the License.
 */
 
+#define _GNU_SOURCE
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -29,6 +30,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <strings.h>
 #include <stdint.h>
 #include <pwd.h>
 #include <sys/stat.h>
@@ -39,6 +41,7 @@
 
 #include "su.h"
 #include "utils.h"
+#include "binds.h"
 
 extern int is_daemon;
 extern int daemon_from_uid;
@@ -384,7 +387,6 @@ static int socket_accept(int serv_fd) {
     return fd;
 }
 
-static int socket_send_request(int fd, const struct su_context *ctx) {
 #define write_data(fd, data, data_len)              \
 do {                                                \
     uint32_t __len = htonl(data_len);               \
@@ -414,6 +416,7 @@ do {                                        \
     write_string_data(fd, name, buf);            \
 } while (0)
 
+static int socket_send_request(int fd, const struct su_context *ctx) {
     write_token(fd, "version", PROTO_VERSION);
     write_token(fd, "binary.version", VERSION_CODE);
     write_token(fd, "pid", ctx->from.pid);
@@ -422,6 +425,9 @@ do {                                        \
     write_token(fd, "from.uid", ctx->from.uid);
     write_token(fd, "to.uid", ctx->to.uid);
     write_string_data(fd, "from.bin", ctx->from.bin);
+    write_string_data(fd, "bind.from", ctx->bind.from);
+    write_string_data(fd, "bind.to", ctx->bind.to);
+    write_string_data(fd, "init", ctx->init);
     // TODO: Fix issue where not using -c does not result a in a command
     write_string_data(fd, "command", get_command(&ctx->to));
     write_token(fd, "eof", PROTO_VERSION);
@@ -461,6 +467,70 @@ static void usage(int status) {
     "  -V                            display version code and exit,\n"
     "                                this is used almost exclusively by Superuser.apk\n");
     exit(status);
+}
+
+static __attribute__ ((noreturn)) void allow_bind(struct su_context *ctx) {
+    if(ctx->from.uid == 0)
+        exit(1);
+
+    if(ctx->bind.from[0] == '!') {
+        int ret = bind_remove(ctx->bind.to, ctx->from.uid);
+        if(!ret) {
+            fprintf(stderr, "The mentioned bind destination path didn't exist\n");
+            exit(1);
+        }
+        exit(0);
+    }
+    if(strcmp("--ls", ctx->bind.from)==0) {
+        bind_ls(ctx->from.uid);
+        exit(0);
+    }
+
+    if(!bind_uniq_dst(ctx->bind.to)) {
+        fprintf(stderr, "BIND: Distant file NOT unique. I refuse.\n");
+        exit(1);
+    }
+	int fd = open("/data/su/binds", O_WRONLY|O_APPEND|O_CREAT, 0600);
+	if(fd<0) {
+		fprintf(stderr, "Failed to open binds file\n");
+        exit(1);
+	}
+    char *str = NULL;
+    int len = asprintf(&str, "%d:%s:%s", ctx->from.uid, ctx->bind.from, ctx->bind.to);
+    write(fd, str, len+1); //len doesn't include final \0 and we want to write it
+    free(str);
+	close(fd);
+    exit(0);
+}
+
+static __attribute__ ((noreturn)) void allow_init(struct su_context *ctx) {
+    if(ctx->init[0]=='!') {
+        int ret = init_remove(ctx->init+1, ctx->from.uid);
+        if(!ret) {
+            fprintf(stderr, "The mentioned init path didn't exist\n");
+            exit(1);
+        }
+        exit(0);
+    }
+    if(strcmp("--ls", ctx->init) == 0) {
+        init_ls(ctx->from.uid);
+        exit(0);
+    }
+    if(!init_uniq(ctx->init))
+        //This script is already in init list
+        exit(1);
+
+	int fd = open("/data/su/init", O_WRONLY|O_APPEND|O_CREAT, 0600);
+	if(fd<0) {
+		fprintf(stderr, "Failed to open init file\n");
+        exit(1);
+	}
+    char *str = NULL;
+    int len = asprintf(&str, "%d:%s", ctx->from.uid, ctx->init);
+    write(fd, str, len+1); //len doesn't include final \0 and we want to write it
+    free(str);
+	close(fd);
+    exit(0);
 }
 
 static __attribute__ ((noreturn)) void deny(struct su_context *ctx) {
@@ -503,6 +573,12 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
 
     if (send_to_app)
         send_result(ctx, ALLOW);
+
+    if(ctx->bind.from[0] && ctx->bind.to[0])
+        allow_bind(ctx);
+
+    if(ctx->init[0])
+        allow_init(ctx);
 
     char *binary;
     argc = ctx->to.optind;
@@ -550,7 +626,7 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
             arg0, PARG(0), PARG(1), PARG(2), PARG(3), PARG(4), PARG(5),
             (ctx->to.optind + 6 < ctx->to.argc) ? " ..." : "");
 
-	if(ctx->to.context) {
+	if(ctx->to.context && strcmp(ctx->to.context, "u:r:su_light:s0") == 0) {
 		setexeccon(ctx->to.context);
 	} else {
 		setexeccon("u:r:su:s0");
@@ -663,7 +739,11 @@ int su_main_nodaemon(int argc, char **argv) {
     LOGD("su invoked.");
 
     //Chainfire compatibility
-    if(argc >= 3 && strcmp(argv[1], "-cn") == 0) {
+    if(argc >= 3 && (
+                strcmp(argv[1], "-cn") == 0 ||
+                strcmp(argv[1], "--context") == 0
+
+                )) {
         argc-=2;
         argv+=2;
     }
@@ -694,14 +774,21 @@ int su_main_nodaemon(int argc, char **argv) {
             .database_path = REQUESTOR_DATA_PATH REQUESTOR_DATABASE_PATH,
             .base_path = REQUESTOR_DATA_PATH REQUESTOR
         },
+        .bind = {
+            .from = "",
+            .to = "",
+        },
+        .init = "",
     };
     struct stat st;
     int c, socket_serv_fd, fd;
     char buf[64], *result;
     policy_t dballow;
     struct option long_opts[] = {
+        { "bind",            required_argument,    NULL, 'b' },
         { "command",            required_argument,    NULL, 'c' },
         { "help",            no_argument,        NULL, 'h' },
+        { "init",            required_argument,        NULL, 'i' },
         { "login",            no_argument,        NULL, 'l' },
         { "preserve-environment",    no_argument,        NULL, 'p' },
         { "shell",            required_argument,    NULL, 's' },
@@ -710,14 +797,31 @@ int su_main_nodaemon(int argc, char **argv) {
         { NULL, 0, NULL, 0 },
     };
 
-    while ((c = getopt_long(argc, argv, "+c:hlmps:Vvuz:", long_opts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "+b:c:hlmps:Vvuz:", long_opts, NULL)) != -1) {
         switch(c) {
+            case 'b': {
+                    char *s = strdup(optarg);
+
+                    char *pos = strchr(s, ':');
+                    if(pos) {
+                        pos[0] = 0;
+                        ctx.bind.to = pos + 1;
+                        ctx.bind.from = s;
+                    } else {
+                        ctx.bind.from = "--ls";
+                        ctx.bind.to = "--ls";
+                    }
+                }
+                break;
         case 'c':
             ctx.to.shell = DEFAULT_SHELL;
             ctx.to.command = optarg;
             break;
         case 'h':
             usage(EXIT_SUCCESS);
+            break;
+        case 'i':
+            ctx.init = optarg;
             break;
         case 'l':
             ctx.to.login = 1;
@@ -733,7 +837,7 @@ int su_main_nodaemon(int argc, char **argv) {
             printf("%d\n", VERSION_CODE);
             exit(EXIT_SUCCESS);
         case 'v':
-            printf("%s cm-su\n", VERSION);
+            printf("%s cm-su subind suinit\n", VERSION);
             exit(EXIT_SUCCESS);
         case 'u':
             switch (get_multiuser_mode()) {
@@ -841,7 +945,7 @@ int su_main_nodaemon(int argc, char **argv) {
 
     ctx.umask = umask(027);
 
-    int ret = mkdir(REQUESTOR_CACHE_PATH, 0770);
+    mkdir(REQUESTOR_CACHE_PATH, 0770);
     if (chown(REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid)) {
         PLOGE("chown (%s, %ld, %ld)", REQUESTOR_CACHE_PATH, st.st_uid, st.st_gid);
         deny(&ctx);
@@ -860,6 +964,7 @@ int su_main_nodaemon(int argc, char **argv) {
         deny(&ctx);
     }
 
+    //TODO: Ignore database check for init and bind?
     dballow = database_check(&ctx);
     switch (dballow) {
         case INTERACTIVE:

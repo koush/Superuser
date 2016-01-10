@@ -77,7 +77,7 @@
 #define str(a) #a
 
 #ifndef VERSION_CODE
-#define VERSION_CODE 16
+#define VERSION_CODE 17
 #endif
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
@@ -122,10 +122,17 @@ struct su_user_info {
     char database_path[PATH_MAX];
 };
 
+struct su_bind {
+	const char *from;
+	const char *to;
+};
+
 struct su_context {
     struct su_initiator from;
     struct su_request to;
     struct su_user_info user;
+	struct su_bind bind;
+	const char *init;
     mode_t umask;
     char sock_path[PATH_MAX];
 };
