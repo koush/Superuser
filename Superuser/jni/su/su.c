@@ -38,6 +38,7 @@
 #include <sys/types.h>
 #include <selinux/selinux.h>
 #include <arpa/inet.h>
+#include <sys/auxv.h>
 
 #include "su.h"
 #include "utils.h"
@@ -729,11 +730,13 @@ int su_main_nodaemon(int argc, char **argv) {
         // not listed in linker, used due to system() call
         "IFS",
     };
-    const char* const* cp   = unsec_vars;
-    const char* const* endp = cp + sizeof(unsec_vars)/sizeof(unsec_vars[0]);
-    while (cp < endp) {
-        unsetenv(*cp);
-        cp++;
+    if(getauxval(AT_SECURE)) {
+        const char* const* cp   = unsec_vars;
+        const char* const* endp = cp + sizeof(unsec_vars)/sizeof(unsec_vars[0]);
+        while (cp < endp) {
+            unsetenv(*cp);
+            cp++;
+        }
     }
 
     LOGD("su invoked.");
