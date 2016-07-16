@@ -361,8 +361,6 @@ public class Settings {
     public static final int THEME_LIGHT = 0;
     public static final int THEME_DARK = 1;
     public static void applyDarkThemeSetting(Activity activity, int dark) {
-        if (!"com.koushikdutta.superuser".equals(activity.getPackageName()))
-            return;
         try {
             if (getTheme(activity) == THEME_DARK)
                 activity.setTheme(dark);
