@@ -375,49 +375,47 @@ public class SettingsFragment extends BetterListFragment {
         })
         .setAttrDrawable(R.attr.notificationsIcon);
 
-        if ("com.koushikdutta.superuser".equals(getActivity().getPackageName())) {
-            addItem(R.string.settings, new ListItem(this, R.string.theme, 0) {
-                void update() {
-                    switch (Settings.getTheme(getActivity())) {
-                    case Settings.THEME_DARK:
-                        setSummary(R.string.dark);
-                        break;
-                    default:
-                        setSummary(R.string.light);
-                        break;
-                    }
-                }
-                {
-                    update();
-                }
+        addItem(R.string.settings, new ListItem(this, R.string.theme, 0) {
+            void update() {
+                switch (Settings.getTheme(getActivity())) {
+                case Settings.THEME_DARK:
+                    setSummary(R.string.dark);
+                    break;
+                default:
+                    setSummary(R.string.light);
+                    break;
+                 }
+            }
+            {
+                update();
+            }
 
-                @Override
-                public void onClick(View view) {
-                    super.onClick(view);
+            @Override
+            public void onClick(View view) {
+                super.onClick(view);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle(R.string.theme);
-                    String[] items = new String[] { getString(R.string.light), getString(R.string.dark) };
-                    builder.setItems(items, new OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                            case Settings.THEME_DARK:
-                                Settings.setTheme(getContext(), Settings.THEME_DARK);
-                                break;
-                            default:
-                                Settings.setTheme(getContext(), Settings.THEME_LIGHT);
-                                break;
-                            }
-                            update();
-                            getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
-                            getActivity().finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.theme);
+                String[] items = new String[] { getString(R.string.light), getString(R.string.dark) };
+                builder.setItems(items, new OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                        case Settings.THEME_DARK:
+                            Settings.setTheme(getContext(), Settings.THEME_DARK);
+                            break;
+                        default:
+                            Settings.setTheme(getContext(), Settings.THEME_LIGHT);
+                            break;
                         }
-                    });
-                    builder.create().show();
-                }
-            })
-            .setAttrDrawable(R.attr.themeIcon);
-        }
+                        update();
+                        getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
+                        getActivity().finish();
+                    }
+                });
+                builder.create().show();
+            }
+        })
+        .setAttrDrawable(R.attr.themeIcon);
     }
 }
