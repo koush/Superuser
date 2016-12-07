@@ -14,7 +14,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
-#ifndef BINDSH
+#ifndef BINDS_H
 #define BINDS_H
 
 #define BINDS_PATH "/data/su/binds"
