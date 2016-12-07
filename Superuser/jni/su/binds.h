@@ -17,6 +17,9 @@
 #ifndef BINDSH
 #define BINDS_H
 
+#define BINDS_PATH "/data/su/binds"
+#define BINDS_TMP_PATH "/data/su/binds.new"
+
 typedef void (*bind_cb)(void *arg, int uid, const char *src, const char *dst);
 extern int bind_foreach(bind_cb cb, void* arg);
 extern int bind_uniq_dst(const char *dst);
