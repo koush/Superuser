@@ -460,7 +460,7 @@ static int copy_file(const char* src, const char* dst, int mode) {
 	int ofd = open(dst, O_WRONLY|O_CREAT, mode);
 	if(ofd<0)
 		return 1;
-	size_t s = lseek(ifd, 0, SEEK_END);
+	off_t s = lseek(ifd, 0, SEEK_END);
 	if(s<0)
 		return 1;
 	lseek(ifd, 0, SEEK_SET);
