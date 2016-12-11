@@ -491,7 +491,7 @@ static __attribute__ ((noreturn)) void allow_bind(struct su_context *ctx) {
         fprintf(stderr, "BIND: Distant file NOT unique. I refuse.\n");
         exit(1);
     }
-	int fd = open("/data/su/binds", O_WRONLY|O_APPEND|O_CREAT, 0600);
+	int fd = open(BINDS_PATH, O_WRONLY|O_APPEND|O_CREAT, 0600);
 	if(fd<0) {
 		fprintf(stderr, "Failed to open binds file\n");
         exit(1);

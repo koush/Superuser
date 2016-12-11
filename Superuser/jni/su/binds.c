@@ -39,7 +39,7 @@
 int bind_foreach(bind_cb cb, void* arg) {
     int res = 0;
     char *str = NULL;
-	int fd = open("/data/su/binds", O_RDONLY);
+	int fd = open(BINDS_PATH, O_RDONLY);
     if(fd<0)
         return 1;
 
@@ -120,8 +120,8 @@ int bind_remove(const char *path, int uid) {
 	_found = 0;
 	_uid = uid;
 
-	unlink("/data/su/bind.new");
-	_fd = open("/data/su/bind.new", O_WRONLY|O_CREAT, 0600);
+	unlink(BINDS_TMP_PATH);
+	_fd = open(BINDS_TMP_PATH, O_WRONLY|O_CREAT, 0600);
 	if(_fd<0)
 		return 0;
 
@@ -139,8 +139,8 @@ int bind_remove(const char *path, int uid) {
     }
     bind_foreach(cb, NULL);
 	close(_fd);
-	unlink("/data/su/bind");
-	rename("/data/su/bind.new", "/data/su/bind");
+	unlink(BINDS_PATH);
+	rename(BINDS_TMP_PATH, BINDS_PATH);
 	return _found;
 }
 
