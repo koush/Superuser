@@ -476,7 +476,7 @@ static void prepare_su_bind() {
 	int ret = 0;
 
 	//Check if there is a use to mount bind
-	if(access("/system/xbin/su", R_OK) != 0)
+	if(access("/system/xbin/su", R_OK) != 0 || access("/system/bin/su", R_OK) != 0)
 		return;
 
 	ret = copy_file("/sbin/su", "/dev/su/su", 0755);
@@ -495,7 +495,11 @@ static void prepare_su_bind() {
 	ret = mount("/dev/su/su", "/system/xbin/su", "", MS_BIND, NULL);
 	if(ret) {
 		LOGE("Failed to mount bind");
-		return;
+	}
+
+	ret = mount("/dev/su/su", "/system/bin/su", "", MS_BIND, NULL);
+	if(ret) {
+		LOGE("Failed to mount bind");
 	}
 }
 
