@@ -16,11 +16,11 @@
 
 You'll need the "Widgets" dependency.
 
-* $ mkdir /path/to/src
-* $ cd /path/to/src
-* $ git clone git://github.com/phhusson/Superuser
-* $ cd Superuser
-* $ git clone git://github.com/phhusson/Widgets
+* `$ mkdir /path/to/src`
+* `$ cd /path/to/src`
+* `$ git clone git://github.com/phhusson/Superuser`
+* `$ cd Superuser`
+* `$ git clone git://github.com/phhusson/Widgets`
 
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
@@ -31,15 +31,15 @@ Make sure the SDK Platform for API 19 is installed, through the Android SDK Mana
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
-* $ cd /path/to/src/
-* $ cd Superuser/Superuser
-* $ ndk-build
+* `$ cd /path/to/src/`
+* `$ cd Superuser/Superuser`
+* `$ ndk-build`
 
 The su binary will built into Superuser/Superuser/libs/armeabi/su, and the placeholder will be built into Superuser/Superuser/libs/armeabi/placeholder
 
 ## Building the application
 
-* $ ./gradlew assembleDebug
+* `$ ./gradlew assembleDebug`
 
 (Yes I use debug builds for the moment.)
 
