@@ -1,6 +1,9 @@
 ## Why another Superuser?
-* Superuser should be open source. It's the gateway to root on your device. It must be open for independent security analysis. Obscurity (closed source) is not security.
-* Superuser should be NDK buildable. No internal Android references.
+* Superuser should be open source.
+  It's the gateway to root on your device.
+  It must be open for independent security analysis. Obscurity (closed source) is not security.
+* Superuser should be NDK buildable.
+  No internal Android references.
 * Superuser should also be AOSP buildable for those that want to embed it in their ROM.
 * Superuser should also be AOSP _embeddable_, meaning a ROM can easily embed it into their Settings app.
 * Maintenance and updates on both the market and source repositories should be timely.
@@ -25,7 +28,8 @@ You'll need the "Widgets" dependency.
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
 
-Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.  Install NDK Revision 9b from [here](http://developer.android.com/tools/sdk/ndk/index.html) or use the latest and set NDK_TOOLCHAIN_VERSION=4.9.
+Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.
+Install NDK Revision 9b from [developer.android.com](https://developer.android.com/tools/sdk/ndk/index.html) or use the latest and set `NDK_TOOLCHAIN_VERSION=4.9`.
 
 ## Building the su and placeholder binaries
 
@@ -55,12 +59,15 @@ applicationId "com.thirdparty.superuser"
 
 ## How to install?
 
-You can install su in various different ways. All are not listed here.
+You can install su in various different ways.
+All are not listed here.
 
 ### Editing /system partition, and using placeholder binary
 
-One way is through placeholder binary. It doesn't require to modify boot.img, only system partition.
-This doesn't work on Android M, and is considered obsolete. (SELinux policies aren't keeping up)
+One way is through placeholder binary.
+It doesn't require to modify boot.img, only system partition.
+This doesn't work on Android M, and is considered obsolete.
+(SELinux policies aren't keeping up)
 
 To install it this way, here are the needed steps:
 - Rename /system/bin/app_process32 to /system/bin/app_process32.old
@@ -77,16 +84,15 @@ Please refer to https://github.com/seSuperuser/AOSP-SU-PATCH/
 
 Please refer to https://github.com/phhusson/super-bootimg/
 
-
 ## TODO List
 
-Here is a list of what's left to do, to be compatible with Chainfire's SuperSU (as documented at https://su.chainfire.eu):
-- --mount-master
+Here is a list of what's left to do, to be compatible with Chainfire's SuperSU (as documented at [su.chainfire.eu](https://su.chainfire.eu)):
+* --mount-master
 
 Here is an additional TODO list:
-- Create restricted domains, which should match of basic needs. So that we can tell users "this app is not as bad as it might"
-- Safer su --bind/su --init (should be package-name based, not uid-based)
-
+* Create restricted domains, which should match of basic needs.
+  So that we can tell users "this app is not as bad as it might"
+* Safer su --bind/su --init (should be package-name based, not uid-based)
 
 ## Contact me
 * IRC: #superuser-phh @ Freenode
@@ -95,11 +101,12 @@ Here is an additional TODO list:
 ## Communication
 
 This project is in REALLY early state, though some points have to be mentioned:
-* For development purposes, I prefer IRC
-* Any issue discussed MUST have an entry in github bugtracker
-* There will be security flaws. If you find one, please first discuss it with me privately (by mail or IRC).
-* If you feel you need to be aware of security flaws before disclosure, please contact me, I might create a dedicated mailing list.
-
+* For development purposes, please use the project's IRC: #superuser-phh @ Freenode
+* Any issue discussed MUST have an entry in GitHub's bugtracker
+* There will be security flaws.
+  If you find one, please first discuss it with me privately (<phh@phh.me>, phh on IRC).
+* If you feel you need to be aware of security flaws before disclosure, please contact me.
+  I might create a dedicated security mailing list.
 
 ## Organisation
 
