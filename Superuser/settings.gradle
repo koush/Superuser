@@ -1,0 +1,2 @@
+include ':Widgets'
+project(':Widgets').projectDir = new File(settingsDir, '../Widgets/Widgets')

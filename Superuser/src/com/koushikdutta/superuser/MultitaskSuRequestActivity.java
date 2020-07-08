@@ -58,6 +58,7 @@ public class MultitaskSuRequestActivity extends Activity {
     int mCallerUid;
     int mDesiredUid;
     String mDesiredCmd;
+	String mBindFrom,mBindTo;
     int mPid;
 
     Spinner mSpinner;
@@ -144,8 +145,6 @@ public class MultitaskSuRequestActivity extends Activity {
         new File(mSocketPath).delete();
     }
 
-    public static final String PERMISSION = "android.permission.ACCESS_SUPERUSER";
-
     boolean mRequestReady;
     void requestReady() {
         findViewById(R.id.incoming).setVisibility(View.GONE);
@@ -181,8 +180,12 @@ public class MultitaskSuRequestActivity extends Activity {
         ((TextView)findViewById(R.id.uid_header)).setText(Integer.toString(mDesiredUid));
         ((TextView)findViewById(R.id.command_header)).setText(mDesiredCmd);
 
-        boolean superuserDeclared = false;
-        boolean granted = false;
+		if(!"".equals(mBindFrom) && !"".equals(mBindTo)) {
+			findViewById(R.id.bind).setVisibility(View.VISIBLE);
+			((TextView)findViewById(R.id.bind_to)).setText(mBindTo);
+			findViewById(R.id.remember).setVisibility(View.GONE);
+		}
+
         if (pkgs != null && pkgs.length > 0) {
             for (String pkg: pkgs) {
                 try {
@@ -195,17 +198,6 @@ public class MultitaskSuRequestActivity extends Activity {
                     ((TextView)findViewById(R.id.app_header)).setText(pi.applicationInfo.loadLabel(pm));
                     ((TextView)findViewById(R.id.package_header)).setText(pi.packageName);
 
-                    if (pi.requestedPermissions != null) {
-                        for (String perm: pi.requestedPermissions) {
-                            if (PERMISSION.equals(perm)) {
-                                superuserDeclared = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    granted |= checkPermission(PERMISSION, mPid, mCallerUid) == PackageManager.PERMISSION_GRANTED;
-
                     // could display them all, but screw it...
                     // maybe a better ux for this later
                     break;
@@ -216,37 +208,11 @@ public class MultitaskSuRequestActivity extends Activity {
             findViewById(R.id.unknown).setVisibility(View.GONE);
         }
 
-        if (!superuserDeclared) {
-            findViewById(R.id.developer_warning).setVisibility(View.VISIBLE);
-        }
-
-        // handle automatic responses
-        // these will be considered permanent user policies
-        // even though they are automatic.
-        // this is so future su requests dont invoke ui
-
-        // handle declared permission
-        if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !superuserDeclared) {
-            Log.i(LOGTAG, "Automatically denying due to missing permission");
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mHandled)
-                        handleAction(false, 0);
-                }
-            });
-            return;
-        }
-
         // automatic response
         switch (Settings.getAutomaticResponse(MultitaskSuRequestActivity.this)) {
         case Settings.AUTOMATIC_RESPONSE_ALLOW:
-//            // automatic response and pin can not be used together
-//            if (Settings.isPinProtected(MultitaskSuRequestActivity.this))
-//                break;
+            // automatic response and pin can not be used together
             // check if the permission must be granted
-            if (Settings.getRequirePermission(MultitaskSuRequestActivity.this) && !granted)
-                break;
             Log.i(LOGTAG, "Automatically allowing due to user preference");
             mHandler.post(new Runnable() {
                 @Override
@@ -338,10 +304,13 @@ public class MultitaskSuRequestActivity extends Activity {
 
                     //int protocolVersion = payload.getAsInteger("version");
                     mCallerUid = payload.getAsInteger("from.uid");
-                    mDesiredUid = payload.getAsByte("to.uid");
+                    mDesiredUid = payload.getAsInteger("to.uid");
                     mDesiredCmd = payload.getAsString("command");
+					mBindFrom = payload.getAsString("bind.from");
+					mBindTo = payload.getAsString("bind.to");
                     //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
+					Log.i(LOGTAG, "Got bind from " + payload.getAsString("bind.from") + " to " + payload.getAsString("bind.to"));
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -512,4 +481,24 @@ public class MultitaskSuRequestActivity extends Activity {
         if (mRequestReady)
             requestReady();
     }
+
+	void hideOverlays(boolean v) {
+		//TODO: Have a proper intent naming ?
+		Intent i = new Intent("eu.chainfire.supersu.action.HIDE_OVERLAYS");
+		i.putExtra("eu.chainfire.supersu.extra.HIDE", v);
+		i.addCategory("android.intent.category.INFO");
+		sendBroadcast(i);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		hideOverlays(true);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		hideOverlays(false);
+	}
 }

@@ -1,0 +1,3 @@
+[submodule "Widgets"]
+	path = Widgets
+	url = https://github.com/phhusson/Widgets.git

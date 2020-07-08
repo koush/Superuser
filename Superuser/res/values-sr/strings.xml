@@ -58,11 +58,8 @@
   <string name="toast">Облак</string>
   <string name="notification">Обавештење</string>
   <string name="no_notification">Ниједно обавештење неће бити приказано</string>
-  <string name="developer_warning">Упозорење аутора:\nandroid.permission.ACCESS_SUPERUSER\n није објављено у манифесту.</string>
   <string name="superuser_description">Пуне дозволе свим карактеристикама и уређајима за складиштење</string>
   <string name="superuser_description_more">Суперкорисник даје пун приступ свим функцијама и складиштењу, укључујући и безбедне и осетљиве хардверске елементе Вашег уређаја. Ова дозвола је потенцијално опасна.</string>
-  <string name="declared_permission">Дозвола је декларисана </string>
-  <string name="declared_permission_summary">Дозволи само захтеве од апликација које прогласе android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Аутоматски одговор</string>
   <string name="prompt">Благовремено</string>
   <string name="automatic_response_allow_summary">Аутоматски дозволи нове захтеве</string>

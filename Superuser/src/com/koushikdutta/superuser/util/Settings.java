@@ -175,15 +175,6 @@ public class Settings {
         return pin.equals(hashed);
     }
 
-    private static final String KEY_REQUIRE_PREMISSION = "require_permission";
-    public static boolean getRequirePermission(Context context) {
-        return getBoolean(context, KEY_REQUIRE_PREMISSION, false);
-    }
-
-    public static void setRequirePermission(Context context, boolean require) {
-        setBoolean(context, KEY_REQUIRE_PREMISSION, require);
-    }
-
     private static final String KEY_AUTOMATIC_RESPONSE = "automatic_response";
     public static final int AUTOMATIC_RESPONSE_PROMPT = 0;
     public static final int AUTOMATIC_RESPONSE_ALLOW = 1;
@@ -370,8 +361,6 @@ public class Settings {
     public static final int THEME_LIGHT = 0;
     public static final int THEME_DARK = 1;
     public static void applyDarkThemeSetting(Activity activity, int dark) {
-        if (!"com.koushikdutta.superuser".equals(activity.getPackageName()))
-            return;
         try {
             if (getTheme(activity) == THEME_DARK)
                 activity.setTheme(dark);

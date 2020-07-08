@@ -58,11 +58,8 @@
   <string name="toast">Dymek</string>
   <string name="notification">Powiadomienie</string>
   <string name="no_notification">Żadne powiadomienia nie będą wyświetlane</string>
-  <string name="developer_warning">Uwaga:\nandroid.permission.ACCESS_SUPERUSER\nnie zostały zadeklarowane w manifeście.</string>
   <string name="superuser_description">pełne uprawnienia dla wszystkich funkcji i magazynu urządzenia</string>
   <string name="superuser_description_more">Superuser zapewnia pełne uprawnienia dla wszystkich funkcji i magazynu urządzenia, w tym zabezpieczonych i wrażliwych elementów sprzętowych urządzenia. Uprawnienia te mogą być potencjalnie niebezpieczne.</string>
-  <string name="declared_permission">Zadeklarowane uprawnienia</string>
-  <string name="declared_permission_summary">Pozwalaj na żądanie uprawnień tylko od aplikacji deklarujących android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Automatyczna odpowiedź</string>
   <string name="prompt">Pytaj za każdym razem</string>
   <string name="automatic_response_allow_summary">Automatycznie przyznawaj uprawnienia</string>

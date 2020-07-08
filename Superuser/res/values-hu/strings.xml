@@ -58,11 +58,8 @@
   <string name="toast">Felugró ablak</string>
   <string name="notification">Figyelmeztetés</string>
   <string name="no_notification">Nem jelennek meg az értesítések</string>
-  <string name="developer_warning">Fejlesztői figyelmeztetés:\nandroid.permission.ACCESS_SUPERUSER\nnincs deklarálva a manifest fájlban.</string>
   <string name="superuser_description">teljes hozzáférés az összes eszközfunkcióhoz és tárolóhoz</string>
   <string name="superuser_description_more">Teljes rendszergazdai hozzáférést ad az összes eszközfunkcióhoz és tárolóhoz, beleértve a készülék egyébként védett és érzékeny hardverelemeit. Ez az engedély potenciálisan veszélyes.</string>
-  <string name="declared_permission">Nyilvántartott engedély</string>
-  <string name="declared_permission_summary">Csak azon alkalmazások számára engedélyezi a rendszergazdai jog kérését, melyek deklarálják az android.permission.ACCESS_SUPERUSER engedélyt</string>
   <string name="automatic_response">Automatikus válasz</string>
   <string name="prompt">Rákérdezés</string>
   <string name="automatic_response_allow_summary">Új kérések automatikus engedélyezése</string>

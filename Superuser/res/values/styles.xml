@@ -23,7 +23,6 @@
 
         <item name="toggleIcon">@drawable/ic_toggle_dark</item>
         <item name="multiuserIcon">@drawable/ic_users_dark</item>
-        <item name="declaredPermissionsIcon">@drawable/ic_declare_dark</item>
         <item name="automaticResponseIcon">@drawable/ic_alert_dark</item>
         <item name="pinProtectionIcon">@drawable/ic_protected_dark</item>
         <item name="requestTimeoutIcon">@drawable/ic_timeout_dark</item>
@@ -35,16 +34,15 @@
     </style>
 
     <style name="SuperuserLight" parent="@style/AppTheme">
-        <item name="colorPrimary">#4CAF50</item>
-        <item name="colorPrimaryDark">#4CAF50</item>
-        <item name="colorAccent">#F44336</item>
+        <item name="android:colorPrimary">@color/holo_blue_light</item>
+        <item name="android:colorPrimaryDark">@color/holo_blue_dark</item>
+        <item name="android:colorAccent">@color/holo_blue_bright</item>
 
-        <item name="bottomButtonBar">@color/background_dark</item>
+        <item name="bottomButtonBar">@color/holo_blue_dark</item>
         <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
         
         <item name="toggleIcon">@drawable/ic_toggle</item>
         <item name="multiuserIcon">@drawable/ic_users</item>
-        <item name="declaredPermissionsIcon">@drawable/ic_declare</item>
         <item name="automaticResponseIcon">@drawable/ic_alert</item>
         <item name="pinProtectionIcon">@drawable/ic_protected</item>
         <item name="requestTimeoutIcon">@drawable/ic_timeout</item>

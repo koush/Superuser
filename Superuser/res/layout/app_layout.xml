@@ -11,14 +11,4 @@
         android:layout_height="wrap_content"
         layout="@layout/packageinfo" />
 
-    <TextView
-        android:paddingBottom="4dp"
-        android:gravity="center"
-        android:id="@+id/developer_warning"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/developer_warning"
-        android:textColor="@color/holo_red_dark"
-        android:visibility="gone" />
-
 </merge>

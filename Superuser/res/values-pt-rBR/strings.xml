@@ -58,11 +58,8 @@
   <string name="toast">Toast (Aviso na tela)</string>
   <string name="notification">Notificação</string>
   <string name="no_notification">Nenhuma notificação será mostrada.</string>
-  <string name="developer_warning">Aviso de Desenvolvedor:\nandroid.permission.ACCESS_SUPERUSER\nnão declarado no manifest.</string>
   <string name="superuser_description">Permissões completas para todos os recursos do dispositivo e armazenamento</string>
   <string name="superuser_description_more">O Superusuário concede acesso total a todos os recursos do dispositivo e de armazenamento, incluindo os elementos de hardware seguros e sensíveis do seu dispositivo. Estas permissões são potencialmente perigosas.</string>
-  <string name="declared_permission">Permissão Declarada</string>
-  <string name="declared_permission_summary">Só permitir pedidos de aplicativos que declaram android.permission.ACCESS_SUPERUSER no manifest.</string>
   <string name="automatic_response">Resposta Automática</string>
   <string name="prompt">Perguntar</string>
   <string name="automatic_response_allow_summary">Permitir automaticamente novos pedidos</string>

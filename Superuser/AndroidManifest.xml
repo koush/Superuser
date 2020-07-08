@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.koushikdutta.superuser"
-    android:versionCode="1030"
-    android:versionName="1.0.3.0" >
+    android:versionCode="1033"
+    android:versionName="1.0.3.3" >
 
     <permission
         android:name="android.permission.REQUEST_SUPERUSER"
@@ -11,23 +11,6 @@
         android:name="android.permission.REPORT_SUPERUSER"
         android:protectionLevel="signature" />
 
-    <permission-group
-        android:name="android.permission-group.SUPERUSER"
-        android:description="@string/superuser_description_more"
-        android:icon="@drawable/ic_action_permission"
-        android:label="@string/superuser"
-        android:priority="10000" />
-
-    <permission
-        android:name="android.permission.ACCESS_SUPERUSER"
-        android:description="@string/superuser_description_more"
-        android:icon="@drawable/ic_action_permission"
-        android:label="@string/superuser_description"
-        android:logo="@drawable/ic_action_permission"
-        android:permissionGroup="android.permission-group.SUPERUSER"
-        android:protectionLevel="dangerous" />
-
-    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -100,7 +83,6 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <data android:scheme="package" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />

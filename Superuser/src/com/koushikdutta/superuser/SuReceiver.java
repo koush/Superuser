@@ -50,6 +50,9 @@ public class SuReceiver extends BroadcastReceiver {
         String fromName = intent.getStringExtra("from_name");
         String desiredName = intent.getStringExtra("desired_name");
 
+		String bindFrom = intent.getStringExtra("bind_from");
+		String bindTo = intent.getStringExtra("bind_to");
+
         final LogEntry le = new LogEntry();
         le.uid = uid;
         le.command = command;

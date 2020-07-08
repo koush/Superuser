@@ -56,11 +56,8 @@
   <string name="superuser_denied">Superuser nekad för %s</string>
   <string name="notification">Notifiering</string>
   <string name="no_notification">Ingen notifiering kommer att visas</string>
-  <string name="developer_warning">Utvecklarvarning:\nandroid.permission.ACCESS_SUPERUSER\ninte deklarerad i manifestet.</string>
   <string name="superuser_description">fullständig behörighet till alla enhetens funktioner och lagring</string>
   <string name="superuser_description_more">Superuser ger full tillgång till alla enhetens funktioner och lagring inklusive skyddad och känslig hårdvara i din enhet. Detta medgivande kan vara farligt.</string>
-  <string name="declared_permission">Deklarerad behörighet</string>
-  <string name="declared_permission_summary">Tillåt bara begäran från appar som deklarerar behörigheten android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Automatiskt svar</string>
   <string name="prompt">Fråga</string>
   <string name="automatic_response_allow_summary">Tillåt automatiskt nya begäran</string>

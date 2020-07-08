@@ -1,5 +1,5 @@
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.6'
+    gradleVersion = '2.5'
 }
 
 buildscript {
@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.+'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
 apply plugin: 'com.android.application'
@@ -17,12 +17,23 @@ repositories {
 }
 
 dependencies {
-    compile project(':Widgets:Widgets')
+    compile project(':Widgets')
 }
 
 android {
     packagingOptions {
         exclude 'META-INF/beans.xml'
+    }
+
+    signingConfigs {
+        release {
+			if(System.getenv("KEYSTORE") != null) {
+	        storeFile file(System.getenv("KEYSTORE"))
+				storePassword new String(System.console().readPassword("\n\$ Enter store password: "))
+				keyAlias "su"
+				keyPassword new String(System.console().readPassword("\n\$ Enter key password: "))
+			}
+        }
     }
 
     sourceSets {
@@ -36,16 +47,15 @@ android {
         }
     }
 
-    compileSdkVersion 21
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
+        File f = new File("packageName")
         minSdkVersion 14
-        targetSdkVersion 21
+        targetSdkVersion 22
+        if(f.exists())
+            applicationId f.text
+        signingConfig signingConfigs.release
     }
 }
-
-// upload to maven task
-//if (System.getenv().I_AM_KOUSH == 'true') {
-//  apply from: 'https://raw.github.com/koush/mvn-repo/master/maven.gradle'
-//}

@@ -58,7 +58,6 @@
   <string name="no_notification">Obavijesti neće biti prikazane</string>
   <string name="superuser_description">potpuna dozvola svim značajkama uređaja i pohranjivanju</string>
   <string name="superuser_description_more">Superuser odobrava potpuni pristup svim značajkama uređaja i pohranjivanju, uključujući sigurnosne i osjetljive hardverske elemente vašeg uređaja. Ova je dozvola potencijalno opasna.</string>
-  <string name="declared_permission_summary">Odobrite samo zahtjeve aplikacija koje imaju android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Automatski Odgovor</string>
   <string name="automatic_response_allow_summary">Automatski dopusti nove zahtjeve</string>
   <string name="automatic_response_deny_summary">Automatski odbij nove zahtjeve</string>

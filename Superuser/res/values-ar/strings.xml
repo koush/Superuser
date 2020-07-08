@@ -58,11 +58,8 @@
   <string name="toast">Toast (مربع في الإسفل)</string>
   <string name="notification">الإعلام</string>
   <string name="no_notification">لن بظهر أي إعلام</string>
-  <string name="developer_warning">تحذير المطور \n android.permission.ACCESS_SUPERUSE \n لن يظهر في البيان.</string>
   <string name="superuser_description">أذونات كاملة إلى جميع ميزات الجهاز والتخزين</string>
   <string name="superuser_description_more">مستخدم خارق يمنح حق الوصول الكامل إلى كافة ميزات الجهاز والتخزين، بما في ذلك عناصر الأجهزة الآمنة والحساسة للجهاز الخاص بك. هذا الإذن يحتمل أن تكون خطرة.</string>
-  <string name="declared_permission">إذن مصرح به</string>
-  <string name="declared_permission_summary">السماح فقط لطلبات من تطبيقات التي مصرح به android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">الرد التلقائي</string>
   <string name="prompt">موجه</string>
   <string name="automatic_response_allow_summary">السماح للطلبات الجديدة تلقائياً</string>

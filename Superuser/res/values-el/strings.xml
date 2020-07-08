@@ -58,11 +58,8 @@
   <string name="toast">Μήνυμα</string>
   <string name="notification">Ειδοποίηση</string>
   <string name="no_notification">Δεν θα εμφανίζεται ειδοποίηση</string>
-  <string name="developer_warning">Προειδοποίηση για προγραμματιστές:\nandroid.permission.ACCESS_SUPERUSER\nδεν έχει δηλωθεί στο manifest.</string>
   <string name="superuser_description">πλήρη δικαιώματα σε όλες τις λειτουργίες της συσκευής και χώρου αποθήκευσης</string>
   <string name="superuser_description_more">Το Superuser παρέχει πλήρη πρόσβαση σε όλες τις λειτουργίες της συσκευής και χώρου αποθήκευσης, συμπεριλαμβανομένων των ευαίσθητων στοιχείων του υλικού της συσκευής σας. Αυτή η άδεια ενδεχομένως είναι επικίνδυνη.</string>
-  <string name="declared_permission">Έγκριση δικαιωμάτων</string>
-  <string name="declared_permission_summary">Να επιτρέπονται αιτήσεις μόνο από εφαρμογές που έχουν δηλώσει το android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Αυτόματη απάντηση</string>
   <string name="prompt">Προτροπή</string>
   <string name="automatic_response_allow_summary">Να επιτρέπονται αυτόματα οι νέες αιτήσεις</string>

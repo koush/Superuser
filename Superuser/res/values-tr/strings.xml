@@ -58,11 +58,8 @@
   <string name="toast">Toast</string>
   <string name="notification">Bildirim</string>
   <string name="no_notification">Hiçbir bildirim görüntülenmeyecek</string>
-  <string name="developer_warning">Geliştirici Uyarısı:\nandroid.permission.ACCESS_SUPERUSER\nmanifest içinde ayarlanmamış.</string>
   <string name="superuser_description">tüm cihaz ve depolamaya sınırsız erişim</string>
   <string name="superuser_description_more">Superuser cihazınızın güvenli ve hasas donanım bileşenleri dahil olmak üzere cihaz özelliklerine ve depolama alanlarına sınırsız bir yetkili kullanıcı erişimi sağlayacak. Bu erişimin tehlikeli olma potansiyeli var.</string>
-  <string name="declared_permission">Belirtilmiş İzin</string>
-  <string name="declared_permission_summary">Sadece android.permission.ACCESS_SUPERUSER iznini belirtmiş uygulamalardan gelen taleplere izin ver</string>
   <string name="automatic_response">Otomatik Yanıtlama</string>
   <string name="prompt">Sor</string>
   <string name="automatic_response_allow_summary">Yeni istekleri otomatik onlayla</string>

@@ -58,11 +58,8 @@
   <string name="toast">Notification pop-up</string>
   <string name="notification">Notification</string>
   <string name="no_notification">Aucune notification ne sera affichée</string>
-  <string name="developer_warning">Mise en garde Développeur :\nandroid.permission.ACCESS_SUPERUSER\nnon déclaré dans le manifest.</string>
   <string name="superuser_description">autorisations totales pour toutes les fonctionnalités et tous les emplacements de stockage du périphérique</string>
   <string name="superuser_description_more">Super-utilisateur permet un accès total à toutes les fonctionnalités et tous les emplacements de stockage de l\'appareil, incluant ses éléments matériels sécurisés et sensibles. Cette permission est potentiellement dangereuse.</string>
-  <string name="declared_permission">Autorisations déclarées</string>
-  <string name="declared_permission_summary">Autoriser uniquement les demandes des applications qui déclarent utiliser la permission android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Réponse automatique</string>
   <string name="prompt">Demander</string>
   <string name="automatic_response_allow_summary">Autoriser automatiquement les nouvelles demandes</string>

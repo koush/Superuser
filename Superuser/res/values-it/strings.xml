@@ -58,11 +58,8 @@
   <string name="toast">Avviso</string>
   <string name="notification">Notifiche</string>
   <string name="no_notification">Non verrà mostrata nessuna notifica</string>
-  <string name="developer_warning">Attenzione sviluppatore:\nandroid.permission.ACCESS_SUPERUSER\nnon è stato dichiarato nel manifesto.</string>
   <string name="superuser_description">massimi privilegi per accedere a tutti gli strumenti e memoria del dispositivo</string>
   <string name="superuser_description_more">Superuser garantisce completo accesso a tutti gli stumenti e memoria interna del dispositivo, compresi gli elementi hardware in sicurezza del tuo dispositivo. Questo permesso è potenzialmente dannoso.</string>
-  <string name="declared_permission">Dichiarazione dei Permessi</string>
-  <string name="declared_permission_summary">Consenti solo richieste da App che dichiarano android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Risposta Automatica</string>
   <string name="prompt">Prompt</string>
   <string name="automatic_response_allow_summary">Consenti automaticamente le nuove richieste</string>

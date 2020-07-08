@@ -22,8 +22,10 @@ cd /tmp
 mkdir superuser
 cd superuser
 unzip -o "$3"
+
 if [ "$?" -ne "0" ]
 then
+#Called when updating SU from the app
   mkdir -p $PLATFORM
   cp /cache/su $PLATFORM/su
   cp /cache/Superuser.apk .
@@ -37,19 +39,11 @@ echo -n -e 'ui_print\n' > /proc/self/fd/$2
 mount /system
 chattr -i /system/bin/su
 chattr -i /system/xbin/su
-rm -f /system/bin/su
-rm -f /system/xbin/su
-rm -f /system/app/Superuser.*
-rm -f /system/app/Supersu.*
-rm -f /system/app/superuser.*
-rm -f /system/app/supersu.*
-rm -f /system/app/SuperUser.*
-rm -f /system/app/SuperSU.*
+rm -Rf /system/{x,}bin/su /system/app/Super{U,u}ser* /system/app/superuser* /system/app/SuperSU/
 
 cp $PLATFORM/su /system/xbin/su
 chown 0:0 /system/xbin/su
-chmod 6755 /system/xbin/su
-ln -s /system/xbin/su /system/bin/su
+chmod 0755 /system/xbin/su
 
 cp Superuser.apk /system/app
 chmod 644 /system/app/Superuser.apk
@@ -59,24 +53,38 @@ chmod 644 /system/app/Superuser.apk
 BUILD_VERSION_SDK="$(grep 'ro\.build\.version\.sdk' /system/build.prop)"
 BUILD_VERSION_SDK="${BUILD_VERSION_SDK##*=}"
 
-if [ "$BUILD_VERSION_SDK" -ge 18 ]
-then
-  # check for rom su daemon before clobbering install-recovery.sh
-  if [ ! -f "/system/etc/.has_su_daemon" ]
-  then
-      echo -n -e 'ui_print Installing Superuser daemon...\n' > /proc/self/fd/$2
-      echo -n -e 'ui_print\n' > /proc/self/fd/$2
-      chattr -i /system/etc/install-recovery.sh
-      chattr -i /system/bin/install-recovery.sh
-      cp install-recovery.sh /system/etc/install-recovery.sh
-      cp install-recovery.sh /system/bin/install-recovery.sh
-      chmod 755 /system/etc/install-recovery.sh
-      chmod 755 /system/bin/install-recovery.sh
-      # note that an post install su daemon was installed
-      # so recovery doesn't freak out and recommend you disable
-      # the install-recovery.sh execute bit.
-      touch /system/etc/.installed_su_daemon
-  fi
+if [ "$BUILD_VERSION_SDK" -le 18 ];then
+	echo -n -e 'ui_print Sorry, but your Android is too old for me...\n' > /proc/self/fd/$2
+	umount /system
+	exit 1
 fi
+if [ -f "/system/etc/.has_su_daemon" ]
+	echo -n -e "ui_print Your ROM already has a root, I don't want to override it.\n" > /proc/self/fd/$2
+	umount /system
+	exit 1
+fi
+
+echo -n -e 'ui_print Installing Superuser daemon...\n' > /proc/self/fd/$2
+echo -n -e 'ui_print\n' > /proc/self/fd/$2
+
+#TODO: I've also seen install*_*recovery.sh, I thi
+for i in etc/install-recovery.sh bin/install-recovery.sh bin/install_recovery.sh;do
+	chattr -i /system/$i
+	cp install-recovery.sh /system/$i
+	chmod 0755 /system/$i
+done
+
+#Rename original app_process32
+if [ ! -f /system/bin/app_process32.old ];then
+	mv /system/bin/app_process32 /system/bin/app_process32.old
+fi
+cp $PLATFORM/placeholder /system/bin/app_process32
+chmod 0755 /system/bin/app_process32
+chcon u:object_r:zygote_exec:s0 /system/bin/app_process32
+
+# note that an post install su daemon was installed
+# so recovery doesn't freak out and recommend you disable
+# the install-recovery.sh execute bit.
+touch /system/etc/.installed_su_daemon
 
 umount /system

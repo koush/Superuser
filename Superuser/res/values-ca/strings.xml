@@ -58,11 +58,8 @@
   <string name="toast">Notificació emergent</string>
   <string name="notification">Notificació</string>
   <string name="no_notification">No es mostraran notificacions</string>
-  <string name="developer_warning">Alerta pel Desenvolupador:\nandroid.permission.ACCESS_SUPERUSER\nno declarada al manifest.</string>
   <string name="superuser_description">permisos totals a totes les característiques i emmagatzematge del dispositiu</string>
   <string name="superuser_description_more">Superusuari otorga accés total a totes les característiques del dispositiu i emmagatzematge, incloent els elements segurs i sensibles del maquinari del teu dispositiu. Aquest permís és potencialment perillós.</string>
-  <string name="declared_permission">Permís Declarat</string>
-  <string name="declared_permission_summary">Permet només les peticions d\'apps que declarin android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Resposta Automàtica</string>
   <string name="prompt">Pregunta</string>
   <string name="automatic_response_allow_summary">Permet automaticament totes les noves peticions</string>

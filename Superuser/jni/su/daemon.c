@@ -33,6 +33,7 @@
 #include <pwd.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#include <sys/sendfile.h>
 #include <stdarg.h>
 #include <sys/types.h>
 #include <pthread.h>
@@ -40,11 +41,13 @@
 #include <termios.h>
 #include <signal.h>
 #include <string.h>
+#include <selinux/selinux.h>
 
 #ifdef SUPERUSER_EMBEDDED
 #include <cutils/multiuser.h>
 #endif
 
+#include "binds.h"
 #include "su.h"
 #include "utils.h"
 #include "pts.h"
@@ -272,7 +275,7 @@ static int run_daemon_child(int infd, int outfd, int errfd, int argc, char** arg
     close(outfd);
     close(errfd);
 
-    return su_main(argc, argv, 0);
+    return su_main_nodaemon(argc, argv);
 }
 
 static int daemon_accept(int fd) {
@@ -372,6 +375,23 @@ static int daemon_accept(int fd) {
 
     int ptsfd;
     if (pts_slave[0]) {
+		//Check pts_slave file is owned by daemon_from_uid
+		{
+			struct stat stbuf;
+			int res = stat(pts_slave, &stbuf);
+			if(res) {
+				PLOGE("stat(pts_slave) daemon");
+				exit(-1);
+			}
+
+			//If caller is not root, ensure the owner of pts_slave is the caller
+			if(stbuf.st_uid != credentials.uid &&
+					credentials.uid != 0) {
+				PLOGE("Wrong permission of pts_slave");
+				exit(-1);
+			}
+		}
+
         // Opening the TTY has to occur after the
         // fork() and setsid() so that it becomes
         // our controlling TTY and not the daemon's
@@ -380,6 +400,21 @@ static int daemon_accept(int fd) {
             PLOGE("open(pts_slave) daemon");
             exit(-1);
         }
+
+		//Check we haven't been fooled
+		{
+			struct stat stbuf;
+			int res = fstat(ptsfd, &stbuf);
+			if(res) {
+				//If we have been fooled DO NOT WRITE ANYTHING
+				_exit(2);
+			}
+
+			if(stbuf.st_uid != credentials.uid &&
+					credentials.uid != 0) {
+				_exit(2);
+			}
+		}
 
         if (infd < 0)  {
             LOGD("daemon: stdin using PTY");
@@ -410,11 +445,147 @@ static int daemon_accept(int fd) {
     return run_daemon_child(infd, outfd, errfd, argc, argv);
 }
 
+static int copy_file(const char* src, const char* dst, int mode) {
+	int ifd = open(src, O_RDONLY);
+	if(ifd<0)
+		return 1;
+	if(mode == 0) {
+		struct stat stbuf;
+		if(fstat(ifd, &stbuf))
+			return 1;
+		mode = stbuf.st_mode & 0777;
+		LOGE("File %s found mode %o", src, mode);
+
+	}
+	int ofd = open(dst, O_WRONLY|O_CREAT, mode);
+	if(ofd<0)
+		return 1;
+	off_t s = lseek(ifd, 0, SEEK_END);
+	if(s<0)
+		return 1;
+	lseek(ifd, 0, SEEK_SET);
+	int ret = sendfile(ofd, ifd, NULL, s);
+	if(ret<0)
+		return 1;
+	close(ofd);
+	close(ifd);
+	return 0;
+}
+
+static void prepare_su_bind() {
+	int ret = 0;
+
+	//Check if there is a use to mount bind
+	if(access("/system/xbin/su", R_OK) != 0 || access("/system/bin/su", R_OK) != 0)
+		return;
+
+	ret = copy_file("/sbin/su", "/dev/su/su", 0755);
+	if(ret) {
+		PLOGE("Failed to copy su");
+		return;
+	}
+	chmod("/dev/su/su", 0755);
+
+	ret = setfilecon("/dev/su/su", "u:object_r:system_file:s0");
+	if(ret) {
+		LOGE("Failed to set file context");
+		return;
+	}
+
+	ret = mount("/dev/su/su", "/system/xbin/su", "", MS_BIND, NULL);
+	if(ret) {
+		LOGE("Failed to mount bind");
+	}
+
+	ret = mount("/dev/su/su", "/system/bin/su", "", MS_BIND, NULL);
+	if(ret) {
+		LOGE("Failed to mount bind");
+	}
+}
+
+static void prepare_binds() {
+	mkdir("/data/su", 0700);
+	static int i = 0;
+
+	auto void cb(void *arg, int uid, const char *src, const char *dst) {
+		int ret = 0;
+
+		char *tmpfile = NULL;
+		asprintf(&tmpfile, "/dev/su/bind%d", i++);
+		struct stat stbuf;
+		ret = stat(src, &stbuf);
+		if(ret) {
+			free(tmpfile);
+			LOGE("Failed to stat src %s file", src);
+			return;
+		}
+
+		//Only shell uid is allowed to bind files not his own
+		if(uid != 2000 && uid != stbuf.st_uid) {
+			LOGE("File %s has wrong owner: %d vs %d", src, uid, stbuf.st_uid);
+			return;
+		}
+
+		ret = copy_file(src, tmpfile, 0);
+		if(ret) {
+			free(tmpfile);
+			PLOGE("Failed to copy su");
+			return;
+		}
+		chmod(tmpfile, stbuf.st_mode);
+
+		ret = setfilecon(tmpfile, "u:object_r:system_file:s0");
+		if(ret) {
+			LOGE("Failed to set file context");
+			return;
+		}
+
+		ret = mount(tmpfile, dst, "", MS_BIND, NULL);
+		if(ret) {
+			LOGE("Failed to mount bind");
+			return;
+		}
+	}
+	bind_foreach(cb, NULL);
+}
+
+static void do_init() {
+	auto void cb(void *arg, int uid, const char *path) {
+		int ret = 0;
+
+		int p = fork();
+		if(p)
+			return;
+
+		while(access("/system/bin/sh", R_OK)) sleep(1);
+		ret = setexeccon("u:r:su:s0");
+		execl(path, path, NULL);
+		LOGE("Failed to execute %s. Trying as shell script, ret = %d", path, ret);
+
+		ret = setexeccon("u:r:su:s0");
+		execl("/system/bin/sh", "/system/bin/sh", path, NULL);
+		LOGE("Failed to execute %s as shell script", path);
+		_exit(1);
+	}
+	init_foreach(cb, NULL);
+}
+
+static void prepare() {
+	setfscreatecon("u:object_r:su_daemon:s0");
+	mkdir("/dev/su", 0700);
+	prepare_su_bind();
+	prepare_binds();
+	do_init();
+	setfscreatecon(NULL);
+}
+
 int run_daemon() {
     if (getuid() != 0 || getgid() != 0) {
         PLOGE("daemon requires root. uid/gid not root");
         return -1;
     }
+
+	prepare();
 
     int fd;
     struct sockaddr_un sun;
@@ -483,6 +654,7 @@ err:
 static int quit_signals[] = { SIGALRM, SIGHUP, SIGPIPE, SIGQUIT, SIGTERM, SIGINT, 0 };
 
 static void sighandler(int sig) {
+	(void)sig;
     restore_stdin();
 
     // Assume we'll only be called before death
@@ -534,7 +706,7 @@ static void setup_sighandlers(void) {
 
 int connect_daemon(int argc, char *argv[], int ppid) {
     int uid = getuid();
-    int ptmx;
+    int ptmx = -1;
     char pts_slave[PATH_MAX];
 
     struct sockaddr_un sun;

@@ -77,7 +77,7 @@
 #define str(a) #a
 
 #ifndef VERSION_CODE
-#define VERSION_CODE 16
+#define VERSION_CODE 17
 #endif
 #define VERSION xstr(VERSION_CODE) " " REQUESTOR
 
@@ -98,6 +98,7 @@ struct su_request {
     int login;
     int keepenv;
     char *shell;
+	char *context;
     char *command;
     char **argv;
     int argc;
@@ -121,10 +122,17 @@ struct su_user_info {
     char database_path[PATH_MAX];
 };
 
+struct su_bind {
+	const char *from;
+	const char *to;
+};
+
 struct su_context {
     struct su_initiator from;
     struct su_request to;
     struct su_user_info user;
+	struct su_bind bind;
+	const char *init;
     mode_t umask;
     char sock_path[PATH_MAX];
 };
@@ -174,11 +182,15 @@ void exec_logd(const char* fmt, ...);
 
 int run_daemon();
 int connect_daemon(int argc, char *argv[], int ppid);
-int su_main(int argc, char *argv[], int need_client);
+int su_main(int argc, char *argv[]);
+int su_main_nodaemon(int argc, char *argv[]);
 // for when you give zero fucks about the state of the child process.
 // this version of fork understands you don't care about the child.
 // deadbeat dad fork.
 int fork_zero_fucks();
+
+void hacks_init();
+void hacks_update_context(struct su_context* ctxt);
 
 // fallback to using /system/bin/log.
 // can't use liblog.so because this is a static binary.

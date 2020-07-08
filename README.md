@@ -1,6 +1,9 @@
 ## Why another Superuser?
-* Superuser should be open source. It's the gateway to root on your device. It must be open for independent security analysis. Obscurity (closed source) is not security.
-* Superuser should be NDK buildable. No internal Android references.
+* Superuser should be open source.
+  It's the gateway to root on your device.
+  It must be open for independent security analysis. Obscurity (closed source) is not security.
+* Superuser should be NDK buildable.
+  No internal Android references.
 * Superuser should also be AOSP buildable for those that want to embed it in their ROM.
 * Superuser should also be AOSP _embeddable_, meaning a ROM can easily embed it into their Settings app.
 * Maintenance and updates on both the market and source repositories should be timely.
@@ -8,110 +11,117 @@
 * Handle multiuser (4.2+) properly
 * Handle concurrent su requests properly
 
-## Translations
-
-Translations are very much appreciated, but please do not submit translations on Github! Instead, use the review submission process on [CyanogenMod's gerrit instance](http://review.cyanogenmod.org/#/q/status:open,n,z).
-
-
+## Why NOT use this Superuser?
+* If you have any doubt about how to go recover from a critical failure, DON'T TRY THIS
+* Don't use it if you're afraid of a brick
 
 ## Checking out the source
 
 You'll need the "Widgets" dependency.
 
-* $ mkdir /path/to/src
-* $ cd /path/to/src
-* $ git clone git://github.com/koush/Superuser
-* $ git clone git://github.com/koush/Widgets
+* `$ mkdir /path/to/src`
+* `$ cd /path/to/src`
+* `$ git clone git://github.com/phhusson/Superuser`
+* `$ cd Superuser`
+* `$ git clone git://github.com/phhusson/Widgets`
 
 These repositories do not keep the actual projects in the top level directory.
 This is because they contain tests, libs, and samples.
 
-Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.  Install NDK Revision 9b from [here](http://developer.android.com/tools/sdk/ndk/index.html).
+Make sure the SDK Platform for API 19 is installed, through the Android SDK Manager.
+Install NDK Revision 9b from [developer.android.com](https://developer.android.com/tools/sdk/ndk/index.html) or use the latest and set `NDK_TOOLCHAIN_VERSION=4.9`.
 
-## Eclipse
-
-In Eclipse, import Widgets/Widgets and Superuser/Superuser. It should Just Work (TM).
-
-## Ant
-
-* $ mkdir /path/to/src
-* $ cd /path/to/src
-* $ cd Superuser/Superuser
-
-In this directory, create a file called local.properties. This file is used by ant for custom properties. You need to specify the location of the ndk directory and your keystore parameters:
-
-```
-ndk.dir=/Users/koush/src/android-ndk
-key.store=/Users/koush/.keystore
-key.alias=mykey
-```
-
-If you do not have a release key yet, [create one using keytool](http://developer.android.com/tools/publishing/app-signing.html).
-
-Set up your SDK path (this is the directory containing platform-tools/, tools/, etc.):
-
-* $ export ANDROID_HOME=/Users/koush/src/sdk
-
-Then you can build:
-
-* $ ant release
-
-Outputs:
-* bin/update.zip - Recovery installable zip
-* bin/Superuser-release.apk - Superuser Android app
-* libs/armeabi/su - ARM su binary
-* libs/x86/su - x86 su binary
-* libs/mips/su - MIPS su binary
-
-## Building the su binary
-
-You can use ant as shown above, to build the binary, but it can also be built without building the APK.
+## Building the su and placeholder binaries
 
 Make sure you have the android-ndk downloaded with the tool "ndk-build" in your path.
 
-* $ cd /path/to/src/
-* $ cd Superuser/Superuser
-* $ ndk-build
+* `$ cd /path/to/src/`
+* `$ cd Superuser/Superuser`
+* `$ ndk-build`
 
-The su binary will built into Superuser/Superuser/libs/armeabi/su.
+The su binary will built into Superuser/Superuser/libs/armeabi/su, and the placeholder will be built into Superuser/Superuser/libs/armeabi/placeholder
 
+## Building the application
 
+* `$ ./gradlew assembleDebug`
 
-## Building with AOSP, CyanogenMod, etc
-
-ROM developers are welcome to distribute the official Superuser APK and binary that I publish. That will
-allow them to receive updates with Google Play. However, you can also build Superuser as part of your
-build, if you choose to.
-
-There are two ways to include Superuser in your build. The easiest is to build the APK as a separate app.
-To do that, simply add the local_manifest.xml as described below. The second way is by embedding it
-into the native Android System Settings.
-
-#### Repo Setup
-Add the [local_manifest.xml](https://github.com/koush/Superuser/blob/master/local_manifest.xml) to your .repo/local_manifests
+(Yes I use debug builds for the moment.)
 
 #### Configuring the Package Name
-The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser.
+//The Superuser distributed on Google Play is in the package name com.koushikdutta.superuser. (To be changed)
 To prevent conflicts with the Play store version, the build process changes the package
 name to com.thirdparty.superuser. You can configure this value by setting the following
-in your vendor makefile or BoardConfig:
+in your build.gradle
 
 ```
-SUPERUSER_PACKAGE := com.mypackagename.superuser
+applicationId "com.thirdparty.superuser"
 ```
 
-#### Advanced - Embedding Superuser into System Settings
+## How to install?
 
-You will not need to change the package name as described above. Superuser will simply go
-into the com.android.settings package.
+You can install su in various different ways.
+All are not listed here.
 
-First, in a product makefile (like vendor/cm/config/common.mk), specify the following:
+### Editing /system partition, and using placeholder binary
 
-```
-SUPERUSER_EMBEDDED := true
-```
+One way is through placeholder binary.
+It doesn't require to modify boot.img, only system partition.
+This doesn't work on Android M, and is considered obsolete.
+(SELinux policies aren't keeping up)
 
-To modify packages/apps/Settings, you will need this [patch](http://review.cyanogenmod.org/#/c/32957/2//COMMIT_MSG,unified).
-The patch simply references the sources checked out to external/koush and makes changes
-to XML preference files and the AndroidManifest.xml. It is a very minimal change.
+To install it this way, here are the needed steps:
+* Rename /system/bin/app_process32 to /system/bin/app_process32.old
+* Copy placeholder to system/bin/app_process32
+* Ensure permissions of app_process32 are the same as of app_process32.old, including SELinux attributes (should be 0755 u:object_r:zygote_exec:s0)
+* Put su file in system/xbin/
+* Add /system/xbin/su --daemon in install-recovery.sh
 
+### From sources
+
+Please refer to https://github.com/seSuperuser/AOSP-SU-PATCH/
+
+### Editing boot partition
+
+Please refer to https://github.com/phhusson/super-bootimg/
+
+## TODO List
+
+Here is a list of what's left to do, to be compatible with Chainfire's SuperSU (as documented at [su.chainfire.eu](https://su.chainfire.eu)):
+* --mount-master
+
+Here is an additional TODO list:
+* Create restricted domains, which should match of basic needs.
+  So that we can tell users "this app is not as bad as it might"
+* Safer su --bind/su --init (should be package-name based, not uid-based)
+
+## Contact me
+* IRC: #superuser-phh @ Freenode
+* mail: phh@phh.me
+
+## Communication
+
+This project is in REALLY early state, though some points have to be mentioned:
+* For development purposes, please use the project's IRC: #superuser-phh @ Freenode
+* Any issue discussed MUST have an entry in GitHub's bugtracker
+* There will be security flaws.
+  If you find one, please first discuss it with me privately (<phh@phh.me>, phh on IRC).
+* If you feel you need to be aware of security flaws before disclosure, please contact me.
+  I might create a dedicated security mailing list.
+
+## Organisation
+
+https://trello.com/b/adDbOmV0/superuser
+
+## Prebuilt images
+
+I setup a robot to build rooted boot.img.
+The result is available at [superuser.phh.me](https://superuser.phh.me/).
+Each boot.img is signed with the keystore at [superuser.phh.me/keystore.img](https://superuser.phh.me/keystore.img).
+Every boot.img contains the latest su and SELinux policy.
+* orig-boot.img is extracted from the ROM and is provided **for reference only**.
+* boot-su-eng.img is generated by calling `su` with the `eng` option.
+* boot-su-user.img is generated by calling `su` without any arguments.
+
+The matching APK is available at [play.google.com/store/apps/details?id=me.phh.superuser](https://play.google.com/store/apps/details?id=me.phh.superuser).
+
+If you want to add some ROMs or boot.img configurations into the auto-builder, open a pull-request or create an issue at [github.com/phhusson/super-bootimg/tree/master/known-imgs](https://github.com/phhusson/super-bootimg/tree/master/known-imgs).

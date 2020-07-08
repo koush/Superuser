@@ -58,11 +58,8 @@
   <string name="toast">всплывающее оповещение</string>
   <string name="notification">уведомление в строке состояния</string>
   <string name="no_notification">Уведомления отключены</string>
-  <string name="developer_warning">Внимание:\nразрешение android.permission.ACCESS_SUPERUSER\nне объявлено в манифесте приложения.</string>
   <string name="superuser_description">Полный доступ к функциям устройства и памяти</string>
   <string name="superuser_description_more">Права Суперпользователя предоставляют полный доступ к функциям и памяти устройства, в том числе к аппаратной составляющей. Предоставление этих прав является потенциально опасным.</string>
-  <string name="declared_permission">Заявленное разрешение</string>
-  <string name="declared_permission_summary">Разрешение будут получать только приложения с заявленным в манифесте android.permission.ACCESS_SUPERUSER</string>
   <string name="automatic_response">Автоматический режим</string>
   <string name="prompt">Спрашивать каждый раз</string>
   <string name="automatic_response_allow_summary">Новые запросы будут разрешены</string>

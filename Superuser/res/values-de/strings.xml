@@ -58,11 +58,8 @@
   <string name="toast">Kurzzeit-Benachrichtigung</string>
   <string name="notification">Statusleisten-Benachrichtigung</string>
   <string name="no_notification">Keine Benachrichtigungen anzeigen</string>
-  <string name="developer_warning">Entwickler-Warnung:\nandroid.permission.ACCESS_SUPERUSER\n wurde im Manifest nicht deklariert.</string>
   <string name="superuser_description">Voller Zugriff auf alle Gerätefunktionen und Speicher</string>
   <string name="superuser_description_more">Superuser gewährt vollen Zugriff auf alle Gerätefunktionen und Speicher, einschließlich der sicheren und sensiblen Hardware-Elemente Ihres Geräts. Diese Berechtigung ist potenziell gefährlich.</string>
-  <string name="declared_permission">Deklaration erfordern</string>
-  <string name="declared_permission_summary">Anfragen von Apps, die die Superuser-Berechtigung nicht im Manifest deklarieren, ignorieren</string>
   <string name="automatic_response">Automatische Beantwortung</string>
   <string name="prompt">Nachfragen</string>
   <string name="automatic_response_allow_summary">Neue Anfragen automatisch gewähren</string>
