@@ -24,7 +24,7 @@ public class LogEntry extends UidCommand {
     public long id;
     public String action;
     public int date;
-    
+
     public Date getDate() {
         return new Date((long)date * 1000);
     }

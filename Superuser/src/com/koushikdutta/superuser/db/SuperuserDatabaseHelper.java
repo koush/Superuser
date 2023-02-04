@@ -50,7 +50,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
             oldVersion = 1;
         }
     }
-    
+
     public static ArrayList<LogEntry> getLogs(Context context, UidPolicy policy, int limit) {
         SQLiteDatabase db = new SuperuserDatabaseHelper(context).getReadableDatabase();
         try {
@@ -59,7 +59,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         finally {
             db.close();
         }
-    }    
+    }
     public static ArrayList<LogEntry> getLogs(SQLiteDatabase db, UidPolicy policy, int limit) {
         ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         Cursor c;
@@ -84,7 +84,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         }
         return ret;
     }
-    
+
     public static ArrayList<LogEntry> getLogs(Context context) {
         SQLiteDatabase db = new SuperuserDatabaseHelper(context).getReadableDatabase();
         try {
@@ -93,7 +93,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         finally {
             db.close();
         }
-    }    
+    }
     public static ArrayList<LogEntry> getLogs(Context context, SQLiteDatabase db) {
         ArrayList<LogEntry> ret = new ArrayList<LogEntry>();
         Cursor c = db.query("log", null, null, null, null, null, "date DESC");
@@ -120,7 +120,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         db.delete("log", null, null);
         db.close();
     }
-    
+
     static void addLog(SQLiteDatabase db, LogEntry log) {
         ContentValues values = new ContentValues();
         values.put("uid", log.uid);
@@ -138,7 +138,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         values.put("username", log.username);
         db.insert("log", null, values);
     }
-    
+
     public static UidPolicy addLog(Context context, LogEntry log) {
         // nulls are considered unique, even from other nulls. blerg.
         // http://stackoverflow.com/questions/3906811/null-permitted-in-primary-key-why-and-in-which-dbms
@@ -174,7 +174,7 @@ public class SuperuserDatabaseHelper extends SQLiteOpenHelper {
         finally {
             superuser.close();
         }
-        
+
         return u;
     }
 }

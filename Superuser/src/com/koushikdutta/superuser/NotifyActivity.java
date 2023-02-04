@@ -33,9 +33,9 @@ public class NotifyActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
-        
+
         setContentView(R.layout.notify);
-        
+
         Intent intent = getIntent();
         if (intent == null) {
             finish();
@@ -46,7 +46,7 @@ public class NotifyActivity extends Activity {
             finish();
             return;
         }
-        
+
         final View packageInfo = findViewById(R.id.packageinfo);
         final PackageManager pm = getPackageManager();
         String[] pkgs = pm.getPackagesForUid(callerUid);
@@ -61,10 +61,10 @@ public class NotifyActivity extends Activity {
                     ImageView icon = (ImageView)packageInfo.findViewById(R.id.image);
                     icon.setImageDrawable(pi.applicationInfo.loadIcon(pm));
                     ((TextView)packageInfo.findViewById(R.id.title)).setText(pi.applicationInfo.loadLabel(pm));
-                    
+
                     ((TextView)findViewById(R.id.app_header)).setText(pi.applicationInfo.loadLabel(pm));
                     ((TextView)findViewById(R.id.package_header)).setText(pi.packageName);
-                    
+
                     // could display them all, but screw it...
                     // maybe a better ux for this later
                     break;
@@ -74,7 +74,7 @@ public class NotifyActivity extends Activity {
             }
             findViewById(R.id.unknown).setVisibility(View.GONE);
         }
-        
+
         findViewById(R.id.ok).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

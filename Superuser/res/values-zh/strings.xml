@@ -77,7 +77,7 @@
     <string name="install_success">超級使用者安裝成功。</string>
     <string name="su_binary_outdated">二進制檔案（su）已經過期。</string>
     <string name="superuser_access">訪問權限</string>
-    <string name="disabled">禁用</string>
+    <string name="access_disabled">禁用</string>
     <string name="apps_only">僅應用程式</string>
     <string name="adb_only">僅 ADB</string>
     <string name="apps_and_adb">應用程式和 ADB</string>

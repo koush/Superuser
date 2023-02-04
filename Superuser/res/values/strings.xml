@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!--
+     Copyright (C) 2013-2014 The CyanogenMod Project
 
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="superuser">Superuser</string>
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
-    <string name="status_incoming">Incoming Superuser Request...</string>
+    <string name="status_incoming">Incoming Superuser Request\u2026</string>
     <string name="unknown_uid">Unknown UID: %s</string>
     <string name="application_request">%s is requesting Superuser access.</string>
     <string name="info">Warning: If you do not understand this, you should deny the request.</string>
@@ -23,7 +37,7 @@
     <string name="no_logs">No Logs</string>
     <string name="no_apps">There are currently no Superuser app policies.</string>
     <string name="logging">Logging</string>
-    <string name="logging_summary">Enable or disable all Superuser request logging</string>
+    <string name="logging_summary">Enable all Superuser request logging</string>
     <string name="pin_protection">PIN Protection</string>
     <string name="pin_protection_summary">Require entry of a PIN to approve Superuser requests</string>
     <string name="request_timeout">Request Timeout</string>
@@ -67,17 +81,17 @@
     <string name="about">About</string>
     <string name="apps">Apps</string>
     <string name="installing">Installing</string>
-    <string name="installing_superuser">Installing Superuser...</string>
+    <string name="installing_superuser">Installing Superuser\u2026</string>
     <string name="install_superuser">Install Superuser</string>
     <string name="install_superuser_info">The Superuser binary (su) must be updated.\n\nPlease choose an installation method.\nRecovery mode installation is recommended for HTC devices.</string>
     <string name="recovery_install">Recovery Install</string>
     <string name="install">Install</string>
-    <string name="checking_superuser">Checking Superuser...</string>
+    <string name="checking_superuser">Checking Superuser\u2026</string>
     <string name="install_error">There was an error installing Superuser. Please send a log of the error to the developer.</string>
     <string name="install_success">Installation of Superuser was successful.</string>
     <string name="su_binary_outdated">The su binary is out of date.</string>
     <string name="superuser_access">Superuser Access</string>
-    <string name="disabled">Disabled</string>
+    <string name="access_disabled">Disabled</string>
     <string name="apps_only">Apps only</string>
     <string name="adb_only">ADB only</string>
     <string name="apps_and_adb">Apps and ADB</string>
@@ -87,4 +101,7 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="pin_disabled">Superuser PIN protection disabled</string>
+    <string name="revoke_permission">Revoke Superuser permission</string>
+    <string name="details">Details</string>
+    <string name="db_delete_error">Superuser permission cannot be revoked from this app.\nPlease restart the Superuser app and try again.</string>
 </resources>

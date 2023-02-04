@@ -40,4 +40,12 @@ public class UidPolicy extends UidCommand {
             return R.string.interactive;
         return R.string.deny;
     }
+
+    public String getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(String policy){
+     this.policy = policy;
+    }
 }

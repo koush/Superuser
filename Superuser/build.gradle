@@ -1,0 +1,51 @@
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.6'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile project(':Widgets:Widgets')
+}
+
+android {
+    packagingOptions {
+        exclude 'META-INF/beans.xml'
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['assets/']
+            res.srcDirs = ['res/']
+            java.srcDirs = ['src/']
+            aidl.srcDirs = ['src/']
+        }
+    }
+
+    compileSdkVersion 21
+    buildToolsVersion '20.0.0'
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 21
+    }
+}
+
+// upload to maven task
+//if (System.getenv().I_AM_KOUSH == 'true') {
+//  apply from: 'https://raw.github.com/koush/mvn-repo/master/maven.gradle'
+//}

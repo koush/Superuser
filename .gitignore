@@ -5,3 +5,6 @@ obj
 local.properties
 gen
 .DS_Store
+.settings
+libs
+build

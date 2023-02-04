@@ -16,21 +16,16 @@
 
 package com.koushikdutta.superuser;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,15 +36,19 @@ import com.koushikdutta.superuser.util.StreamUtility;
 import com.koushikdutta.superuser.util.SuHelper;
 import com.koushikdutta.widgets.BetterListActivity;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
+
 public class MainActivity extends BetterListActivity {
     public MainActivity() {
         super(PolicyFragment.class);
     }
 
-    public PolicyFragmentInternal getFragment() {
-        return (PolicyFragmentInternal)super.getFragment();
-    }
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mi = new MenuInflater(this);
@@ -58,25 +57,45 @@ public class MainActivity extends BetterListActivity {
         about.setOnMenuItemClickListener(new OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                getFragment().setContent(new AboutFragment(), true, getString(R.string.about));
+                getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(getString(R.string.about))
+                .replace(getListContainerId(), new AboutFragment(), "content")
+                .commit();
                 return true;
             }
         });
-        
+
+        MenuItem settings = menu.findItem(R.id.settings);
+        settings.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(final MenuItem item) {
+                getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(getString(R.string.settings))
+                .replace(getListContainerId(), new SettingsFragment(), "content")
+                .commit();
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private String getArch() {
+        String prop = System.getProperty("os.arch");
+        if (prop.contains("x86") || prop.contains("i686") || prop.contains("i386")) {
+            return "x86";
+        } else if (prop.contains("mips")) {
+            return "mips";
+        } else {
+            return "armeabi";
+        }
     }
     
     File extractSu() throws IOException, InterruptedException {
-        Process p = Runtime.getRuntime().exec("cat /proc/cpuinfo");
-        String contents = StreamUtility.readToEnd(p.getInputStream());
-        p.getInputStream().close();
-        p.waitFor();
-        contents = contents.toLowerCase();
-        String arch = "armeabi";
-        if (contents.contains("x86"))
-            arch = "x86";
         ZipFile zf = new ZipFile(getPackageCodePath());
-        ZipEntry su = zf.getEntry("assets/" + arch + "/su");
+        ZipEntry su = zf.getEntry("assets/" + getArch() + "/su");
         InputStream zin = zf.getInputStream(su);
         File ret = getFileStreamPath("su");
         FileOutputStream fout = new FileOutputStream(ret);
@@ -86,7 +105,7 @@ public class MainActivity extends BetterListActivity {
         fout.close();
         return ret;
     }
-    
+
     void doRecoveryInstall() {
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.installing);
@@ -104,13 +123,22 @@ public class MainActivity extends BetterListActivity {
                 in.close();
                 zf.close();
             }
-            
+
             public void run() {
                 try {
                     File zip = getFileStreamPath("superuser.zip");
                     ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zip));
                     doEntry(zout, "assets/update-binary", "META-INF/com/google/android/update-binary");
+                    doEntry(zout, "assets/install-recovery.sh", "install-recovery.sh");
                     zout.close();
+
+                    ZipFile zf = new ZipFile(getPackageCodePath());
+                    ZipEntry ze = zf.getEntry("assets/" + getArch() + "/reboot");
+                    InputStream in;
+                    FileOutputStream reboot;
+                    StreamUtility.copyStream(in = zf.getInputStream(ze), reboot = openFileOutput("reboot", MODE_PRIVATE));
+                    reboot.close();
+                    in.close();
 
                     final File su = extractSu();
 
@@ -123,10 +151,15 @@ public class MainActivity extends BetterListActivity {
                             "chmod 644 /cache/superuser.zip\n" +
                             "chmod 644 /cache/recovery/command\n" +
                             "sync\n" +
+                            String.format("chmod 755 %s\n", getFileStreamPath("reboot").getAbsolutePath()) +
                             "reboot recovery\n";
                     Process p = Runtime.getRuntime().exec("su");
                     p.getOutputStream().write(command.getBytes());
                     p.getOutputStream().close();
+                    File rebootScript = getFileStreamPath("reboot.sh");
+                    StreamUtility.writeFile(rebootScript, "reboot recovery ; " + getFileStreamPath("reboot").getAbsolutePath() + " recovery ;");
+                    p.waitFor();
+                    Runtime.getRuntime().exec(new String[] { "su", "-c", ". " + rebootScript.getAbsolutePath() });
                     if (p.waitFor() != 0)
                         throw new Exception("non zero result");
                 }
@@ -148,7 +181,7 @@ public class MainActivity extends BetterListActivity {
             }
         }.start();
     }
-    
+
     void doSystemInstall() {
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.installing);
@@ -183,7 +216,7 @@ public class MainActivity extends BetterListActivity {
                 }
                 catch (Exception ex) {
                     _error = true;
-                    ex.printStackTrace();
+                    Log.e("Superuser", "error upgrading", ex);
                 }
                 dlg.dismiss();
                 final boolean error = _error;
@@ -193,7 +226,7 @@ public class MainActivity extends BetterListActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setPositiveButton(android.R.string.ok, null);
                         builder.setTitle(R.string.install);
-                        
+
                         if (error) {
                             builder.setMessage(R.string.install_error);
                         }
@@ -206,17 +239,19 @@ public class MainActivity extends BetterListActivity {
             };
         }.start();
     }
-    
+
     void doInstall() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.install);
         builder.setMessage(R.string.install_superuser_info);
-        builder.setPositiveButton(R.string.install, new OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                doSystemInstall();
-            }
-        });
+        if (Build.VERSION.SDK_INT < 18) {
+            builder.setPositiveButton(R.string.install, new OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    doSystemInstall();
+                }
+            });
+        }
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.setNeutralButton(R.string.recovery_install, new OnClickListener() {
             @Override
@@ -226,13 +261,13 @@ public class MainActivity extends BetterListActivity {
         });
         builder.create().show();
     }
-    
+
     private void saveWhatsNew() {
         Settings.setString(this, "whats_new", WHATS_NEW);
     }
-    
+
     // this is intentionally not localized as it will change constantly.
-    private static final String WHATS_NEW = "Notifications can now be configured per app.\n\nThe Superuser theme can be configured in Settings.";
+    private static final String WHATS_NEW = "Added support for Android 4.3.";
     protected void doWhatsNew() {
         if (WHATS_NEW.equals(Settings.getString(this, "whats_new")))
             return;
@@ -257,12 +292,12 @@ public class MainActivity extends BetterListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Settings.applyDarkThemeSetting(this, R.style.SuperuserDarkActivity);
         super.onCreate(savedInstanceState);
-        
+
         if (Settings.getBoolean(this, "first_run", true)) {
             saveWhatsNew();
             Settings.setBoolean(this, "first_run", false);
         }
-        
+
         final ProgressDialog dlg = new ProgressDialog(this);
         dlg.setTitle(R.string.superuser);
         dlg.setMessage(getString(R.string.checking_superuser));
