@@ -53,14 +53,14 @@ public class PinViewHelper {
                 }
             }
         });
-        
+
         ret.findViewById(R.id.cancel).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCancel();
             }
         });
-        
+
         ret.findViewById(R.id.ok).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,18 +68,18 @@ public class PinViewHelper {
                 password.setText("");
             }
         });
-        
+
         mView = ret;
     }
-    
+
     View mView;
     public View getView() {
         return mView;
     }
-    
+
     public void onEnter(String password) {
     }
-    
+
     public void onCancel() {
     }
 }

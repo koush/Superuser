@@ -6,10 +6,14 @@
 echo -n -e 'ui_print Installing Superuser...\n' > /proc/self/fd/$2
 echo -n -e 'ui_print\n' > /proc/self/fd/$2
 
-X86=$(uname -a | grep x86)
-if [ ! -z "$X86" ]
-then
+# detect binary versions to install
+ARCH=$(uname -m)
+
+# x86 needs to match: i486, i686, x86_64, ...
+if echo "$ARCH" | grep -q 86; then
   PLATFORM=x86
+elif [ "$ARCH" = "mips" -o "$ARCH" = "mips64" ]; then
+  PLATFORM=mips
 else
   PLATFORM=armeabi
 fi
@@ -23,6 +27,7 @@ then
   mkdir -p $PLATFORM
   cp /cache/su $PLATFORM/su
   cp /cache/Superuser.apk .
+  cp /cache/install-recovery.sh .
 fi
 
 
@@ -30,6 +35,8 @@ echo -n -e 'ui_print Installing '$PLATFORM' binaries...\n' > /proc/self/fd/$2
 echo -n -e 'ui_print\n' > /proc/self/fd/$2
 
 mount /system
+chattr -i /system/bin/su
+chattr -i /system/xbin/su
 rm -f /system/bin/su
 rm -f /system/xbin/su
 rm -f /system/app/Superuser.*
@@ -46,5 +53,30 @@ ln -s /system/xbin/su /system/bin/su
 
 cp Superuser.apk /system/app
 chmod 644 /system/app/Superuser.apk
+
+# if the system is at least 4.3, and there is no su daemon built in,
+# let's try to install it using install-recovery.sh
+BUILD_VERSION_SDK="$(grep 'ro\.build\.version\.sdk' /system/build.prop)"
+BUILD_VERSION_SDK="${BUILD_VERSION_SDK##*=}"
+
+if [ "$BUILD_VERSION_SDK" -ge 18 ]
+then
+  # check for rom su daemon before clobbering install-recovery.sh
+  if [ ! -f "/system/etc/.has_su_daemon" ]
+  then
+      echo -n -e 'ui_print Installing Superuser daemon...\n' > /proc/self/fd/$2
+      echo -n -e 'ui_print\n' > /proc/self/fd/$2
+      chattr -i /system/etc/install-recovery.sh
+      chattr -i /system/bin/install-recovery.sh
+      cp install-recovery.sh /system/etc/install-recovery.sh
+      cp install-recovery.sh /system/bin/install-recovery.sh
+      chmod 755 /system/etc/install-recovery.sh
+      chmod 755 /system/bin/install-recovery.sh
+      # note that an post install su daemon was installed
+      # so recovery doesn't freak out and recommend you disable
+      # the install-recovery.sh execute bit.
+      touch /system/etc/.installed_su_daemon
+  fi
+fi
 
 umount /system

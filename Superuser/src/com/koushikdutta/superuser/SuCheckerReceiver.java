@@ -1,12 +1,12 @@
 package com.koushikdutta.superuser;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.koushikdutta.superuser.util.Settings;
@@ -14,7 +14,7 @@ import com.koushikdutta.superuser.util.SuHelper;
 
 public class SuCheckerReceiver extends BroadcastReceiver {
     public static void doNotification(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        Notification.Builder builder = new Notification.Builder(context);
         builder.setTicker(context.getString(R.string.install_superuser));
         builder.setContentTitle(context.getString(R.string.install_superuser));
         builder.setSmallIcon(R.drawable.ic_stat_notification);
@@ -30,15 +30,15 @@ public class SuCheckerReceiver extends BroadcastReceiver {
         NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         nm.notify(10000, builder.build());
     }
-    
+
     private static final String ACTION_DELETED = "internal.superuser.ACTION_CHECK_DELETED";
-    
+
     @Override
     public void onReceive(final Context context, Intent intent) {
         if (intent == null)
             return;
-        
-        
+
+
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()) || "internal.superuser.BOOT_TEST".equals(intent.getAction())) {
             // if the user deleted the notification in the past, don't bother them again for a while
             int counter = Settings.getCheckSuQuietCounter(context);

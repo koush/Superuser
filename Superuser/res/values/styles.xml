@@ -35,6 +35,10 @@
     </style>
 
     <style name="SuperuserLight" parent="@style/AppTheme">
+        <item name="colorPrimary">#4CAF50</item>
+        <item name="colorPrimaryDark">#4CAF50</item>
+        <item name="colorAccent">#F44336</item>
+
         <item name="bottomButtonBar">@color/background_dark</item>
         <item name="bottomButtonBarText">?android:attr/textColorPrimaryInverse</item>
         

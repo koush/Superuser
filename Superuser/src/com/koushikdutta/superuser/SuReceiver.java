@@ -16,13 +16,12 @@
 
 package com.koushikdutta.superuser;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.koushikdutta.superuser.db.LogEntry;
@@ -35,7 +34,7 @@ public class SuReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         if (intent == null)
             return;
-        
+
         String command = intent.getStringExtra("command");
         if (command == null)
             return;
@@ -76,22 +75,22 @@ public class SuReceiver extends BroadcastReceiver {
 
         switch (Settings.getNotificationType(context)) {
         case Settings.NOTIFICATION_TYPE_NOTIFICATION:
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            Notification.Builder builder = new Notification.Builder(context);
             builder.setTicker(toast)
             .setAutoCancel(true)
             .setContentIntent(PendingIntent.getActivity(context, 0, new Intent(), 0))
             .setContentTitle(context.getString(R.string.superuser))
             .setContentText(toast)
             .setSmallIcon(R.drawable.ic_stat_notification);
-            
+
             NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-            nm.notify(NOTIFICATION_ID, builder.getNotification());
+            nm.notify(NOTIFICATION_ID, builder.build());
             break;
         case Settings.NOTIFICATION_TYPE_TOAST:
             Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
             break;
         }
     }
-    
+
     private static final int NOTIFICATION_ID = 4545;
 }

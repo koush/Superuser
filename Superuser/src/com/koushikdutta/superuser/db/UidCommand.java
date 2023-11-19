@@ -30,7 +30,7 @@ public class UidCommand {
     public String command;
     public int desiredUid;
     public String desiredName;
-    
+
     public String getName() {
         if (name != null)
             return name;
@@ -40,8 +40,8 @@ public class UidCommand {
             return username;
         return String.valueOf(uid);
     }
-    
-    
+
+
     public void getPackageInfo(Context context) {
         try {
             PackageManager pm = context.getPackageManager();

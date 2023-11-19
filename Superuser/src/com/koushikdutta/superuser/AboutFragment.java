@@ -25,7 +25,7 @@ public class AboutFragment extends BetterListFragment {
         mWrapper = new ContextThemeWrapper(super.getContext(), value.resourceId);
         return mWrapper;
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
@@ -38,8 +38,8 @@ public class AboutFragment extends BetterListFragment {
         }
         catch (NameNotFoundException e) {
         }
-        
-        addItem(R.string.about, new ListItem(getInternal(), getString(R.string.superuser), version, R.drawable.ic_launcher) {
+
+        addItem(R.string.about, new ListItem(this, getString(R.string.superuser), version, R.drawable.ic_launcher) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -48,8 +48,8 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });
-        
-        addItem(R.string.about, new ListItem(getInternal(), "Koushik Dutta", "@koush", R.drawable.koush) {
+
+        addItem(R.string.about, new ListItem(this, "Koushik Dutta", "@koush", R.drawable.koush) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -65,9 +65,9 @@ public class AboutFragment extends BetterListFragment {
 
             }
         });
-        
+
         final String uri = "http://github.com/koush/Superuser";
-        addItem(R.string.about, new ListItem(getInternal(), "Github", uri, R.drawable.github) {
+        addItem(R.string.about, new ListItem(this, "Github", uri, R.drawable.github) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -78,7 +78,7 @@ public class AboutFragment extends BetterListFragment {
             }
         });
 
-        addItem(R.string.apps, new ListItem(getInternal(), "ROM Manager", "The ultimate backup, restore, and ROM installation tool", R.drawable.clockwork512) {
+        addItem(R.string.apps, new ListItem(this, "ROM Manager", "The ultimate backup, restore, and ROM installation tool", R.drawable.clockwork512) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -86,8 +86,8 @@ public class AboutFragment extends BetterListFragment {
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.rommanager"));
                 startActivity(i);
             }
-        });        
-        addItem(R.string.apps, new ListItem(getInternal(), "Carbon", "Android's missing backup solution", R.drawable.carbon) {
+        });
+        addItem(R.string.apps, new ListItem(this, "Helium", "Android's missing backup solution", R.drawable.carbon) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -95,8 +95,8 @@ public class AboutFragment extends BetterListFragment {
                 i.setData(Uri.parse("market://details?id=com.koushikdutta.backup"));
                 startActivity(i);
             }
-        });        
-        addItem(R.string.apps, new ListItem(getInternal(), "DeskSMS", "Seamlessly text message from your email, browser, or instant messenger", R.drawable.desksms) {
+        });
+        addItem(R.string.apps, new ListItem(this, "DeskSMS", "Seamlessly text message from your email, browser, or instant messenger", R.drawable.desksms) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);
@@ -105,7 +105,7 @@ public class AboutFragment extends BetterListFragment {
                 startActivity(i);
             }
         });
-        addItem(R.string.apps, new ListItem(getInternal(), "Tether", "Use your phone's web connection on a laptop or PC", R.drawable.tether) {
+        addItem(R.string.apps, new ListItem(this, "Tether", "Use your phone's web connection on a laptop or PC", R.drawable.tether) {
             @Override
             public void onClick(View view) {
                 super.onClick(view);

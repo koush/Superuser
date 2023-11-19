@@ -50,19 +50,19 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
             db.execSQL("create table if not exists settings (key TEXT PRIMARY KEY, value TEXT)");
             oldVersion = 3;
         }
-        
+
         // migrate the logs and settings outta this db. fix for db locking issues by su, which
         // only needs a readonly db.
         if (oldVersion == 3) {
             SQLiteDatabase superuser = new SuperuserDatabaseHelper(mContext).getWritableDatabase();
-            
+
             ArrayList<LogEntry> logs = SuperuserDatabaseHelper.getLogs(mContext, db);
             superuser.beginTransaction();
             try {
                 for (LogEntry log: logs) {
                     SuperuserDatabaseHelper.addLog(superuser, log);
                 }
-                
+
                 Cursor c = db.query("settings", null, null, null, null, null, null);
                 while (c.moveToNext()) {
                     String key = c.getString(c.getColumnIndex("key"));
@@ -82,18 +82,18 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
                 superuser.endTransaction();
                 superuser.close();
             }
-            
+
             db.execSQL("drop table if exists log");
             db.execSQL("drop table if exists settings");
             oldVersion = 4;
         }
-        
+
         if (oldVersion == 4) {
             db.execSQL("alter table uid_policy add column notification integer");
             db.execSQL("update uid_policy set notification = 1");
             oldVersion = 5;
         }
-        
+
         if (oldVersion == 5) {
             // fix bug where null commands are unique from other nulls. eww!
             ArrayList<UidPolicy> policies = getPolicies(db);
@@ -143,13 +143,13 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         u.notification = c.getInt(c.getColumnIndex("notification")) != 0;
         return u;
     }
-    
-    
+
+
     public static ArrayList<UidPolicy> getPolicies(SQLiteDatabase db) {
         ArrayList<UidPolicy> ret = new ArrayList<UidPolicy>();
-        
+
         db.delete("uid_policy", "until > 0 and until < ?", new String[] { String.valueOf(System.currentTimeMillis()) });
-        
+
         Cursor c = db.query("uid_policy", null, null, null, null, null, null);
         try {
             while (c.moveToNext()) {
@@ -176,15 +176,17 @@ public class SuDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public static void delete(Context context, UidPolicy policy) {
+    public static boolean delete(Context context, UidPolicy policy) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getWritableDatabase();
         if (!TextUtils.isEmpty(policy.command))
             db.delete("uid_policy", "uid = ? and command = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), policy.command, String.valueOf(policy.desiredUid) });
         else
             db.delete("uid_policy", "uid = ? and desired_uid = ?", new String[] { String.valueOf(policy.uid), String.valueOf(policy.desiredUid) });
+        UidPolicy policyEval = get(context, policy.uid, policy.desiredUid, String.valueOf(policy.command));
         db.close();
+        return ((policyEval == null) ? true : false);
     }
-    
+
     public static UidPolicy get(Context context, int uid, int desiredUid, String command) {
         SQLiteDatabase db = new SuDatabaseHelper(context).getReadableDatabase();
         Cursor c;

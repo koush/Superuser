@@ -36,26 +36,63 @@
 #include "su.h"
 #include "utils.h"
 
+extern int is_daemon;
+extern int daemon_from_uid;
+extern int daemon_from_pid;
+
 unsigned get_shell_uid() {
   struct passwd* ppwd = getpwnam("shell");
   if (NULL == ppwd) {
     return 2000;
   }
-  
+
   return ppwd->pw_uid;
+}
+
+unsigned get_system_uid() {
+  struct passwd* ppwd = getpwnam("system");
+  if (NULL == ppwd) {
+    return 1000;
+  }
+
+  return ppwd->pw_uid;
+}
+
+unsigned get_radio_uid() {
+  struct passwd* ppwd = getpwnam("radio");
+  if (NULL == ppwd) {
+    return 1001;
+  }
+
+  return ppwd->pw_uid;
+}
+
+int fork_zero_fucks() {
+    int pid = fork();
+    if (pid) {
+        int status;
+        waitpid(pid, &status, 0);
+        return pid;
+    }
+    else {
+        if (pid = fork())
+            exit(0);
+        return 0;
+    }
 }
 
 void exec_log(char *priority, char* logline) {
   int pid;
   if ((pid = fork()) == 0) {
-      int zero = open("/dev/zero", O_RDONLY | O_CLOEXEC);
-      dup2(zero, 0);
       int null = open("/dev/null", O_WRONLY | O_CLOEXEC);
-      dup2(null, 1);
-      dup2(null, 2);
-      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline);
+      dup2(null, STDIN_FILENO);
+      dup2(null, STDOUT_FILENO);
+      dup2(null, STDERR_FILENO);
+      execl("/system/bin/log", "/system/bin/log", "-p", priority, "-t", LOG_TAG, logline, NULL);
       _exit(0);
   }
+  int status;
+  waitpid(pid, &status, 0);
 }
 
 void exec_loge(const char* fmt, ...) {
@@ -98,6 +135,11 @@ static int from_init(struct su_initiator *from) {
 
     from->uid = getuid();
     from->pid = getppid();
+
+    if (is_daemon) {
+        from->uid = daemon_from_uid;
+        from->pid = daemon_from_pid;
+    }
 
     /* Get the command line */
     snprintf(path, sizeof(path), "/proc/%u/cmdline", from->pid);
@@ -214,7 +256,10 @@ static void populate_environment(const struct su_context *ctx) {
     pw = getpwuid(ctx->to.uid);
     if (pw) {
         setenv("HOME", pw->pw_dir, 1);
-        setenv("SHELL", ctx->to.shell, 1);
+        if (ctx->to.shell)
+            setenv("SHELL", ctx->to.shell, 1);
+        else
+            setenv("SHELL", DEFAULT_SHELL, 1);
         if (ctx->to.login || ctx->to.uid) {
             setenv("USER", pw->pw_name, 1);
             setenv("LOGNAME", pw->pw_name, 1);
@@ -351,7 +396,7 @@ do {                                                \
     }                                               \
 } while (0)
 
-#define write_string(fd, name, data)        \
+#define write_string_data(fd, name, data)        \
 do {                                        \
     write_data(fd, name, strlen(name));     \
     write_data(fd, data, strlen(data));     \
@@ -362,25 +407,26 @@ do {                                        \
 do {                                        \
     char buf[16];                           \
     snprintf(buf, sizeof(buf), "%d", data); \
-    write_string(fd, name, buf);            \
+    write_string_data(fd, name, buf);            \
 } while (0)
 
     write_token(fd, "version", PROTO_VERSION);
     write_token(fd, "binary.version", VERSION_CODE);
     write_token(fd, "pid", ctx->from.pid);
-    write_string(fd, "from.name", ctx->from.name);
-    write_string(fd, "to.name", ctx->to.name);
+    write_string_data(fd, "from.name", ctx->from.name);
+    write_string_data(fd, "to.name", ctx->to.name);
     write_token(fd, "from.uid", ctx->from.uid);
     write_token(fd, "to.uid", ctx->to.uid);
-    write_string(fd, "from.bin", ctx->from.bin);
-    write_string(fd, "command", get_command(&ctx->to));
+    write_string_data(fd, "from.bin", ctx->from.bin);
+    // TODO: Fix issue where not using -c does not result a in a command
+    write_string_data(fd, "command", get_command(&ctx->to));
     write_token(fd, "eof", PROTO_VERSION);
     return 0;
 }
 
 static int socket_receive_result(int fd, char *result, ssize_t result_len) {
     ssize_t len;
-    
+
     LOGD("waiting for user");
     len = read(fd, result, result_len-1);
     if (len < 0) {
@@ -398,6 +444,7 @@ static void usage(int status) {
     fprintf(stream,
     "Usage: su [options] [--] [-] [LOGIN] [--] [args...]\n\n"
     "Options:\n"
+    "  --daemon                      start the su daemon agent\n"
     "  -c, --command COMMAND         pass COMMAND to the invoked shell\n"
     "  -h, --help                    display this help message and exit\n"
     "  -, -l, --login                pretend the shell to be a login shell\n"
@@ -414,10 +461,19 @@ static void usage(int status) {
 static __attribute__ ((noreturn)) void deny(struct su_context *ctx) {
     char *cmd = get_command(&ctx->to);
 
-    // No send to UI denied requests for shell and root users (they are in the log)
-    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
+    int send_to_app = 1;
+
+    // no need to log if called by root
+    if (ctx->from.uid == AID_ROOT)
+        send_to_app = 0;
+
+    // dumpstate (which logs to logcat/shell) will spam the crap out of the system with su calls
+    if (strcmp("/system/bin/dumpstate", ctx->from.bin) == 0)
+        send_to_app = 0;
+
+    if (send_to_app)
         send_result(ctx, DENY);
-    // }
+
     LOGW("request rejected (%u->%u %s)", ctx->from.uid, ctx->to.uid, cmd);
     fprintf(stderr, "%s\n", strerror(EACCES));
     exit(EXIT_FAILURE);
@@ -428,13 +484,40 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     int argc, err;
 
     umask(ctx->umask);
-    // No send to UI accepted requests for shell and root users (they are in the log)
-    // if( ctx->from.uid != AID_SHELL && ctx->from.uid != AID_ROOT ) {
-        send_result(ctx, ALLOW);
-    // }
+    int send_to_app = 1;
 
-    arg0 = strrchr (ctx->to.shell, '/');
-    arg0 = (arg0) ? arg0 + 1 : ctx->to.shell;
+    // no need to log if called by root
+    if (ctx->from.uid == AID_ROOT)
+        send_to_app = 0;
+
+    // dumpstate (which logs to logcat/shell) will spam the crap out of the system with su calls
+    if (strcmp("/system/bin/dumpstate", ctx->from.bin) == 0)
+        send_to_app = 0;
+
+    if (send_to_app)
+        send_result(ctx, ALLOW);
+
+    char *binary;
+    argc = ctx->to.optind;
+    if (ctx->to.command) {
+        binary = ctx->to.shell;
+        ctx->to.argv[--argc] = ctx->to.command;
+        ctx->to.argv[--argc] = "-c";
+    }
+    else if (ctx->to.shell) {
+        binary = ctx->to.shell;
+    }
+    else {
+        if (ctx->to.argv[argc]) {
+            binary = ctx->to.argv[argc++];
+        }
+        else {
+            binary = DEFAULT_SHELL;
+        }
+    }
+
+    arg0 = strrchr (binary, '/');
+    arg0 = (arg0) ? arg0 + 1 : binary;
     if (ctx->to.login) {
         int s = strlen(arg0) + 2;
         char *p = malloc(s);
@@ -451,25 +534,20 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
     set_identity(ctx->to.uid);
 
 #define PARG(arg)                                    \
-    (ctx->to.optind + (arg) < ctx->to.argc) ? " " : "",                    \
-    (ctx->to.optind + (arg) < ctx->to.argc) ? ctx->to.argv[ctx->to.optind + (arg)] : ""
+    (argc + (arg) < ctx->to.argc) ? " " : "",                    \
+    (argc + (arg) < ctx->to.argc) ? ctx->to.argv[argc + (arg)] : ""
 
-    LOGD("%u %s executing %u %s using shell %s : %s%s%s%s%s%s%s%s%s%s%s%s%s%s",
+    LOGD("%u %s executing %u %s using binary %s : %s%s%s%s%s%s%s%s%s%s%s%s%s%s",
             ctx->from.uid, ctx->from.bin,
-            ctx->to.uid, get_command(&ctx->to), ctx->to.shell,
+            ctx->to.uid, get_command(&ctx->to), binary,
             arg0, PARG(0), PARG(1), PARG(2), PARG(3), PARG(4), PARG(5),
             (ctx->to.optind + 6 < ctx->to.argc) ? " ..." : "");
 
-    argc = ctx->to.optind;
-    if (ctx->to.command) {
-        ctx->to.argv[--argc] = ctx->to.command;
-        ctx->to.argv[--argc] = "-c";
-    }
     ctx->to.argv[--argc] = arg0;
-    execv(ctx->to.shell, ctx->to.argv + argc);
+    execvp(binary, ctx->to.argv + argc);
     err = errno;
     PLOGE("exec");
-    fprintf(stderr, "Cannot execute %s: %s\n", ctx->to.shell, strerror(err));
+    fprintf(stderr, "Cannot execute %s: %s\n", binary, strerror(err));
     exit(EXIT_FAILURE);
 }
 
@@ -481,6 +559,9 @@ static __attribute__ ((noreturn)) void allow(struct su_context *ctx) {
  * Find the properties ourselves.
  */
 int access_disabled(const struct su_initiator *from) {
+#ifndef SUPERUSER_EMBEDDED
+    return 0;
+#else
     char *data;
     char build_type[PROPERTY_VALUE_MAX];
     char debuggable[PROPERTY_VALUE_MAX], enabled[PROPERTY_VALUE_MAX];
@@ -527,12 +608,56 @@ int access_disabled(const struct su_initiator *from) {
                  "enable it under settings -> developer options");
             return 1;
         }
-        
+
     }
     return 0;
+#endif
+}
+
+static int get_api_version() {
+  char sdk_ver[PROPERTY_VALUE_MAX];
+  char *data = read_file("/system/build.prop");
+  get_property(data, sdk_ver, "ro.build.version.sdk", "0");
+  int ver = atoi(sdk_ver);
+  free(data);
+  return ver;
+}
+
+static void fork_for_samsung(void)
+{
+    // Samsung CONFIG_SEC_RESTRICT_SETUID wants the parent process to have
+    // EUID 0, or else our setresuid() calls will be denied.  So make sure
+    // all such syscalls are executed by a child process.
+    int rv;
+
+    switch (fork()) {
+    case 0:
+        return;
+    case -1:
+        PLOGE("fork");
+        exit(1);
+    default:
+        if (wait(&rv) < 0) {
+            exit(1);
+        } else {
+            exit(WEXITSTATUS(rv));
+        }
+    }
 }
 
 int main(int argc, char *argv[]) {
+    return su_main(argc, argv, 1);
+}
+
+int su_main(int argc, char *argv[], int need_client) {
+    // start up in daemon mode if prompted
+    if (argc == 2 && strcmp(argv[1], "--daemon") == 0) {
+        return run_daemon();
+    }
+
+    int ppid = getppid();
+    fork_for_samsung();
+
     // Sanitize all secure environment variables (from linker_environ.c in AOSP linker).
     /* The same list than GLibc at this point */
     static const char* const unsec_vars[] = {
@@ -591,7 +716,7 @@ int main(int argc, char *argv[]) {
             .uid = AID_ROOT,
             .login = 0,
             .keepenv = 0,
-            .shell = DEFAULT_SHELL,
+            .shell = NULL,
             .command = NULL,
             .argv = argv,
             .argc = argc,
@@ -622,6 +747,7 @@ int main(int argc, char *argv[]) {
     while ((c = getopt_long(argc, argv, "+c:hlmps:Vvu", long_opts, NULL)) != -1) {
         switch(c) {
         case 'c':
+            ctx.to.shell = DEFAULT_SHELL;
             ctx.to.command = optarg;
             break;
         case 'h':
@@ -665,6 +791,20 @@ int main(int argc, char *argv[]) {
             usage(2);
         }
     }
+
+    if (need_client) {
+        // attempt to use the daemon client if not root,
+        // or this is api 18 and adb shell (/data is not readable even as root)
+        // or just always use it on API 19+ (ART)
+        if ((geteuid() != AID_ROOT && getuid() != AID_ROOT) ||
+            (get_api_version() >= 18 && getuid() == AID_SHELL) ||
+            get_api_version() >= 19) {
+            // attempt to connect to daemon...
+            LOGD("starting daemon client %d %d", getuid(), geteuid());
+            return connect_daemon(argc, argv, ppid);
+        }
+    }
+
     if (optind < argc && !strcmp(argv[optind], "-")) {
         ctx.to.login = 1;
         optind++;
@@ -700,21 +840,21 @@ int main(int argc, char *argv[]) {
     if (from_init(&ctx.from) < 0) {
         deny(&ctx);
     }
-        
+
     read_options(&ctx);
     user_init(&ctx);
-    
-    // TODO: customizable behavior for shell? It can currently be toggled via settings.
-    if (ctx.from.uid == AID_ROOT || ctx.from.uid == AID_SHELL) {
-        LOGD("Allowing root/shell.");
+
+    // the latter two are necessary for stock ROMs like note 2 which do dumb things with su, or crash otherwise
+    if (ctx.from.uid == AID_ROOT) {
+        LOGD("Allowing root/system/radio.");
         allow(&ctx);
     }
 
     // verify superuser is installed
     if (stat(ctx.user.base_path, &st) < 0) {
-        // send to market
-        if (0 == strcmp(JAVA_PACKAGE_NAME, REQUESTOR))
-            silent_run("am start -d http://www.clockworkmod.com/superuser/install.html -a android.intent.action.VIEW");
+        // send to market (disabled, because people are and think this is hijacking their su)
+        // if (0 == strcmp(JAVA_PACKAGE_NAME, REQUESTOR))
+        //     silent_run("am start -d http://www.clockworkmod.com/superuser/install.html -a android.intent.action.VIEW");
         PLOGE("stat %s", ctx.user.base_path);
         deny(&ctx);
     }
@@ -725,7 +865,7 @@ int main(int argc, char *argv[]) {
                 (int)st.st_uid, (int)st.st_gid);
         deny(&ctx);
     }
-    
+
     // always allow if this is the superuser uid
     // superuser needs to be able to reenable itself when disabled...
     if (ctx.from.uid == st.st_uid) {
@@ -736,6 +876,12 @@ int main(int argc, char *argv[]) {
     if (access_disabled(&ctx.from)) {
         LOGD("access_disabled");
         deny(&ctx);
+    }
+
+    // autogrant shell at this point
+    if (ctx.from.uid == AID_SHELL) {
+        LOGD("Allowing shell.");
+        allow(&ctx);
     }
 
     // deny if this is a non owner request and owner mode only
@@ -776,7 +922,7 @@ int main(int argc, char *argv[]) {
             LOGD("db denied");
             deny(&ctx);        /* never returns too */
     }
-    
+
     socket_serv_fd = socket_create_temp(ctx.sock_path, sizeof(ctx.sock_path));
     LOGD(ctx.sock_path);
     if (socket_serv_fd < 0) {
